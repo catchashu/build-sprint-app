@@ -1,0 +1,11 @@
+Rule,Research Protocol
+1,"User supplies the reference URL, timestamp range, and motion family. Treat those as the exact scope."
+2,Always analyze the specified video through vidIQ visual-watch first. Do not substitute web search or generic animal knowledge for the requested footage.
+3,"When captions/subtitles/speech are irrelevant, explicitly instruct vidIQ to ignore them and analyze visible motion only."
+4,Do not search for or discover additional videos unless the user explicitly asks. No outlier/video-discovery searches by default.
+5,Old source videos may be reused with new timestamps for another motion family. Create a new reference ID for the new motion analysis.
+6,"Separate direct observation from design interpretation. Mark blur, occlusion, angle, or uncertain anatomy explicitly."
+7,"After every successful analysis, update four layers: Reference Library → Motion Index → Canonical Motion Specs → Motion Bible."
+8,Canonical status rule: one useful reference = provisional; corroborating independent references = stronger provisional; promote to V1-ready when the key variation/angle/mechanics are adequately covered.
+9,"Do not turn individual quirks into biological rules. Keep hand preference, exact asymmetry, or context-specific actions variable unless multiple references support them."
+10,Keep V1 motions modular and interruptible. Animation must serve product state and may hand off at natural breakpoints when AI processing completes.

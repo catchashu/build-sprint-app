@@ -1,0 +1,410 @@
+Retrieval Decisions — Where To Expand vs Stop,,,,,
+This captures your search-level judgement only: whether a discovered query is worth following as a branch. These reasons are NOT part of the blind AI input.,,,,,
+,,,,,
+Node ID,Query,Decision,Reason Category,Reason / Initial Expert Note,Status
+N002,mri safety zones,Not yet,Relevant branch,Relevant and important subtopic; expansion decision not yet frozen.,Open
+N003,mri safety ppt,Stop,Branch saturated,PPT branch converged into already-covered PDF / SlideShare / precautions / staff-guidelines variants; no new intent worth expanding.,Closed
+N004,mri safety radiology,Stop,Branch saturated,"Opened and reviewed. Results repeated PDF, PPT, articles, staff-guidelines and broad MRI-safety terms; no new branch worth following.",Closed
+N005,mri safety pdf,Expand,Relevant guide / printable intent,Relevant printable guide / reference intent; user opened this branch.,Open
+N006,mri safety precautions,Not yet,Relevant knowledge intent,Relevant; precaution / educational intent.,Open
+N007,mri safety protocol,Not yet,Relevant knowledge intent,Relevant; protocol / how-it-should-be-done intent.,Open
+N008,mri safety guidelines,Not yet,Relevant knowledge intent,Relevant; guidelines / how-it-should-be-done intent.,Open
+N009,mri safety list,Stop,Intent resolved as implant/device-list intent,"Initially looked relevant, but opening the branch showed implants, compatible metals and manufacturer-specific safety lists. User closed the branch.",Closed
+N010,mri safety zones ppt,Not yet,Relevant knowledge intent,Relevant; presentation intent around MRI safety zones.,Open
+N011,mri safety articles,Stop,Branch saturated / outside useful scope,"Rechecked from the alternate seed. Results converged into ACR/manual, implant, certification and already-covered PDF/PPT themes; no new useful branch.",Closed
+N012,mri safety certification,Stop,Outside business offering,Dealer does not provide certification.,Closed
+N013,mri safety course,Stop,"Relevant training branch, now saturated",Relevant because the business provides MRI safety training. Explored free and online variants; branch is now closed after convergence.,Closed
+N014,mri safety sheet,Not yet,Relevant guide / printable intent,Relevant; similar reference/guide intent to MRI safety PDF.,Open
+N015,What are the safety precautions for MRI?,Leaf,Relevant educational intent,Relevant MRI safety precautions question.,Open
+N016,What are the three MRI safety categories?,Leaf,Relevant educational intent,Relevant MRI safety categories question.,Open
+N017,What items are MRI safe?,Leaf,Relevant equipment / product intent,Quite relevant because the business deals with MRI-safe devices/equipment.,Open
+N018,Is an MRI safer than a CT scan?,Stop,Wrong end-user intent,"End-user comparison query, not relevant to the MRI-safety business scope.",Closed
+N019,Recent updates to mri safety,Expand,Relevant current-guidance intent,User opened this branch because journals / technical guidance may matter for MRI safety.,Open
+N020,ACR MRI safety guidelines,Not yet,Unassessed,Discovered under MRI safety PDF; relevance/expansion not yet judged.,Open
+N021,MRI design guidelines,Not yet,Unassessed,Discovered under MRI safety PDF; relevance/expansion not yet judged.,Open
+N022,Safety in magnetic Resonance Imaging,Not yet,Unassessed,Discovered under MRI safety PDF; relevance/expansion not yet judged.,Open
+N023,What is not allowed in MRI,Not yet,Unassessed,Discovered under MRI safety PDF; relevance/expansion not yet judged.,Open
+N024,MRI safety Handbook,Not yet,Unassessed,Discovered under MRI safety PDF; relevance/expansion not yet judged.,Open
+N025,MRI safety PPT slideshare,Leaf,Repeat / PPT variant,Same presentation intent; parent PPT branch now closed.,Closed
+N026,Mri safety and precautions by slideshare,Leaf,Repeat / PPT variant,Same presentation/precautions intent; parent PPT branch now closed.,Closed
+N027,MRI slideshare,Leaf,Repeat / PPT variant,Same presentation intent; parent PPT branch now closed.,Closed
+N028,SlideShare Downloader,Stop,Peripheral utility intent,SlideShare-download utility is not a distinct MRI-safety need; no expansion.,Closed
+N029,QUENCHING in MRI PPT,Stop,Outside chosen scope,User explicitly judged this irrelevant.,Closed
+N030,MRI safety guidelines for staff,Expand,Relevant staff-guidance intent,User opened this branch; it is relevant to staff guidance/training. Branch later closed after repetition/saturation.,Closed
+N031,MRI safe implants list,Stop,Wrong / implant-specific intent,User judged this outside the business scope; primarily implant/patient/clinical screening intent.,Closed
+N032,Conditional 5 MRI safety,Stop,Outside chosen scope,User checked the meaning and judged this branch to be moving outside the business scope.,Closed
+N033,MRI compatible metals list,Stop,Wrong / implant-material intent,Not relevant to the business's MRI-safety offering.,Closed
+N034,Nexplanon MRI Safety list,Stop,Product/implant-specific intent,Manufacturer/implant-specific query; outside scope.,Closed
+N035,Medtronic MRI Safety,Stop,Product/implant-specific intent,Manufacturer/implant-specific query; outside scope.,Closed
+N036,MRI implant safety website,Stop,Implant-specific intent,Outside the MRI-safety business scope used for this experiment.,Closed
+N037,MRI safety Topics,Stop,Branch saturated / wrong connotation,"The 'MRI safety list' branch resolved into mostly implant/device-list intent, so the branch was closed rather than expanded further.",Closed
+N038,What are the ACR MRI guidelines for 2026?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; branch was not expanded further from this PAA question.,Closed
+N039,What are the latest advancements in MRI technology?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; no explicit relevance judgement was made before the branch was closed.,Closed
+N040,Is MRI scan 100% safe?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; no explicit relevance judgement was made before the branch was closed.,Closed
+N041,What is the latest technology in MRI machines?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; no explicit relevance judgement was made before the branch was closed.,Closed
+N042,What are the ACR safety zones for MRIs?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; no explicit relevance judgement was made before the branch was closed.,Closed
+N043,What is the main hazard in the MRI environment?,Leaf,Captured PAA / no explicit judgement,Captured as evidence; no explicit relevance judgement was made before the branch was closed.,Closed
+N044,ACR MRI safety manual 2026,Stop,Authority/manual outside offer,User explicitly said the ACR manual is not the business's offering.,Closed
+N045,ACR MRI Screening form,Stop,Outside chosen scope,User explicitly rejected the screening-form branch.,Closed
+N046,ACR MRI QC Manual PDF,Stop,Authority/QC manual outside offer,User explicitly rejected the ACR QC manual branch.,Closed
+N047,MRI safety guidelines pdf,Leaf,Repeat / covered by guideline branch,Same broad guidance intent already being explored through the staff-guidelines branch; not expanded separately.,Closed
+N048,ACR MRI pregnancy,Stop,Wrong / patient-specific intent,User explicitly judged pregnancy-related ACR intent irrelevant.,Closed
+N049,What are the safety protocols for MRIs?,Leaf,Captured PAA / branch saturation,Captured as evidence; not expanded further because the branch was already converging/repeating.,Closed
+N050,What is the biggest safety hazard of MRI?,Leaf,Captured PAA / branch saturation,Captured as evidence; not expanded further because the branch was already converging/repeating.,Closed
+N051,What is an MRI checklist?,Leaf,Captured PAA / branch saturation,Captured as evidence; not expanded further because the branch was already converging/repeating.,Closed
+N052,Toe nail polish MRI,Stop,Wrong / end-user specific intent,User said the only new item worth keeping from this related-search set was 'What is MRI safety'; this personal-use query was not kept.,Closed
+N053,ACR MRI Safety,Stop,Authority-specific / not pursued,Not kept from the saturated staff-guidelines branch; no separate expansion.,Closed
+N054,What is MRI safety,Leaf,Relevant broad safety intent,"User identified this as the only new item worth keeping from the final saturated branch, but did not expand it further.",Closed
+N055,MRI safety slideshare,Leaf,Repeat / presentation variant,No new intent beyond already-covered MRI safety PPT / SlideShare cluster.,Closed
+N056,MRI safety zones Radiology,Leaf,Repeat / zones variant,"Potentially related to MRI safety zones, but no new branch was opened; radiology branch was closed due convergence.",Closed
+N057,Radiographics mri safety,Leaf,Repeat / publication-style intent,No new search direction identified; radiology branch was closed due convergence.,Closed
+N058,Mri safety course free,Expand,Relevant training intent,User explicitly judged this relevant and opened it to test whether the branch added anything new.,Closed
+N059,Www mri,Stop,Unclear / non-specific intent,User's course-branch judgement retained only the course/free/online directions; this query was not pursued.,Closed
+N060,Mri safety course online,Expand,Relevant training intent,User explicitly judged this relevant and opened it; branch yielded India / near-me / certification modifiers.,Closed
+N061,Level 1 MRI training,Stop,Geography / certification-system mismatch,User identified this as a US-style level-training concept and left it out.,Closed
+N062,Mri safety course online free,Leaf,Repeat / free-online variant,Same broad training intent as free + online; no separate expansion needed.,Closed
+N063,MRI Safety books,Stop,Not part of chosen course branch,User said the meaningful branch here was MRI safety course/free/online; books were not pursued.,Closed
+N064,MRI safety videos,Stop,Not part of chosen course branch,User said the meaningful branch here was MRI safety course/free/online; videos were not pursued.,Closed
+N065,Mri safety course free pdf,Leaf,Repeat / free-course format variant,Same free-course intent; branch closed after repetition.,Closed
+N066,IMAIOS free,Stop,Outside chosen scope,Unrelated provider/free-resource query; not pursued.,Closed
+N067,Mri safety course free online,Leaf,Repeat / free-online course variant,Same training intent; no new direction.,Closed
+N068,Radiopaedia MRI brain,Stop,Wrong clinical/anatomy intent,Outside MRI-safety training offer.,Closed
+N069,Mri safety course free download,Leaf,Repeat / download-format variant,Same free-course intent; no new direction.,Closed
+N070,AI CT scan reader free,Stop,Wrong modality / product intent,Outside MRI-safety course scope.,Closed
+N071,MRI instrumentation,Stop,Different educational topic,Not pursued as part of MRI-safety course intent.,Closed
+N072,T2 axial brain MRI anatomy,Stop,Wrong clinical/anatomy intent,Outside MRI-safety course scope.,Closed
+N073,Mri safety course online india,Leaf,Relevant India training modifier,User explicitly judged this relevant to the target geography.,Closed
+N074,Mri safety course online near me,Leaf,Relevant local-intent training modifier,User explicitly judged this relevant.,Closed
+N075,Free Level 2 MRI Safety Training,Stop,Geography / certification-system mismatch,User identified Level 2 as a US-style training/certification concept and excluded it.,Closed
+N076,Mri safety course online nhs,Stop,Wrong geography,NHS-specific UK query; target market for this experiment is India.,Closed
+N077,MRI online course with Certificate,Stop,Outside business offering,Business provides courses but not certification; user explicitly excluded certification intent.,Closed
+N078,MRI online course free with certificate,Stop,Outside business offering,Same certification mismatch; excluded.,Closed
+N079,MRI courses for radiographers,Leaf,Training-audience variant / not further expanded,"Potentially relevant to the training offer, but user did not open it further before closing the branch.",Closed
+N001,mri safety,Stop,Seed exhausted / saturated,"Main MRI safety seed is now closed: PDF, PPT, list, radiology and course branches were explored or explicitly stopped, and later branches converged into repeats/peripheral intents.",Closed
+N080,mri safe,Stop,Alternate seed saturated / duplicate universe,Alternate seed produced almost entirely queries already captured under 'mri safety'. User closed it and moved to a new seed.,Closed
+N081,Is MRI safe reddit,Not yet,Unassessed,Visible under the alternate seed. User did not explicitly assess or expand it.,Open
+N082,MRI Safe symbol,Not yet,Unassessed,Visible under the alternate seed. User did not explicitly assess or expand it.,Open
+N083,mri safe products,Expand,Relevant umbrella/product-category seed,User selected this as the next product-focused seed. It opened the MRI-compatible product universe.,Open
+N084,mri safety products,Expand,Relevant synonym / umbrella intent,User recognized 'MRI safety products' as the same useful product-category direction.,Open
+N085,mri compatible products,Expand,Relevant synonym / product-category intent,User identified 'MRI compatible' as an important related phrasing and expanded it.,Open
+N086,mri safe items,Stop,Too generic / wrong connotation,User said the other autocomplete results beyond MRI-safe/MRI-compatible were not useful.,Closed
+N087,mri safe items iron,Stop,Wrong end-user/material intent,Not part of the institutional medical-product scope.,Closed
+N088,does mri safe,Stop,Malformed / irrelevant intent,Not pursued.,Closed
+N089,mri list safety,Stop,Malformed / duplicate intent,Not pursued.,Closed
+N090,mri safe vs mri compatible,Not yet,Potential terminology intent,"Potentially useful distinction, but user did not expand this exact phrasing in this round.",Open
+N091,mri safe unsafe,Stop,Wrong / generic terminology intent,Not pursued.,Closed
+N092,Can I leave my bra on for an MRI?,Stop,End-user patient intent,User said the PAA section did not contain anything useful for this business context.,Closed
+N093,What jewellery is MRI safe?,Stop,End-user patient intent,User said the PAA section did not contain anything useful for this business context.,Closed
+N094,MRI compatibility check,Stop,Implant/device-check intent outside offer,Branch skewed toward implant/device compatibility checking rather than the supplied hospital products.,Closed
+N095,MRI compatible devices,Expand,Relevant umbrella product intent,"User opened this to verify intent; results mostly skewed to implants, but the term itself is relevant as a product umbrella.",Closed
+N096,MRI-compatible orthopedic implants,Stop,Implant-specific intent,Outside current business offering.,Closed
+N097,What devices are not MRI compatible?,Leaf,Captured PAA / no further expansion,Captured while checking the devices branch; not pursued further.,Closed
+N098,How to check MRI compatibility?,Leaf,Captured PAA / no further expansion,Captured while checking the devices branch; not pursued further.,Closed
+N099,What are the three types of MRI machines?,Stop,Wrong machine-type intent,Outside product-supplier scope.,Closed
+N100,What materials are MRI compatible?,Stop,Materials intent outside current offer,Not pursued.,Closed
+N101,Medtronic MRI Compatibility checker,Stop,Manufacturer/implant-specific intent,Outside business offering.,Closed
+N102,MRI conditional vs compatible,Expand,Terminology check / implant-skewed,User checked this branch; it resolved into implant/conditional-device terminology and was then closed.,Closed
+N103,Medtronic MRI compatible pacemaker list,Stop,Manufacturer/pacemaker intent,Outside current business offering.,Closed
+N104,MRI Conditional Medtronic,Stop,Manufacturer/implant-specific intent,Outside scope.,Closed
+N105,MR Conditional examples,Stop,Terminology/implant intent,User said this branch was not important and was largely about implants/users.,Closed
+N106,MRI Conditional meaning,Stop,Terminology/implant intent,Not pursued for this product-supplier experiment.,Closed
+N107,MRI-conditional pacemaker,Stop,Pacemaker/implant intent,Explicitly outside current product offering.,Closed
+N108,MR Conditional symbol,Stop,Terminology/label intent,Not pursued.,Closed
+N109,MRI Conditional implants,Stop,Implant-specific intent,Outside business offering.,Closed
+N110,Not MRI conditional meaning,Stop,Terminology/implant intent,Not pursued.,Closed
+N111,mri compatible meaning,Stop,Generic terminology intent,User explicitly said 'meaning' was not important for this product-discovery branch.,Closed
+N112,mri compatible pulse oximeter,Expand,Relevant hospital-product intent,User identified this as a key product query and expanded it.,Closed
+N113,mri compatible pacemaker,Stop,Pacemaker/implant intent,User explicitly excluded pacemaker demand from this supplier scope.,Closed
+N114,mri compatible pacemaker cost in india,Stop,Pacemaker/implant commercial intent,User explicitly excluded pacemaker demand.,Closed
+N115,mri compatible monitor,Expand,Relevant hospital-product intent,"User expanded the MRI-compatible monitor branch. It yielded patient-monitor synonyms, multipara/cardiac variants, price intent, and several brand/model terms. Branch is now saturated.",Closed
+N116,mri compatible metals,Stop,Materials intent outside product offering,User explicitly said this was not important.,Closed
+N117,mri compatible laryngoscope,Expand,Relevant hospital-product intent,"User fully explored the MRI-compatible laryngoscope branch. Price, set/accessory, MRI-safe synonym and video-laryngoscope variants were relevant; branch saturated after branded/format variants.",Closed
+N118,mri compatible fire extinguisher,Expand,Relevant MRI-room safety product intent,"Dedicated pass completed across autocomplete, price, India/local modifiers, non-magnetic synonym and MRI-safe synonym. Branch saturated and closed.",Closed
+N119,mri compatible ventilator,Expand,Relevant hospital-product intent,"Dedicated ventilator pass completed: autocomplete, PAA, related searches, MRI-safe synonym, manufacturer and India checks. Branch saturated and closed.",Closed
+N120,mri compatible ecg electrodes,Leaf,Relevant hospital-product intent,User identified ECG electrodes as an important product term.,Open
+N121,mri compatible wheelchair,Expand,Relevant hospital-product intent,"User explored autocomplete, price, MRI-safe synonym and related searches. Useful terms were price/cost/safe synonym; stretcher surfaced as a new adjacent product seed. Branch closed.",Closed
+N122,mri compatible anesthesia machine,Leaf,Relevant hospital-product intent,User identified anesthesia machine as an important product term.,Open
+N123,mri compatible pacemaker price,Stop,Pacemaker/implant commercial intent,User explicitly excluded pacemaker price.,Closed
+N124,MRI Compatible Pulse Oximeter Price in India,Expand,Relevant commercial product intent,User identified price / India as the only useful next branch for pulse oximeter.,Closed
+N125,Emco Pulse Oximeter,Stop,Brand-specific intent,User is not using competing/other brand queries for this experiment.,Closed
+N126,MRI compatible Pulse Oximeter Price,Leaf,Relevant commercial product intent,Same useful price intent; no need to expand separately.,Closed
+N127,EMCO oxi-MRI 3600,Stop,Brand/model-specific intent,Outside chosen brand scope.,Closed
+N128,MRI compatible Multipara monitor,Leaf,Relevant monitor synonym / subtype,User corrected earlier judgement: multipara means multiparameter monitor and is relevant to the monitor product family.,Closed
+N129,Emco Pulse Oximeter Price,Stop,Brand-specific commercial intent,Outside chosen brand scope.,Closed
+N130,Which pulse oximeter is compatible with MRI machines?,Leaf,Relevant product-selection question,User said this is essentially the same useful product intent.,Closed
+N131,How much does a pulse oximeter cost in India?,Stop,Generic non-MRI commercial intent,User explicitly judged this irrelevant.,Closed
+N132,How much does pulse oximetry cost?,Stop,Generic service/cost intent,User explicitly judged this irrelevant.,Closed
+N133,Which brand is best for pulse oximeters?,Stop,Generic brand-comparison intent,User explicitly judged this irrelevant.,Closed
+N134,mri compatible pulse oximeter price,Leaf,Relevant commercial product intent,Same price intent; no new branch.,Closed
+N135,mri compatible pulse oximeter price in india,Leaf,Relevant India commercial product intent,Same useful price-in-India intent; no new branch.,Closed
+N136,mri compatible multipara monitor,Leaf,Relevant monitor synonym / subtype,Same multiparameter-monitor intent; retained after user's correction.,Closed
+N137,emco oxi-mri 3600,Stop,Brand/model-specific intent,Outside chosen brand scope.,Closed
+N138,emco pulse oximeter,Stop,Brand-specific intent,Outside chosen brand scope.,Closed
+N139,emco pulse oximeter price,Stop,Brand-specific commercial intent,Outside chosen brand scope.,Closed
+N140,mri compatible monitor price,Leaf,Relevant commercial product intent,User explicitly kept monitor-price intent; no new branch emerged.,Closed
+N141,mri compatible monitoring equipment,Leaf,Relevant product-family synonym,Relevant alternate wording for the monitor/monitoring-equipment family.,Closed
+N142,mri compatible monitor philips,Leaf,Brand search / competitive vocabulary,"User wants brand searches retained even when not a dealer, as useful market vocabulary.",Closed
+N143,mri safe monitor,Leaf,Relevant synonym,Relevant alternate wording for MRI-compatible monitor.,Closed
+N144,mri safe monitoring equipment,Leaf,Relevant product-family synonym,Relevant alternate wording for the monitoring-equipment family.,Closed
+N145,mri compatible ventilator price,Leaf,Relevant commercial cross-product intent,Relevant ventilator price query; cross-product seed rather than a monitor subtopic.,Open
+N146,mri compatible display,Leaf,Potential relevant equipment intent,User said MRI-compatible display can work; retained without deeper expansion here.,Open
+N147,mri compatible ventilator circuit,Stop,Accessory term not pursued,Latest user judgement: MRI-compatible ventilator circuit is not relevant for this branch.,Closed
+N148,"What does ""MRI compatible"" mean?",Stop,Generic terminology / user-side intent,User said PAA under the monitor query was mostly irrelevant and user-side.,Closed
+N149,Can I wear a heart monitor during an MRI?,Stop,Patient/end-user intent,Not relevant to institutional equipment purchasing.,Closed
+N150,MRI Compatible Patient Monitor Price,Expand,Relevant commercial monitor intent,User opened this price branch; no useful child demand beyond generic/non-MRI price questions.,Closed
+N151,MRI compatible Multipara monitor,Expand,Relevant monitor subtype/synonym,User corrected earlier view: multipara = multiparameter and is relevant; branch yielded brand/model variants.,Closed
+N152,IRadimed MRI monitor,Expand,Relevant brand/model monitor intent,User chose to keep and inspect this brand search.,Closed
+N153,Mindray MRI compatible monitor,Expand,Relevant brand/model monitor intent,User chose to keep and inspect this brand search; it also surfaced anesthesia-machine and infusion-pump terms.,Closed
+N154,MRI patient monitor,Expand,Relevant monitor synonym,User identified this as another name for MRI-compatible monitor; branch repeated known terms.,Closed
+N155,IRadimed MRI monitor PRICE,Expand,Relevant brand + commercial intent,Price associated with the brand is important; manuals/service variants were not.,Closed
+N156,MRI compatible cardiac monitor,Expand,Relevant monitor subtype,User kept and checked this subtype; branch repeated monitor terms and produced irrelevant Holter/loop-recorder intent.,Closed
+N157,How much does a patient monitor cost?,Stop,Generic non-MRI commercial intent,User explicitly judged generic patient-monitor cost irrelevant.,Closed
+N158,How much does an MRI compatible pacemaker cost?,Stop,Pacemaker/implant intent,Explicitly out of scope.,Closed
+N159,How much does a 27-inch medical grade monitor cost?,Stop,Generic display/monitor cost intent,Not specific to MRI-compatible patient monitoring.,Closed
+N160,What is the price of a 3 Para patient monitor?,Stop,Generic non-MRI commercial intent,Not specific enough to the MRI-compatible monitor need.,Closed
+N161,Tesla M3 MRI monitor,Expand,Relevant brand/model monitor intent,Important brand/model term; user said the business deals in Tesla M3 monitors and explored it.,Closed
+N162,Invivo Expression MRI monitor,Leaf,Relevant brand/model monitor intent,Retained as another market brand/model term; no expansion in this round.,Open
+N163,IRadimed MRI Pump service manual,Stop,Service-manual intent,Business research does not need service manuals for this website-planning experiment.,Closed
+N164,IRadimed 3885T Service manual,Stop,Service-manual intent,Not relevant to the website/product demand job.,Closed
+N165,IRadimed 3880 User Manual,Stop,Manual/support intent,Not relevant to the website/product demand job.,Closed
+N166,IRadimed 3880 Service Manual,Stop,Service-manual intent,Not relevant to the website/product demand job.,Closed
+N167,MRI safe Patient Monitor,Leaf,Relevant monitor synonym,Relevant alternate wording; branch not expanded further.,Closed
+N168,Mindray MRI Anesthesia Machine,Leaf,Relevant cross-product seed,User explicitly kept MRI anesthesia machine as important; should be explored as its own product branch.,Open
+N169,Mindray Patient Monitor price,Leaf,Brand + commercial intent,Useful brand/price vocabulary; not expanded separately.,Closed
+N170,Mindray monitor reading,Stop,Usage/how-to intent,User explicitly judged this irrelevant.,Closed
+N171,MRI compatible infusion pump price,Leaf,Relevant commercial cross-product seed,User explicitly marked this relevant; should feed the infusion-pump product branch.,Open
+N172,Benefusion MRI Station pdf,Stop,Manual/PDF support intent,Not relevant to product-demand architecture.,Closed
+N173,Mindray Monitor explained,Stop,Usage/explainer intent,User explicitly judged this irrelevant.,Closed
+N174,Mindray bp Monitor price,Stop,Generic/non-MRI product intent,User explicitly judged this irrelevant.,Closed
+N175,Mindray Monitor display,Stop,Generic display/usage intent,User explicitly judged this irrelevant.,Closed
+N176,IRadimed MRI pump,Leaf,Relevant cross-product brand term,"Cross-product term; relevant to MRI infusion-pump seed, not expanded here.",Open
+N177,IRadimed 3885B,Leaf,Brand/model term,Captured as a market model term; no expansion requested.,Open
+N178,Loop recorder MRI safety the list,Stop,Implant/device-list intent,User explicitly rejected this branch.,Closed
+N179,Can you have an MRI with a Holter monitor,Stop,Patient/end-user intent,User explicitly judged this irrelevant.,Closed
+N180,MIPM Tesla M3 Service Manual,Stop,Service-manual intent,User explicitly said manuals are not relevant.,Closed
+N181,Tesla M3 monitor Manual,Stop,Manual/support intent,User explicitly said manuals are not relevant.,Closed
+N182,Tesla MRI monitor,Leaf,Relevant brand/model synonym,User explicitly kept this as another way to say Tesla M3 MRI monitor.,Closed
+N183,Iradimed mri monitor price,Leaf,Relevant brand + commercial intent,User explicitly kept iRadimed monitor price as relevant.,Closed
+N184,mri compatible laryngoscope price,Leaf,Relevant commercial product intent,User explicitly kept price intent.,Closed
+N185,mri compatible laryngoscope set,Leaf,Relevant product synonym / bundle intent,User explicitly said the product is also called a set.,Closed
+N186,mri compatible laryngoscope battery,Leaf,Potential relevant accessory,User would keep it; accessory scope may depend on what the business actually sells.,Closed
+N187,mri compatible laryngoscope blades,Leaf,Potential relevant accessory,User would keep it; accessory scope may depend on what the business actually sells.,Closed
+N188,mri compatible laryngoscope handle,Leaf,Potential relevant accessory,User would keep it; accessory scope may depend on what the business actually sells.,Closed
+N189,mri safe laryngoscope,Leaf,Relevant synonym,Alternate wording for MRI-compatible laryngoscope.,Closed
+N190,mri safe laryngoscope handle,Leaf,Potential relevant accessory / synonym,Retained as MRI-safe accessory wording.,Closed
+N191,mri safe laryngoscope blades,Leaf,Potential relevant accessory / synonym,Retained as MRI-safe accessory wording.,Closed
+N192,mri compatible video laryngoscope,Leaf,Potential relevant subtype,User said this could be relevant but was not fully certain; retained as subtype evidence.,Closed
+N193,MRI Compatible Laryngoscope Price,Expand,Relevant commercial product intent,User opened this branch; it did not produce useful new demand beyond one MRI-safety FAQ.,Closed
+N194,Penlon Laryngoscope,Expand,Relevant brand search / competitive vocabulary,Appears to be a laryngoscope brand with MRI-compatible products; user kept it and explored it.,Closed
+N195,MRI compatible Suction Machine,Expand,Relevant cross-product seed,"User explored MRI-compatible suction machine. The branch was small and quickly converged, while surfacing flow meter, oxygen flowmeter, anesthesia machine and a Penlon MRI ventilator term.",Closed
+N196,Penlon Video Laryngoscope,Expand,Relevant brand/subtype search,User explored this brand + video-laryngoscope branch; it quickly broadened into generic video-laryngoscope demand and was closed.,Closed
+N197,Mri compatible equipment,Leaf,Relevant umbrella synonym,Broad MRI-compatible equipment wording; already conceptually covered by product-category seed.,Closed
+N198,Penlon MRI,Stop,Ambiguous / wrong product intent,User checked the meaning and decided not to pursue this term.,Closed
+N199,Mri compatible vaporizer,Expand,Relevant cross-product seed,User explored MRI-compatible vaporizer. Branch was small and converged quickly; retained MRI-qualified/brand price vocabulary and handed off flow meter/anesthesia-machine terms to their own seeds.,Closed
+N200,Portable video laryngoscope,Stop,Too broad / loses MRI qualifier,User said portable video laryngoscope is too broad without MRI-specific intent.,Closed
+N201,How much does a laryngoscope cost?,Stop,Generic non-MRI commercial intent,Not MRI-specific enough for this experiment.,Closed
+N202,Are laryngoscopes MRI safe?,Leaf,Relevant MRI-safety FAQ intent,MRI-specific safety question; retained as supporting evidence.,Closed
+N203,What is the price of an MRI machine in rupees?,Stop,Wrong product intent,MRI machine pricing is unrelated to the laryngoscope product offering.,Closed
+N204,How much does flexible laryngoscopy cost?,Stop,Generic procedure/service intent,Not about MRI-compatible laryngoscope purchasing.,Closed
+N205,Penlon Diamond Laryngoscope,Leaf,Brand/model search,User was unsure but chose to retain it as brand/model vocabulary.,Closed
+N206,Video Laryngoscope Price,Stop,Generic non-MRI commercial intent,Loses MRI-specific qualifier.,Closed
+N207,Penlon MRI Laryngoscope,Leaf,Relevant brand/model + MRI intent,User explicitly kept this brand/MRI phrasing.,Closed
+N208,McCoy laryngoscope,Leaf,Brand/model vocabulary,User was unsure but chose to keep it as a possible brand/type term.,Closed
+N209,Laryngoscope price,Stop,Generic non-MRI commercial intent,Too broad without MRI qualifier.,Closed
+N210,Penlon endoscopy,Stop,Adjacent/generic category intent,Not clearly MRI-compatible laryngoscope demand; user closed the branch.,Closed
+N211,Video laryngoscope brands,Stop,Generic brand-research intent,Loses MRI qualifier; branch was closed.,Closed
+N212,Medcaptain Video laryngoscope Price,Stop,Generic brand/commercial intent,Not MRI-qualified; not useful for this product-specific branch.,Closed
+N213,Best video laryngoscope for EMS,Stop,Different use-case intent,EMS use case is outside the MRI-compatible hospital product context.,Closed
+N214,Flexible video laryngoscope,Stop,Generic product subtype without MRI qualifier,No longer MRI-specific.,Closed
+N215,Video laryngoscope pediatric,Stop,Generic pediatric subtype without MRI qualifier,No longer MRI-specific.,Closed
+N216,GlideScope video laryngoscope,Stop,Generic brand/product intent,No MRI qualifier and outside chosen branch.,Closed
+N217,Are endoscopes MRI safe?,Leaf,Potential MRI-safety FAQ / adjacent terminology,User said this may be useful as a FAQ-style safety query; retained as narrated evidence.,Closed
+N218,MRI Compatible Flow Meter,Expand,"Relevant product seed, no further fan-out","User searched this seed directly. No useful People Also Ask / Related Search expansion appeared, so the branch is closed.",Closed
+N219,MRI Compatible Oxygen Flowmeter,Expand,"Relevant product seed, no further fan-out","User searched this seed directly. No useful People Also Ask / Related Search expansion appeared, so the branch is closed.",Closed
+N220,MRI anesthesia machine,Expand,"Relevant product seed, branch saturated",User explored this branch. Results mostly repeated already-known equipment/brand terms; portable/generic and selected Penlon terms were not pursued. Branch closed.,Closed
+N221,Penlon mri ventilator,Leaf,Relevant brand/product seed,Brand + MRI ventilator term surfaced from suction-machine branch; useful market vocabulary and ventilator branch input.,Open
+N222,Penlon MRI Laryngoscope,Leaf,Repeat / already-covered brand term,Already captured in the laryngoscope branch; no need to expand again.,Closed
+N223,Penlon AV-S MRI,Leaf,Potential relevant brand/model term,Captured from the alternate 'MRI safe suction machine' check; retained as MRI-equipment brand/model vocabulary without expanding here.,Open
+N224,Penlon Vaporizer Price,Leaf,Relevant brand + commercial intent,User retained price intent around an MRI-equipment brand; no deeper expansion needed in this branch.,Closed
+N225,Penlon Sigma Delta vaporizer User manual,Stop,Manual/support intent,User explicitly said manuals are not relevant to this website-demand exercise.,Closed
+N226,Isoflurane Vaporizer,Stop,Generic non-MRI product intent,User explicitly judged this irrelevant because the query loses the MRI-compatible qualifier.,Closed
+N227,Penlon Prima 451 MRI,Stop,Brand/model term not pursued,User judged this irrelevant for the current branch and did not pursue it further. Kept in raw evidence as observed vocabulary.,Closed
+N228,Anesthesia machine portable,Stop,Generic product intent without MRI qualifier,User explicitly judged this irrelevant to the MRI-specific product-demand exercise.,Closed
+N229,Penlon anesthesia machine,Stop,Brand/product term not pursued,User explicitly judged this irrelevant for the current branch and did not expand it.,Closed
+N230,mri compatible ventilator price,Leaf,Relevant commercial product intent,Price is a useful commercial modifier.,Closed
+N231,mri compatible ventilator manufacturers,Expand,Relevant supplier/manufacturer intent,"Explicitly relevant; checked directly, no new meaningful branch.",Closed
+N232,mri safe ventilator,Expand,Relevant synonym,MRI-safe synonym checked; mostly brand/manual noise afterward.,Closed
+N233,mri safe ventilator veterinary,Leaf,Relevant niche use-case modifier,User said to include it.,Closed
+N234,hamilton mri compatible ventilator,Leaf,Relevant brand + MRI product intent,Explicitly retained brand term.,Closed
+N235,mri compatible transport ventilator,Leaf,Relevant subtype / use-case intent,Explicitly retained.,Closed
+N236,mri compatible portable ventilator,Leaf,Relevant subtype / synonym,Explicitly retained.,Closed
+N237,Can you do MRI with a ventilator?,Stop,Patient/end-user intent,Not relevant to institutional product-demand research.,Closed
+N238,What is the price of a MRI compatible ventilator?,Leaf,Relevant commercial product intent,Useful PAA item; reinforces price intent.,Closed
+N239,Is bipap MRI compatible?,Stop,Different device/use-case intent,Not useful for this branch.,Closed
+N240,What are the three types of ventilators?,Stop,Generic educational intent,Not MRI-specific.,Closed
+N241,HAMILTON MRI ventilator,Expand,Relevant brand/model product intent,Kept and checked; follow-on results mostly non-MRI/support intent.,Closed
+N242,Hamilton medical transport ventilator,Stop,Generic brand/product intent without MRI qualifier,User explicitly excluded it.,Closed
+N243,Servo-u Ventilator Manual,Stop,Manual/support intent,Explicitly irrelevant.,Closed
+N244,Servo-c ventilator,Leaf,Relevant brand/model product intent,User explicitly included it.,Closed
+N245,HAMILTON-C1 ICU ventilator,Stop,Generic non-MRI model intent,Not important.,Closed
+N246,Hamilton T1 ventilator humidifier,Stop,Accessory / non-MRI support intent,Not important.,Closed
+N247,Servo u high flow,Stop,Different product/use-case intent,Not important.,Closed
+N248,Hamilton ventilator sales rep,Stop,Sales/contact intent,Not relevant.,Closed
+N249,Servo i ventilator,Stop,Generic brand/model intent,MRI-safe check: only Hamilton MRI ventilator was useful.,Closed
+N250,Maquet SERVO-U Ventilator User Manual PDF,Stop,Manual/support intent,Irrelevant.,Closed
+N251,Maquet ventilator,Stop,Generic brand/product intent without MRI qualifier,Not retained.,Closed
+N252,Servo-u ventilator price,Stop,Generic brand commercial intent without MRI qualifier,MRI qualifier lost.,Closed
+N253,HAMILTON-MR1 Service Manual,Stop,Service-manual intent,Outside the website-demand job.,Closed
+N254,Servo u ventilator heliox,Stop,Specialized non-MRI variant intent,Irrelevant.,Closed
+N255,Hamilton ventilator India,Stop,Brand + geography but loses MRI qualifier,India check drifted to generic ventilator demand.,Closed
+N256,Best portable ventilator,Stop,Generic non-MRI product intent,India check drift.,Closed
+N257,Portable respiratory ventilator,Stop,Generic non-MRI product intent,No MRI qualifier.,Closed
+N258,Portable medical ventilator,Stop,Generic non-MRI product intent,No MRI qualifier.,Closed
+N259,Portable ventilator machine,Stop,Generic non-MRI product intent,No MRI qualifier.,Closed
+N260,New ventilator machine,Stop,Generic non-MRI product intent,No MRI qualifier.,Closed
+N261,Transport ventilator for Ambulance,Stop,Different non-MRI use-case intent,Ambulance transport is outside the MRI-specific branch.,Closed
+N262,mri compatible electrodes,Leaf,Relevant electrode-family wording,Related to ECG-electrode/lead family; no separate useful fan-out was found.,Closed
+N263,mri compatible ecg leads,Expand,"Relevant product/accessory intent, no further fan-out",User checked MRI-compatible ECG leads and found no useful expansion. Branch closed as a valid leaf.,Closed
+N264,mri compatible external fixator,Expand,Intent-probe branch,User opened this query to inspect intent. Final relevance judgement not yet stated.,Open
+N265,mri compatible extinguisher,Leaf,Repeat / fire-extinguisher synonym,Reinforces the dedicated MRI-compatible fire-extinguisher branch; no separate expansion needed.,Closed
+N266,mri compatible eeg leads,Not yet,Unassessed,New autocomplete term. No explicit relevance judgement yet.,Open
+N267,mri compatible eeg electrodes,Not yet,Unassessed,New autocomplete term. No explicit relevance judgement yet.,Open
+N268,mri compatible ecg,Leaf,Relevant ECG-family wording,Broad MRI-compatible ECG wording; no separate useful fan-out was found.,Closed
+N269,mri compatible ex fix,Not yet,Likely shorthand duplicate,Likely shorthand for external fixator; no explicit judgement yet.,Open
+N270,Stryker external fixator MRI safety,Not yet,Brand + orthopedic safety intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N271,Stryker Hoffmann 3 MRI safety,Not yet,Brand/model + orthopedic safety intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N272,External fixation device name,Not yet,Generic orthopedic-device intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N273,Hoffmann External fixator surgical technique,Not yet,Surgical-technique intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N274,Hoffmann 2 external fixator,Not yet,Brand/model orthopedic intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N275,K-wire MRI safety,Not yet,Orthopedic implant/device safety intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N276,Internal fixation device,Not yet,Generic orthopedic-device intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N277,Harrington rods MRI safety,Not yet,Orthopedic implant/device safety intent,Captured from external-fixator branch; waiting for user's relevance call.,Open
+N278,mri compatible wheelchair price,Leaf,Relevant commercial product intent,Explicitly relevant; price is a useful commercial modifier.,Closed
+N279,mri safe wheelchair,Expand,Relevant synonym,MRI-safe is an alternate phrasing for MRI-compatible wheelchair; user checked it and found the same small query universe.,Closed
+N280,mri safe wheelchair australia,Stop,Wrong geography,Explicitly irrelevant for India-focused experiment.,Closed
+N281,mri safe wheelchair parts,Stop,Accessory/end-user intent outside current offer,User explicitly judged parts irrelevant.,Closed
+N282,mri safe wheelchair weight limit,Stop,Specification/end-user intent outside chosen job,User explicitly judged weight-limit intent irrelevant.,Closed
+N283,mri safe wheelchair for sale,Stop,End-user retail intent,User explicitly said they do not sell to end users.,Closed
+N284,mri safe wheelchair cost,Leaf,Relevant commercial product intent,User retained cost as equivalent to price intent.,Closed
+N285,mri safety wheelchair,Leaf,Relevant synonym / wording variant,User said safe/safety/compatible variants are relevant.,Closed
+N286,mri compatible materials,Stop,Materials intent outside product branch,User explicitly judged this irrelevant.,Closed
+N287,MRI Compatible Wheelchair Price,Leaf,Relevant commercial product intent,Same useful price intent; no additional fan-out.,Closed
+N288,MRI Compatible Stretcher,Expand,Relevant hospital-product intent,"User checked MRI-compatible stretcher. Only price and the already-known wheelchair term appeared, so the branch is closed as a small leaf.",Closed
+N289,MRI wheelchair accident,Stop,Accident / informational intent,User explicitly judged this irrelevant.,Closed
+N290,MRI equipment,Stop,Too broad / already-covered umbrella intent,User explicitly said this broad equipment query is not useful here.,Closed
+N291,MRI Compatible Stretcher Price,Leaf,Relevant commercial product intent,Price is the only meaningful modifier surfaced from the stretcher branch.,Closed
+N292,mri compatible fire extinguisher price,Expand,Relevant commercial product intent,Core commercial modifier; user expanded it.,Closed
+N293,mri safe fire extinguisher,Expand,Relevant synonym,MRI-safe synonym checked separately; same useful demand universe.,Closed
+N294,mri safe fire extinguisher color,Leaf,Relevant informational/FAQ intent,User chose to keep this as an FAQ-style question.,Closed
+N295,mri safe fire extinguisher cabinet,Stop,Accessory outside current offer,User explicitly said the business does not deal with this cabinet query.,Closed
+N296,mri safe fire extinguisher amerex,Leaf,Brand/competitor vocabulary,User said to keep the brand term as market vocabulary.,Closed
+N297,mri safe fire extinguisher class,Leaf,Relevant informational/FAQ intent,User chose to keep class as useful informational intent.,Closed
+N298,mri safe fire extinguisher sign,Leaf,Relevant informational/FAQ intent,User chose to keep sign as useful FAQ/supporting intent.,Closed
+N299,mri safety fire department,Stop,Wrong institutional intent,Explicitly irrelevant.,Closed
+N300,mri fire safety,Stop,Too broad / wrong intent,Explicitly irrelevant for the product-specific branch.,Closed
+N301,Safex Fire Extinguisher manufacturer,Stop,Brand/manufacturer term not pursued,Latest user judgement: manufacturer query is not useful for this branch.,Closed
+N302,Mri compatible fire extinguisher india,Expand,Relevant geography-qualified product intent,India is an important modifier; user expanded this branch.,Closed
+N303,Which fire extinguisher is suitable for electrical fire,Stop,Generic non-MRI fire-safety intent,Explicitly irrelevant.,Closed
+N304,How to operate the fire extinguisher,Stop,Generic usage intent,Explicitly irrelevant.,Closed
+N305,Safex Clean Agent Fire Extinguisher,Stop,Generic brand/product intent without MRI qualifier,Explicitly irrelevant.,Closed
+N306,Non magnetic Fire Extinguisher,Expand,Relevant synonym / product descriptor,User identified non-magnetic as an important synonym for MRI-safe fire extinguishers and expanded it.,Closed
+N307,Safex Fire Extinguisher dealers in Delhi,Stop,Dealer/local brand intent outside scope,Explicitly irrelevant.,Closed
+N308,Which fire extinguisher is compatible with MRI scanners?,Stop,Compatibility-check intent not useful for specialist MRI-safe catalogue,"User clarified that the business deals only in MRI-safe/MRI-compatible equipment, so generic 'is this compatible?' questions do not need to shape the acquisition architecture.",Closed
+N309,How much does a 1kg fire extinguisher cost?,Stop,Generic non-MRI price intent,Explicitly irrelevant.,Closed
+N310,How much does a 4 kg CO2 fire extinguisher cost?,Stop,Generic non-MRI price intent,Explicitly irrelevant.,Closed
+N311,How much does a 12 kg fire extinguisher cost?,Stop,Generic non-MRI price intent,Explicitly irrelevant.,Closed
+N312,mri compatible fire extinguisher price near delhi,Leaf,Relevant local commercial modifier,User said regional/local price variants can be included.,Closed
+N313,Mri compatible fire extinguisher price in india,Expand,Relevant India commercial intent,User expanded this India-price branch.,Closed
+N314,"mri compatible fire extinguisher price near noida, uttar pradesh",Leaf,Relevant local commercial modifier,User said regional/local price variants can be included.,Closed
+N315,Mri compatible fire extinguisher price in india online,Leaf,Relevant commercial modifier,Online + India price variant retained.,Closed
+N316,Best mri compatible fire extinguisher price in india,Leaf,Relevant commercial/comparison modifier,User explicitly retained this query.,Closed
+N317,Best mri compatible fire extinguisher india,Leaf,Relevant comparison + geography intent,Retained from India branch.,Closed
+N318,Mri compatible fire extinguisher india price,Leaf,Relevant commercial + geography intent,Same useful India-price intent.,Closed
+N319,Mri compatible fire extinguisher india cost,Leaf,Relevant commercial + geography intent,Cost treated as equivalent to price.,Closed
+N320,Non magnetic fire extinguisher types,Expand,Relevant product-information intent,User explicitly kept and explored this branch.,Closed
+N321,Non magnetic fire extinguisher price,Leaf,Relevant commercial product intent,Explicitly relevant.,Closed
+N322,Non magnetic fire extinguisher manufacturers,Leaf,Relevant supplier/manufacturer intent,User explicitly retained manufacturers for the non-magnetic synonym branch.,Closed
+N323,Best non magnetic fire extinguisher,Expand,Relevant comparison intent,User explicitly retained and checked this query.,Closed
+N324,Non magnetic fire extinguisher types in india,Leaf,Relevant type + geography intent,User explicitly kept this query.,Closed
+N325,ABC Fire Extinguisher,Stop,Generic non-MRI product intent,User said the remaining general extinguisher terms were irrelevant.,Closed
+N326,CO2 fire extinguisher,Stop,Generic non-MRI product intent,User said the remaining general extinguisher terms were irrelevant.,Closed
+N327,Non Magnetic Fire Extinguisher for MRI,Leaf,Relevant MRI-specific synonym,Explicitly useful MRI-qualified phrasing.,Closed
+N328,Best non magnetic fire extinguisher in india,Leaf,Relevant comparison + geography intent,Explicitly relevant.,Closed
+N329,Kanex Fire Extinguisher,Stop,Generic brand term without MRI qualifier,Not retained.,Closed
+N330,What methods can be used to extinguish the fire,Stop,Generic educational intent,Not relevant to product demand.,Closed
+N331,Co2 Fire Extinguisher 4.5 Kg Price,Stop,Generic non-MRI commercial intent,Not relevant to MRI-specific demand.,Closed
+N332,Mri safe fire extinguisher india,Leaf,Relevant synonym + geography intent,Same useful India modifier under MRI-safe synonym.,Closed
+N333,Mri safe fire extinguisher price,Leaf,Relevant synonym + commercial intent,Same useful price intent under MRI-safe synonym.,Closed
+N334,Safenex Fire Solutions,Stop,Brand/company intent outside chosen branch,User said everything else in this branch was irrelevant.,Closed
+N335,Fulfilling criteria for fire compartmentation,Stop,Adjacent fire-safety/regulatory intent,User said everything else in this branch was irrelevant.,Closed
+N336,mri compatible infusion pump,Expand,Relevant hospital-product seed,"Website-derived product seed. User explored autocomplete, brand/model terms, syringe/IV variants and MRI-safe synonym. Branch saturated and closed.",Closed
+N337,mri compatible infusion pump price,Leaf,Relevant commercial product intent,Explicitly relevant.,Closed
+N338,mri safe infusion pumps,Expand,Relevant synonym,MRI-safe synonym checked; results repeated the same brand/price universe.,Closed
+N339,mri compatible syringe infusion pump,Expand,Relevant subtype,User explicitly identified this as a type of infusion pump and checked it; no new intent beyond repeats.,Closed
+N340,mri compatible iv infusion pumps,Leaf,Relevant synonym/subtype,User said this is effectively the same product family.,Closed
+N341,b braun mri compatible infusion pump,Leaf,Relevant brand/product vocabulary,User explicitly retained B. Braun as a brand term.,Closed
+N342,are there any open mri machines,Stop,Wrong machine/product intent,Explicitly irrelevant.,Closed
+N343,mri compatible materials,Stop,Materials intent outside product branch,Already excluded elsewhere and explicitly not relevant here.,Closed
+N344,anesthesia machine mri compatible,Leaf,Repeat / already-covered adjacent product,Already explored under anesthesia-machine branch; no new expansion needed.,Closed
+N345,mri compatible fire extinguisher,Leaf,Repeat / already-covered adjacent product,Already explored and closed.,Closed
+N346,MRI compatible infusion pump price,Leaf,Relevant commercial product intent,Repeated core price intent.,Closed
+N347,Benefusion MRI Station pdf,Stop,PDF/manual/support intent,User explicitly rejected this.,Closed
+N348,IRadimed MRI pump,Expand,Relevant brand/product intent,User explicitly kept and explored this brand query.,Closed
+N349,Mindray MRI Anesthesia Machine,Leaf,Repeat / already-covered adjacent product,Already handled in anesthesia/monitor research.,Closed
+N350,IRadimed MRI Pump service manual,Stop,Service-manual intent,Explicitly irrelevant.,Closed
+N351,IRadimed MRI monitor PRICE,Leaf,Relevant but belongs to monitor cluster,"User explicitly said this should be kept under the monitor branch, not infusion pumps.",Closed
+N352,MRidium MRI Infusion System,Expand,Relevant brand/model infusion intent,User retained and checked this infusion-system term; branch repeated known price/manual terms.,Closed
+N353,B braun space station MRI price,Leaf,Relevant brand/commercial vocabulary; user assigns to monitor side,User said to keep this term but place it with monitor-related evidence rather than infusion-pump architecture.,Closed
+N354,MRI infusion pump,Leaf,Relevant synonym,Same infusion-pump product family.,Closed
+N355,IRadimed 3885T manual,Stop,Manual/support intent,User excludes manuals.,Closed
+N356,MRI compatible infusion pump price,Leaf,Relevant commercial product intent,Repeated core price intent.,Closed
+N357,Iradimed 3870,Not yet,Brand/model vocabulary,Observed under IRadimed pump branch; user did not explicitly judge this model term.,Open
+N358,MRidium MRI Infusion System,Leaf,Relevant brand/model infusion intent,Repeat of already-retained infusion-system term.,Closed
+N359,Iradimed india,Not yet,Brand + geography vocabulary,Observed under IRadimed pump branch; user did not explicitly judge it.,Open
+N360,MRI patient monitoring system,Leaf,Relevant but belongs to monitor cluster,Cross-product repeat; not part of infusion-pump branch.,Closed
+N361,Are Alaris pumps MRI compatible?,Stop,Compatibility-check / external brand intent,User clarified that compatibility-check questions are not useful for the site's acquisition architecture; the business presents equipment that is already MRI-safe.,Closed
+N362,What is the difference between an infusion pump and a syringe pump?,Leaf,Relevant informational subtype question,"MRI-compatible syringe-pump branch; could support product education, but no deeper expansion was needed.",Closed
+N363,MRI compatible patient monitor,Leaf,Repeat / monitor cluster,Already covered in monitor branch.,Closed
+N364,Mindray MRI compatible monitor,Leaf,Repeat / monitor brand cluster,Already covered in monitor branch.,Closed
+N365,MRI compatible cardiac monitor,Leaf,Repeat / monitor subtype cluster,Already covered in monitor branch.,Closed
+N366,IRadimed MRI monitor,Leaf,Repeat / monitor brand cluster,Already covered in monitor branch.,Closed
+N367,B braun space station MRI price,Leaf,Repeat brand/commercial term,Same term already observed; user did not want further expansion.,Closed
+N368,MRI Water Pump,Stop,Wrong technical/equipment intent,User judged this unrelated to infusion-pump demand.,Closed
+N369,BD Alaris mri capsule,Not yet,Brand/model vocabulary,Observed under MRI-safe infusion-pump branch; user did not explicitly judge it.,Open
+N370,mri compatible furniture,Expand,Relevant category seed,"Website-derived product category. User checked autocomplete and search results; no useful fan-out beyond a chair subtype, so the branch is closed.",Closed
+N371,mri compatible tools,Stop,Different product category,Not relevant to the furniture branch and not pursued here.,Closed
+N372,mri compatible items,Stop,Too broad / non-specific,Not useful as a distinct demand branch.,Closed
+N373,mri compatible plate,Stop,Different product/material intent,Not relevant to the furniture branch.,Closed
+N374,mri compatible chair,Leaf,Relevant furniture subtype,User identified chair as the only useful furniture subtype surfaced; no deeper fan-out appeared.,Closed
+N375,mri compatible accessories,Expand,Relevant catalogue/category seed,Website-derived category. User checked the category and then tested specific accessory/product terms. Branch is closed after small leaf checks.,Closed
+N376,mri compatible stethoscope,Expand,Relevant accessory/product seed,User checked this term; only MRI-safe synonym appeared and no useful further expansion. Closed as a small leaf.,Closed
+N377,mri safe stethoscope,Leaf,Relevant synonym,Alternate wording for MRI-compatible stethoscope; no further fan-out.,Closed
+N378,mri compatible forceps,Leaf,Relevant accessory/product seed,User checked this product term; no useful further expansion. Closed as a small leaf.,Closed
+N379,mri compatible bp machine,Leaf,Relevant accessory/product seed,User checked this product term; no useful suggestions/fan-out. Closed as a small leaf.,Closed
+N380,faraday cage,Expand,Relevant service/category seed,"Business manufactures/installs MRI Faraday cages. User used the broad seed to identify MRI-specific phrasings, then closed generic Faraday-cage intent.",Closed
+N381,faraday cage mri,Expand,Relevant service intent,Core MRI Faraday-cage phrasing; user checked the branch and found mostly adjacent/generic noise.,Closed
+N382,faraday cage mri room,Leaf,Relevant service/location intent,Directly relevant to the business's MRI-room cage installation/manufacturing service.,Closed
+N383,faraday cage radiology,Stop,Too broad / ambiguous context,User said only MRI and MRI-room variants were compatible/relevant from autocomplete.,Closed
+N384,faraday cage material,Stop,Generic informational intent,Not retained for this service-demand branch.,Closed
+N385,faraday cage effect,Stop,Generic informational intent,Not retained.,Closed
+N386,faraday cage meaning,Stop,Generic educational intent,Not retained.,Closed
+N387,faraday cage made of,Stop,Generic educational intent,Not retained.,Closed
+N388,faraday cage principle,Stop,Generic educational intent,Not retained.,Closed
+N389,faraday cage phone sleeve,Stop,Wrong consumer-product intent,Unrelated to MRI-room cage service.,Closed
+N390,faraday cage uses,Stop,Generic educational intent,Not retained.,Closed
+N391,Faraday cage mri material,Stop,Adjacent informational intent,User said nothing in this related-search set was suitable beyond the main MRI/MRI-room service wording.,Closed
+N392,Rf cage meaning,Stop,Generic terminology intent,Not retained.,Closed
+N393,MRI cage for head,Stop,Different product/clinical intent,User explicitly said this is something else.,Closed
+N394,MRI machine,Stop,Wrong product intent,Not relevant to Faraday-cage manufacturing/installation.,Closed
+N395,Claustrophobia #MRI head cage,Stop,Patient/end-user intent,Not relevant.,Closed
+N396,MRI shielding,Not yet,Potentially adjacent service terminology,"Appeared under the Faraday-cage branch. User did not explicitly retain it, so left unassessed rather than guessed.",Open
+N397,MRI head cage purpose,Stop,Different clinical/product intent,Not relevant to MRI-room Faraday cage service.,Closed
+N398,RF interference MRI,Not yet,Potentially adjacent problem/need terminology,"Appeared under Faraday-cage branch. User did not explicitly retain it, so left unassessed.",Open
+N399,mri compatible equipment,Expand,Coverage-check umbrella seed,User ran this to be exhaustive. Nearly everything repeated already-covered products; branch closed.,Closed
+N400,Mri compatible equipment pdf,Stop,PDF/document intent,Not useful to product-demand architecture.,Closed
+N401,MRI entertainment system,Not yet,Unassessed new product/category,New term surfaced; user was unsure what it is and did not pursue it.,Open
+N402,MRI Safe TV,Not yet,Unassessed new product/category,New term surfaced; user noted it but did not confirm business relevance.,Open
+N403,mri compatible equipment dealer in india,Expand,Relevant broad supplier / dealer intent,Late final check identified a broad India-level supplier query spanning the full MRI-safe equipment catalogue. Best matched by the home page rather than a single product category.,Closed
+N404,mri safe equipment dealers in india,Leaf,Relevant supplier / dealer intent,Close synonym/variation of the broad homepage supplier need.,Closed
+N405,mri safe product dealers in india,Leaf,Relevant supplier / dealer intent,Close synonym/variation of the broad homepage supplier need.,Closed
+N406,mri safe equipment sellers in india,Leaf,Relevant supplier / seller intent,Close synonym/variation of the broad homepage supplier need.,Closed

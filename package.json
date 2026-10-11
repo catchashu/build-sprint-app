@@ -1,0 +1,36 @@
+{
+  "name": "build-sprint-app",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "tsx --test tests/*.test.ts",
+    "research:mri": "tsx scripts/run-milestone.ts",
+    "prepare:mri": "tsx scripts/prepare-fixture.ts",
+    "deploy": "npx @convex-dev/static-hosting deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ai-sdk/openai": "^4.0.91",
+    "@convex-dev/agent": "^0.7.7",
+    "@convex-dev/ai-sdk-provider": "^0.3.0",
+    "@convex-dev/static-hosting": "^0.2.1",
+    "@convex-dev/workflow": "^0.4.10",
+    "ai": "^7.0.137",
+    "convex": "^1.46.0",
+    "csv-parse": "^7.0.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "convex-test": "^0.0.61",
+    "tsx": "^4.23.15"
+  }
+}

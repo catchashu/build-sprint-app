@@ -1,0 +1,18 @@
+MRI Safety Blind Experiment — Status & Next Steps,,,
+,,,
+Phase,Status,What Happens Next,Lock / Rule
+1. Raw retrieval,FROZEN — FINAL,"Raw research is complete, including the late supplier/dealer homepage cluster.",Do not add more evidence before the first blind AI run.
+2. Retrieval decisions,CAPTURED,"Use as expert-process evidence, not as blind-AI input.",Expand/stop logic stays hidden from the blind tester.
+3. Expert gold standard,FROZEN — APPROVED,"Expert gold standard is approved, including homepage supplier intent and removal of compatibility FAQs.",Do not alter the answer key after seeing the blind AI output.
+4. Gold-standard website plan,FROZEN — APPROVED,Gold-standard website plan is approved and will be used for scoring.,Home is scored; About/Contact are baseline hygiene and excluded from the risky-guess score.
+5. Blind AI test,COMPLETE — PRIMARY RUN,Gemini 3.1 Pro with Extended Thinking completed the official first blind run using the frozen business context + raw evidence only.,Official precommitted result: FAIL. Keep-rate 8/13 = 61.5%; no Core underlying need completely missed.
+6. Pass/fail scoring,COMPLETE — SCORED,Primary test failed the ≥75% keep-rate threshold while passing Core-demand coverage. Claude was run afterward as a secondary model comparison and also remained below 75%.,Do not move the original bar. Use the failure modes to refine the correction checkpoint before final architecture generation.
+,,,
+Manual raw-research time,~5 hours,"Approx. 2:00–6:00 + 8:30–9:30, excluding the break.",Useful benchmark for the pain/time-saving hypothesis; not part of the blind AI score.
+Raw evidence count,~400 nodes captured,"Includes raw queries, repeats avoided, and narrated/pictured evidence across multiple seeds.",The experiment stops at saturation rather than exhaustive infinity.
+,,,
+Primary blind model,Gemini 3.1 Pro — Extended Thinking,First complete response only; no coaching.,Official test run.
+Gemini result,8/13 kept = 61.5%,Core underlying demand coverage: PASS; overall threshold: FAIL.,Main failure mode: over-merging distinct product families.
+Secondary comparison,Claude Opus 5.5 — High,Same blind workbook + same prompt; first complete response only.,"Secondary comparison, not the precommitted official run."
+Claude result,Below 75%,Approx. ~54% strict to ~66% with generous category-hub credit; Core-demand coverage still PASS.,Main failure mode: over-segmenting informational demand / overbuilding the architecture.
+Shared finding,Architecture granularity needs human correction,Both models understood the evidence reasonably well but disagreed on how much to merge vs split.,Correct / Fix this must explicitly let the practitioner correct product/content hierarchy before final IA.

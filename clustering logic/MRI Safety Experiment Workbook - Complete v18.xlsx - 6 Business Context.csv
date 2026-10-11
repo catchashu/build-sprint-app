@@ -1,0 +1,14 @@
+Business Context — Inputs For Later Blind Test,,
+"Context can guide relevance, but the existing site's current architecture must not be treated as the answer.",,
+,,
+Field,Value,Notes
+Current website URL,https://marrsis-disha.com/,"Provided by user for later business-context input. Use to understand the business, not to copy the existing IA."
+Target market,India,Current experiment geography.
+Known offer: training,MRI safety training for healthcare workers,Relevant to course/training queries.
+Known non-offer,MRI safety certification,Certification queries are outside the current business offering.
+Current product catalogue role,Seed generation only,"Existing product/menu items can generate candidate seeds, but they must not be treated as proof of demand or as the desired future site architecture."
+Current website product menu screenshot,Provided in conversation,Visible items captured separately in '7 Seed Backlog' so the blind AI test can distinguish business context from search evidence.
+Known service: MRI Faraday cage,Manufacture + installation for MRI rooms,Business context supplied by user; do not infer demand from the existing site alone.
+Raw retrieval status,Frozen after final homepage supplier/dealer cluster,Final raw dataset includes one late broad supplier-intent addition before the gold standard was frozen.
+Primary evidence sources,Google Autocomplete + People Also Ask + People Also Search For,No Semrush/Keyword Planner volume used in this experiment.
+Demand-derived homepage target,MRI-Compatible & MRI-Safe Equipment Dealer in India,Late final Google check surfaced supplier/dealer/seller intent across the whole catalogue; use this to frame the home page.
