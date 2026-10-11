@@ -1,5 +1,7 @@
 # Progress
 
+- 2026-10-11 ? Milestone 2 passed user review: user saw the live cards and reported all 4 accurate; live SerpAPI evidence, sourced cards, a visible four-search limit and explicit failures work. Decision: keep the milestone 1 engine and move to planning milestone 3 (Correct / Fix this). Still unresolved: SerpAPI can return 503, thin evidence can prevent cards, and automated browser/layout checks remain unavailable.
+
 - 2026-10-11 — Milestone 1 passed user review on run j97dr7ghay28gsesgnqc38c3ds8g295p: 8/10 pages kept (80%, above 75%); batched reasoning produces a demand map and website plan with all 372 evidence IDs assigned exactly once. Decision: keep medium reasoning and structured batches of 50, preserve earlier runs, and move to Milestone 2. Still unresolved: four Core families remain conditional sections, duplicate suction coverage and a business-only source-label mismatch remain; browser/phone verification and production deployment are still pending.
 
 ## 2026-10-11 — Milestone 1 paused at AI access

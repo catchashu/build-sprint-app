@@ -13,11 +13,13 @@ import type * as checkAi from "../checkAi.js";
 import type * as evaluation from "../evaluation.js";
 import type * as experiment from "../experiment.js";
 import type * as experimentRuns from "../experimentRuns.js";
+import type * as firstValue from "../firstValue.js";
 import type * as fixtures_mriEvaluation from "../fixtures/mriEvaluation.js";
 import type * as fixtures_mriInput from "../fixtures/mriInput.js";
 import type * as inputs from "../inputs.js";
 import type * as research from "../research.js";
 import type * as runFields from "../runFields.js";
+import type * as websiteContext from "../websiteContext.js";
 
 import type {
   ApiFromModules,
@@ -31,11 +33,13 @@ declare const fullApi: ApiFromModules<{
   evaluation: typeof evaluation;
   experiment: typeof experiment;
   experimentRuns: typeof experimentRuns;
+  firstValue: typeof firstValue;
   "fixtures/mriEvaluation": typeof fixtures_mriEvaluation;
   "fixtures/mriInput": typeof fixtures_mriInput;
   inputs: typeof inputs;
   research: typeof research;
   runFields: typeof runFields;
+  websiteContext: typeof websiteContext;
 }>;
 
 /**
