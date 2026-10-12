@@ -3,6 +3,7 @@ import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { materializeCards } from "../shared/firstValue";
 import "./style.css";
+import { mountReview } from "./cardReview";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
@@ -11,6 +12,7 @@ const blank = (): State => ({ offering: "", website: "", references: ["", ""], w
 let state: State;
 try { state = JSON.parse(sessionStorage.getItem(storageKey) || "null") || blank(); } catch { state = blank(); }
 let unsubscribe: (() => void) | undefined;
+let stopReview: (() => void) | undefined;
 let busy = false;
 function save() { sessionStorage.setItem(storageKey, JSON.stringify(state)); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
@@ -30,7 +32,7 @@ function field(label: string, value: string, placeholder: string, update: (value
   input.oninput = () => { update(input.value); save(); }; wrapper.append(input); return wrapper;
 }
 function render() {
-  unsubscribe?.(); unsubscribe = undefined; app.replaceChildren();
+  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; app.replaceChildren();
   app.className = state.screen === "landing" ? "landing" : "canvas";
   const stage = node("div", "", "stage"); const image = node("img"); image.src = "/images/gibbon-placeholder.jpg"; image.alt = "A golden gibbon resting on a log in a green forest"; stage.append(image); app.append(stage);
   const panel = node("section", "", "panel"); app.append(panel); panel.append(node("p", "Topic Gibbon", "brand"));
@@ -71,7 +73,7 @@ function render() {
     const title = node("h2", "Preparing your first search…"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");
     const status = node("p", "", "muted"); status.setAttribute("role", "status");
-    const cards = node("div", "", "cards");
+    const cards = node("div", "", "review");
     const searches = node("details"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
     const controls = node("div", "", "controls");
     const retry = button("Try again", () => void work(async () => { await client.mutation(api.firstValue.start, { id: state.id!, token: state.token }); }), true); retry.hidden = true;
@@ -83,26 +85,14 @@ function render() {
       count.textContent = `Searches used: ${run.searchCount} / ${run.searchLimit}`;
       log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => node("li", `${s.query} — ${s.status}${s.error ? `: ${s.error}` : ""}`, s.status === "failed" ? "error" : "")));
       if (run.searches.some((s: { status: string }) => s.status === "failed")) searches.open = true;
-      message(run.error || ""); cards.replaceChildren();
+      message(run.error || ""); if (!stopReview) cards.replaceChildren();
       title.textContent = run.state === "complete" ? "Here’s what people in India are searching for around your offering." : run.state === "failed" ? "Your first view needs another step" : "Finding your customers’ questions";
       status.textContent = run.state === "searching" ? "Looking for real search demand around your offering…" : run.state === "grouping" ? "Organising the search evidence into a first view…" : run.state === "working" ? "Choosing searches around your offering…" : "";
       retry.hidden = !["ready", "failed"].includes(run.state); edit.hidden = !["ready", "failed", "complete"].includes(run.state);
       if (run.state === "complete" && run.cards) {
         const values: ReturnType<typeof materializeCards> = JSON.parse(run.cards);
         status.textContent = `Search evidence collected ${values[0].queries[0].sources[0].retrievedAt}. This is the saved first view for this run.`;
-        for (const card of values) {
-          const article = node("article"); article.append(node("h3", card.label), node("p", card.need)); const list = node("ul");
-          for (const query of card.queries) {
-            const item = node("li", query.query); const detail = node("details"); detail.append(node("summary", "Source"));
-            for (const source of query.sources) {
-              const a = node("a", `${source.field === "related_questions.question" ? "Google question" : "Google related search"} · ${source.retrievedAt}`);
-              a.href = source.reference; a.target = "_blank"; a.rel = "noopener noreferrer"; detail.append(a);
-            }
-            item.append(detail); list.append(item);
-          }
-          article.append(list, node("p", "Sourced from live Google search evidence · India", "small muted")); cards.append(article);
-        }
-        cards.append(node("p", "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted"));
+        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards);
       }
     }, () => { message("The connection was interrupted. Your context is saved. Reload to reconnect."); });
   }

@@ -1,5 +1,18 @@
 # Progress
 
+- 2026-10-12 — Milestone 3 part 1 passed user review: desktop and correction actions reported working; phone screenshot confirmed the saved state, and the user confirmed the clearer “Your review is saved” message after deployment. All 42 tests and build passed. Continue is outside the scrolling cards. Agent browser checks remain unavailable. Next: part 2, selecting queries that do not belong and merging cards, preserving evidence and unaffected approvals.
+
+## 2026-10-11 - Milestone 3 part 1: deployed, browser checks pending
+
+- Stopped after building Correct, Exclude, Explain a wrong label, and Describe another correction, and deploying with `npm run deploy` to https://ardent-fly-778.convex.site/. Corrections use the existing engine, preserve original evidence and unaffected approvals, and require the changed card to be reviewed again. Continue saves the accepted understanding.
+- Checked: all 42 automated tests passed; build passed; live server checks passed using saved real search evidence in a separate test run, with no additional searches. These were server checks, not phone or desktop browser checks. Raw results are in `artifacts/milestone-3-part-1-tests.txt` and `artifacts/milestone-3-part-1-live-tests.txt`.
+- Still open: phone and desktop interaction checks could not run because no browser was connected. Part 1 has not yet passed user review. No UX fixes were made; details are still to come from the user. Part 2 has not started.
+- Next: connect browser access, test all four actions and Continue on the live link at phone and desktop sizes, and paste the raw results. Then stop for the user's yes. Only after that approval, build part 2: select queries that do not belong, and merge. Preserve the working milestone 2 flow and earlier runs.
+
+- UX fixes open, details to come from me later.
+
+- 2026-10-11 — User confirms milestone 2 is live at https://ardent-fly-778.convex.site/ and works on phone and desktop; decision: preserve the working flow and plan milestone 3 (Correct / Fix this) before coding. Open: search-provider failures/retry experience and thin-evidence dead ends; the user's additional UX-fix list is awaiting clarification and has not been invented.
+
 - 2026-10-11 ? Milestone 2 passed user review: user saw the live cards and reported all 4 accurate; live SerpAPI evidence, sourced cards, a visible four-search limit and explicit failures work. Decision: keep the milestone 1 engine and move to planning milestone 3 (Correct / Fix this). Still unresolved: SerpAPI can return 503, thin evidence can prevent cards, and automated browser/layout checks remain unavailable.
 
 - 2026-10-11 — Milestone 1 passed user review on run j97dr7ghay28gsesgnqc38c3ds8g295p: 8/10 pages kept (80%, above 75%); batched reasoning produces a demand map and website plan with all 372 evidence IDs assigned exactly once. Decision: keep medium reasoning and structured batches of 50, preserve earlier runs, and move to Milestone 2. Still unresolved: four Core families remain conditional sections, duplicate suction coverage and a business-only source-label mismatch remain; browser/phone verification and production deployment are still pending.

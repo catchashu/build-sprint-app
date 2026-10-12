@@ -9,6 +9,7 @@
  */
 
 import type * as batchedExperiment from "../batchedExperiment.js";
+import type * as cardReview from "../cardReview.js";
 import type * as checkAi from "../checkAi.js";
 import type * as evaluation from "../evaluation.js";
 import type * as experiment from "../experiment.js";
@@ -29,6 +30,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   batchedExperiment: typeof batchedExperiment;
+  cardReview: typeof cardReview;
   checkAi: typeof checkAi;
   evaluation: typeof evaluation;
   experiment: typeof experiment;
