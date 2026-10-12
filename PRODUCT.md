@@ -65,7 +65,7 @@ Other flows (stop when the job is covered): Thin or contradictory context \-\> c
 
 # 
 
-First value (the moment it first does the job for them): The user sees 2–4 meaningful needs/demand areas grounded in real searches, with 2–3 sourced query examples under each card and a simple Correct / Fix this interaction.
+First value (the moment it first does the job for them): The user sees 1–4 meaningful needs/demand areas grounded in real searches, with 2–3 sourced query examples under each card and a simple Correct / Fix this interaction.
 
 The smallest commitment we ask for: A 1–2 line description of the established offering on the Landing. After Start, the product progressively asks whether there is an existing website and, optionally, up to 2 competitor/inspiration URLs. V1 research geography is India and is not an onboarding question.
 
@@ -74,7 +74,7 @@ The worry it removes (from section 2): “Is this real search demand, or is the 
 From opening the link to the first value:  
 1\. They open the product and see one clear promise: website planning grounded in real searches. removes: “Is this just another generic AI answer?”  
 2\. They begin with the lowest-friction business context: a short description of one established offering on the Landing. After Start, Topic Gibbon progressively asks only the next useful context question: existing website if available, then optional competitor/inspiration sites. India is fixed for V1, so geography is not asked. removes: “Will I have to fill a long brief before I see anything useful?”  
-3\. The product retrieves lightweight real-search evidence and shows 2–4 meaningful cards with 2–3 sourced queries under each plus Correct / Fix this. removes: “Is this real search demand, or is the AI just making up plausible-looking topics?”
+3\. The product retrieves lightweight real-search evidence and shows 1–4 meaningful cards with 2–3 sourced queries under each plus Correct / Fix this. removes: “Is this real search demand, or is the AI just making up plausible-looking topics?”
 
 Login: not in V1. Unlock comes only after first value. A user continues the same one-pass run either by completing the one-time ₹399 UPI payment through Razorpay or by applying the single V1 invite code for 100% comped access. No account is required.
 

@@ -5,7 +5,7 @@ import type { ConvexClient } from "convex/browser";
 import type { Id } from "../convex/_generated/dataModel";
 import { mountReview } from "../src/cardReview.ts";
 
-function setup() {
+function setup(onContinue = () => {}) {
   const window = new Window();
   Object.assign(globalThis, { window, document: window.document, Option: function(text = "", value = "") { const option = window.document.createElement("option"); option.text = text; option.value = value; return option; } });
   const root = window.document.createElement("div"); window.document.body.append(root);
@@ -18,7 +18,7 @@ function setup() {
     onUpdate: (_api: unknown, _identity: unknown, callback: typeof emit) => { emit = callback; callback(structuredClone(view)); return () => {}; },
     mutation: (_api: unknown, args: { cardId: string; revision: number }) => { calls.push(args); return new Promise<void>((yes, no) => { resolve = yes; reject = no; }); },
   };
-  const stop = mountReview(client as unknown as ConvexClient, { id: "test-run" as Id<"firstValueRuns">, token: "test-only" }, root as unknown as HTMLElement, () => {});
+  const stop = mountReview(client as unknown as ConvexClient, { id: "test-run" as Id<"firstValueRuns">, token: "test-only" }, root as unknown as HTMLElement, onContinue);
   return { window, root: root as unknown as HTMLElement, calls, view, emit: () => emit(structuredClone(view)), resolve: () => resolve(), reject: () => reject(new Error("Offline")), close: () => { stop(); window.happyDOM.abort(); } };
 }
 const settled = () => new Promise<void>(resolve => setImmediate(resolve));
@@ -76,5 +76,21 @@ test("correction form validation and Cancel still work with a persistent list", 
     const cancel = [...s.root.querySelectorAll("button")].find(b => b.textContent === "Cancel")!; cancel.click();
     assert.equal(s.root.querySelector("textarea"), null); assert.ok(s.root.querySelector(".cards") === list);
     assert.equal(list.scrollTop, 500); assert.ok(list.querySelectorAll("article")[0] === first); assert.equal(s.calls.length, 0);
+  } finally { s.close(); }
+});
+
+
+test("one correct card can Continue and still offers Continue after reopening a saved review", async () => {
+  let continued = 0;
+  const s = setup(() => { continued++; });
+  try {
+    s.view.cards = s.view.cards.slice(0, 1);
+    s.view.decisions = { a: "correct" }; s.view.revision = 1; s.emit();
+    const next = [...s.root.querySelectorAll("button")].find(b => b.textContent === "Continue")!;
+    assert.ok(next); assert.equal(next.disabled, false);
+    next.click(); s.resolve(); await settled(); assert.equal(continued, 1);
+    s.view.accepted = true; s.view.revision = 2; s.emit();
+    const reopened = [...s.root.querySelectorAll("button")].find(b => b.textContent === "Continue")!;
+    assert.ok(reopened); reopened.click(); assert.equal(continued, 2);
   } finally { s.close(); }
 });

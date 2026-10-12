@@ -20,7 +20,7 @@ export function liveInput(offering: string, context: string, evidence: Evidence[
     importReport: { originalNodes: rows.length, reasoningQueries: evidence.length, seedOnly: 0, duplicateOccurrences: rows.length - evidence.length, sourceTypes: {}, note: "Live Google suggestions and questions localized to India. No search volumes; observations do not prove popularity or exclusively Indian searchers." } };
 }
 export function cardsSchema(groups: LocalGroup[]) {
-  return z.object({ cards: z.array(z.object({ groupId: z.enum(groups.map(g => g.id) as [string, ...string[]]), label: z.string(), need: z.string() }).strict()).min(2).max(4) }).strict();
+  return z.object({ cards: z.array(z.object({ groupId: z.enum(groups.map(g => g.id) as [string, ...string[]]), label: z.string(), need: z.string() }).strict()).min(1).max(4) }).strict();
 }
 export function materializeCards(raw: unknown, groups: LocalGroup[], evidence: Evidence[]) {
   const parsed = cardsSchema(groups).parse(raw);

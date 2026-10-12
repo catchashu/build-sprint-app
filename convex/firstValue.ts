@@ -78,7 +78,7 @@ export const pipeline = workflow.define({ args: { id: v.id("firstValueRuns"), sa
     // Only our public-safe errors cross into the UI; provider errors can include request details.
     const safe = message.includes("SEARCH_FAILED") ? "I couldn’t finish this first search pass. Your context is saved. See the failed search below."
       : message.includes("SEARCH_LIMIT") ? "The search attempt limit was reached without usable results. Your context is saved."
-      : message.includes("INSUFFICIENT") ? "The completed searches did not provide enough evidence for two reliable cards. Any failed searches are listed below. Your context and successful results are saved."
+      : message.includes("INSUFFICIENT") ? "The completed searches did not provide enough evidence for a reliable card. Any failed searches are listed below. Your context and successful results are saved."
       : "I couldn’t build a reliable first view. Your context and completed searches are saved. Try again or edit your context.";
     const failureKind = message.includes("INSUFFICIENT") ? "insufficient" : message.includes("SEARCH_") ? "search" : "build";
     await step.runMutation(internal.firstValue.save, { id, state: "failed", error: safe, failureKind });
@@ -126,7 +126,7 @@ export const group = internalAction({ args: { id: v.id("firstValueRuns") }, retu
   const run = await ctx.runQuery(internal.firstValue.read, { id });
   await ctx.runMutation(internal.firstValue.save, { id, state: "grouping" });
   const evidence = extractSerpEvidence(run.responses.map((r: string) => JSON.parse(r)));
-  if (evidence.length < 4) throw new Error("INSUFFICIENT");
+  if (evidence.length < 2) throw new Error("INSUFFICIENT");
   const input = liveInput(run.offering, run.context, evidence), batches = evidenceBatches(input);
   const outputs: unknown[] = run.batches.map((b: string) => JSON.parse(b));
   for (let i = outputs.length; i < batches.length; i++) {
@@ -134,13 +134,13 @@ export const group = internalAction({ args: { id: v.id("firstValueRuns") }, retu
     outputs.push(output); await ctx.runMutation(internal.firstValue.save, { id, batch: JSON.stringify(output) });
   }
   const local = collectBatches(input, outputs);
-  if (local.groups.length < 2) throw new Error("INSUFFICIENT");
+  if (local.groups.length < 1) throw new Error("INSUFFICIENT");
   const merge = run.merge ? JSON.parse(run.merge) : await generate(ctx, consolidationSchema(local.groups), JSON.stringify({ stage: "Consolidate synonymous customer needs. Each group chooses one target bucket key. Preserve distinct product families and needs. Do not build pages.", businessFacts: input.businessFacts, groups: groupSummaries(local.groups) }));
   if (!run.merge) await ctx.runMutation(internal.firstValue.save, { id, merge: JSON.stringify(merge) });
   const merged = consolidate(input, outputs, merge);
   const eligible = merged.groups.filter(g => g.assignments.length >= 2);
-  if (eligible.length < 2) throw new Error("INSUFFICIENT");
-  const raw = await generate(ctx, cardsSchema(eligible), JSON.stringify({ stage: "Select 2–4 distinct, meaningful customer need groups for a small first view. Use plain labels and one-sentence descriptions. Choose unique group IDs. No website recommendations, priorities, popularity claims or volumes.", offering: run.offering, groups: groupSummaries(eligible) }));
+  if (eligible.length < 1) throw new Error("INSUFFICIENT");
+  const raw = await generate(ctx, cardsSchema(eligible), JSON.stringify({ stage: "Select 1–4 distinct, meaningful customer need groups (one supported group is enough; never split a need just to create more cards) for a small first view. Use plain labels and one-sentence descriptions. Choose unique group IDs. No website recommendations, priorities, popularity claims or volumes.", offering: run.offering, groups: groupSummaries(eligible) }));
   const cards = materializeCards(raw, eligible, evidence);
   await ctx.runMutation(internal.firstValue.save, { id, state: "complete", cards: JSON.stringify(cards) }); return null;
 } });

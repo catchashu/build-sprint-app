@@ -1,3 +1,4 @@
+import { collectBatches } from "../shared/batchedPlanning";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { nextSearchCount, publicWebsite, liveInput, materializeCards } from "../shared/firstValue.ts";
@@ -49,7 +50,7 @@ test("search budget includes failed attempts and refuses a fifth attempt", () =>
 
 test("a new 503 after successful searches retains results and proceeds to grouping", async () => {
   const t = convexTest(schema, modules), token = "test-capability-token-with-at-least-32-characters";
-  const response = JSON.stringify({ search_metadata: { id: "saved", status: "Success" }, search_parameters: { gl: "in" }, related_searches: [{ query: "hospital beds" }, { query: "hospital bed cost" }] });
+  const response = JSON.stringify({ search_metadata: { id: "saved", status: "Success" }, search_parameters: { gl: "in" }, related_searches: [{ query: "hospital beds" }] });
   const id = await t.run(ctx => ctx.db.insert("firstValueRuns", { token, offering: "Hospital equipment", context: "", state: "working", searchCount: 1, seeds: ["beds", "tables"], searches: [{ query: "beds", status: "complete" }], responses: [response], batches: [] }));
   const originalFetch = globalThis.fetch, originalKey = process.env.SERPAPI_API_KEY; let requests = 0;
   process.env.SERPAPI_API_KEY = "unit-test-only"; globalThis.fetch = async () => { requests++; return new Response("Unavailable", { status: 503 }); };
@@ -98,4 +99,18 @@ test("reported run recovers two missing searches and discards only stale groupin
  assert.deepEqual(saved?.batches,[]); assert.equal(saved?.merge,undefined);
  assert.equal(saved?.searches[0].status,"failed");
  await assert.rejects(()=>t.mutation(internal.firstValue.reserveSearch,{id,query:"d"}),/limit/);
+});
+
+
+test("one supported card is enough, but zero cards and single-example cards are rejected", () => {
+  const sources = [{ provider: "SerpAPI", reference: "https://serpapi.com/searches/saved.json", field: "related_searches.query", retrievedAt: "2026-10-12" }];
+  const evidence = ["Family office services", "Family office fees"].map((query, i) => ({ id: `e${i}`, query, volume: null, sources }));
+  const input = liveInput("Family office services", "", evidence);
+  const assignment = { destination: "cluster", needKey: "family-office", label: "Family office services", need: "Find a provider", kind: "Service", intent: "Commercial", stage: "Consideration", priority: "Next", reason: "Relevant service", subIntent: "Comparing" };
+  const groups = collectBatches(input, [{ assignments: Object.fromEntries(evidence.map(e => [e.id, assignment])) }]).groups;
+  const raw = { cards: [{ groupId: groups[0].id, label: assignment.label, need: assignment.need }] };
+  assert.deepEqual(materializeCards(raw, groups, evidence)[0].queries, evidence);
+  assert.throws(() => materializeCards({ cards: [] }, groups, evidence));
+  assert.throws(() => materializeCards(raw, [{ ...groups[0], assignments: groups[0].assignments.slice(0, 1) }], evidence), /Not enough sourced/);
+  assert.throws(() => materializeCards(raw, groups, evidence.slice(0, 1)), /Missing source/);
 });
