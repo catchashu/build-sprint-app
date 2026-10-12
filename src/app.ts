@@ -4,10 +4,11 @@ import type { Id } from "../convex/_generated/dataModel";
 import type { materializeCards } from "../shared/firstValue";
 import "./style.css";
 import { mountReview } from "./cardReview";
+import { mountUnlock } from "./unlock";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
-type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result"; id?: Id<"firstValueRuns">; token: string };
+type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock"; id?: Id<"firstValueRuns">; token: string };
 const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: crypto.randomUUID() });
 let state: State;
 try { state = JSON.parse(sessionStorage.getItem(storageKey) || "null") || blank(); } catch { state = blank(); }
@@ -69,6 +70,10 @@ function render() {
       if (own) { state.websiteText = texts.join("\n"); go("references"); }
       else { state.referenceText = texts.join("\n"); await launch(); }
     }); };
+  } else if (state.screen === "unlock") {
+    if (!state.id) { go("landing"); return; }
+    const unlock = node("div", "", "unlock"); panel.append(unlock);
+    stopReview = mountUnlock(client, { id: state.id, token: state.token }, unlock, () => go("result"));
   } else {
     const title = node("h2", "Preparing your first search…"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");
@@ -88,11 +93,14 @@ function render() {
       message(run.error || ""); if (!stopReview) cards.replaceChildren();
       title.textContent = run.state === "complete" ? "Here’s what people in India are searching for around your offering." : run.state === "failed" ? "Your first view needs another step" : "Finding your customers’ questions";
       status.textContent = run.state === "searching" ? "Looking for real search demand around your offering…" : run.state === "grouping" ? "Organising the search evidence into a first view…" : run.state === "working" ? "Choosing searches around your offering…" : "";
-      retry.hidden = !["ready", "failed"].includes(run.state); edit.hidden = !["ready", "failed", "complete"].includes(run.state);
+      retry.hidden = !["ready", "failed"].includes(run.state) || !run.canRetry;
+      retry.textContent = run.retryUsesSaved ? "Use saved searches" : "Try again";
+      edit.hidden = !["ready", "failed", "complete"].includes(run.state);
       if (run.state === "complete" && run.cards) {
         const values: ReturnType<typeof materializeCards> = JSON.parse(run.cards);
         status.textContent = `Search evidence collected ${values[0].queries[0].sources[0].retrievedAt}. This is the saved first view for this run.`;
-        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards);
+        if (run.searches.some((s: { status: string }) => s.status === "failed")) status.textContent += " Some searches failed. These cards use only the successful saved results; coverage may be incomplete.";
+        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards, () => go("unlock"));
       }
     }, () => { message("The connection was interrupted. Your context is saved. Reload to reconnect."); });
   }

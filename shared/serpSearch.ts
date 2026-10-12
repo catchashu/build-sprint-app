@@ -9,7 +9,7 @@ export async function fetchSerpSearch(params: URLSearchParams, request: typeof f
     if (!response.ok) throw new Error(`SerpAPI returned HTTP ${response.status}. No substitute results were used.`);
     return await response.json();
   } catch (error) {
-    if (controller.signal.aborted) throw new Error("SerpAPI did not finish within two minutes. This attempt counts toward the four-search limit. Your completed searches are saved; no substitute results were used.");
+    if (controller.signal.aborted) throw new Error("SerpAPI did not finish within two minutes. This attempt counts toward the bounded search allowance. Your completed searches are saved; no substitute results were used.");
     if (error instanceof Error && /^SerpAPI returned HTTP \d+\./.test(error.message)) throw error;
     throw new Error("The connection to SerpAPI failed. Your completed searches are saved; no substitute results were used.");
   } finally { clearTimeout(timer); }

@@ -42,3 +42,22 @@ test("failed AI correction preserves original meaning, clears pending state and 
   await t.mutation(internal.cardReview.finish, { jobId: nextJob, error: "Late duplicate failure" });
   assert.equal((await t.query(api.cardReview.get, { id, token }))?.cards[0].label, "New meaning");
 });
+
+test("merge finish saves evidence and retry selections; invalid output preserves cards and clears the job", async () => {
+  const { t, id, token, cards } = await setup();
+  async function job(requestId: string) { return t.run(async ctx => {
+    const jobId = await ctx.db.insert("cardCorrections", { runId: id, cardId: "a", kind: "merge", targetCardId: "b", note: "", revision: 0, requestId, state: "running" });
+    await ctx.db.patch(id, { reviewPending: jobId, reviewLast: jobId }); return jobId;
+  }); }
+  const bad = await job("bad-merge-request-123");
+  await t.mutation(internal.cardReview.finish, { jobId: bad, resultJson: JSON.stringify({ outcome: "updated", explanation: "Invalid", groups: [{ label: "Merged", need: "Need", queryIds: ["invented"] }] }) });
+  const failed = await t.query(api.cardReview.get, { id, token });
+  assert.ok(failed?.last);
+  assert.equal(failed.last.state, "failed"); assert.equal(failed.last.targetCardId, "b"); assert.equal(failed.pending, null); assert.equal(failed.revision, 0);
+  const good = await job("good-merge-request-123");
+  await t.mutation(internal.cardReview.finish, { jobId: good, resultJson: JSON.stringify({ outcome: "updated", explanation: "Same need", groups: [{ label: "Merged", need: "Need", queryIds: ["a", "b"] }] }) });
+  const saved = await t.query(api.cardReview.get, { id, token });
+  assert.ok(saved);
+  assert.equal(saved.cards.length, 1); assert.equal(saved.cards[0].queries.length, 2); assert.equal(saved.decisions.a, "pending");
+  assert.equal((await t.run(ctx => ctx.db.get(id)))?.cards, cards);
+});

@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {ConvexHttpClient} from 'convex/browser';
+import {api} from '../convex/_generated/api';
+import {extractSerpEvidence} from '../shared/evidence';
+const before=JSON.parse(readFileSync('artifacts/search-diagnosis-current.json','utf8'));
+const client=new ConvexHttpClient('https://dynamic-crane-178.convex.cloud');
+function cli(name:string,args:unknown) {const r=spawnSync(process.execPath,['node_modules/convex/bin/main.js','run',name,JSON.stringify(args)],{encoding:'utf8',maxBuffer:10000000});if(r.status!==0) return {failed:true};return r.stdout.trim()?JSON.parse(r.stdout):null;}
+const id=await client.mutation(api.firstValue.create,{offering:before.offering,context:before.context,token:crypto.randomUUID()});
+writeFileSync('artifacts/relevance-eval-receipt.json',JSON.stringify({id}));
+assert.equal(cli('firstValue:planSearch',{id}),null);
+let run=cli('firstValue:read',{id});console.log(JSON.stringify({plannedSearches:run.seeds}));
+for(const response of before.responses)assert.equal(cli('firstValue:save',{id,response}),null);
+const result=cli('firstValue:group',{id});
+run=cli('firstValue:read',{id});writeFileSync('artifacts/relevance-eval-output.json',JSON.stringify(run,null,2));
+const assignments=run.batches.flatMap((b:string)=>Object.entries(JSON.parse(b).assignments));
+const evidence=extractSerpEvidence(before.responses.map(JSON.parse));
+console.log(JSON.stringify({groupingFinished:!result?.failed,decisions:assignments.map(([eid,a]:any)=>({query:evidence.find(e=>e.id===eid)?.query,...a})),cards:run.cards?JSON.parse(run.cards):null},null,2));
+assert.deepEqual(run.responses,before.responses);
+const assigned=Object.assign({},...run.batches.map((b:string)=>JSON.parse(b).assignments));
+assert.notEqual(assigned.e4.destination,'excluded','Generic provider comparison must not be excluded as competitor navigation');
+assert.notEqual(assigned.e3.destination,'cluster','Unrelated named firm must not become offered-service evidence');
+assert.equal(run.searchCount,0,'Saved-evidence evaluation must not spend searches');
+console.log('PASS: provider comparison considered, unrelated brand not retained, saved evidence preserved; no new searches.');

@@ -2,9 +2,16 @@
 
 ## Milestones
 
+2026-10-12 user acceptance: the complete start-to-invite-unlock flow passed on the user's phone, including stable cards, correction, approval, Continue and invite-code submission. Milestone 3 is passed; the invite path of milestone 4 is passed. Razorpay payment testing remains open until account setup. Next: milestone 5, full research and Demand Map review after unlock; implementation plan awaiting confirmation.
+
+
+Milestone 4 (approved 2026-10-12): connect saved-review Continue to the ₹399 UPI/invite unlock tray, preserving the same run and allowing Close/back. User has no Razorpay account yet. Implement and verify the server-only invite path; prepare UPI-only Razorpay test checkout, signed confirmation, webhook and return recovery. Reject live payment keys until the promised full research is connected. A saved unlock currently leads to an honest not-yet-started research status, not simulated research. Razorpay account setup, actual checkout/device testing, and the full-research handoff remain open.
+
+Milestone 3 part 2 (approved 2026-10-12): add selection of searches that do not belong together and selection of one other remaining card to merge with. Reuse the existing AI correction workflow; preserve original evidence and unaffected approvals; require every changed card to be reviewed again. Passed user phone review on 2026-10-12; merging was confirmed earlier.
+
 1. I can give the core reasoning engine real search evidence + minimal business context for one offering/market and receive a coherent demand map and draft website plan that I would genuinely use as a starting point. — passed user review (8/10, 80%)
 2. I can describe one established offering in 1–2 lines on the Landing, optionally add an existing website and up to 2 competitor/inspiration URLs through progressive context questions, and see an initial India-grounded structure from lightweight real-search retrieval with 2–3 sourced query examples under each card. ? passed user review (all 4 cards accurate)
-3. I can mark the product's initial understanding as Correct or Fix this, and any correction changes the understanding carried into the rest of the run. <- now  
+3. I can mark the product's initial understanding as Correct or Fix this, and any correction changes the understanding carried into the rest of the run. ? passed user phone review  
 4. I can unlock one run after seeing first value either by paying through Razorpay UPI or by applying the single V1 invite code for 100% comped access, then continue the same analysis without creating an account.  
 5. I can review a synthesised demand map grouped by underlying need/intent, see directional High / Medium / Low demand when reliable external volume evidence is available and Insufficient evidence when it is not, inspect the full retained relevant keyword/query set and provenance within each cluster when needed, and answer only an ambiguity that would materially change the output.  
 6. I can receive a final prioritised hierarchical website page/content plan that labels each recommendation as Page / Section / FAQ / Supporting Content, shows what deserves website coverage and relative priority, and lets me trace each recommendation back to one or more underlying demand clusters and their retained relevant search evidence.  
