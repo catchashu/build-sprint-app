@@ -119,3 +119,38 @@ Milestone 1 is not complete. The approved scope is one offering in India: real s
 - 2026-10-13 - Desktop framing fix: removed the height-fitted narrow portrait presentation above 600px. Shared landing/canvas scene now uses a 768px-wide proportional crop with softened forest edges and a panel-aligned pause control. Mobile rules, approved copy and video bytes/speed unchanged. Browser checked 1695x944 and 1280x900 desktop landing, next context screen and Back; 390x844 mobile preserved. 105 tests/build passed. Deployed 3a43abe9-3e74-4c05-a864-942b105c62de; desktop composition awaits user review.
 
 - USER PASS: desktop composition accepted for now ('looks good for now'). Save and push the deployed desktop framing and shared canvas checkpoint. Next review: website-context screen on desktop and mobile; physical phone keyboard behavior remains pending.
+
+- Arrival / Ready For Context implementation for review: explicit cancellable transient state, immediate already-settled resting fallback, missing-offering recovery, and configurable character assets without resetting shared playback. Website Context tray grows only enough to expose navigation (328px at 390x844 and 1280x900); landing f770fb2 geometry unchanged. Browser verified rapid Start, blank Continue, Back and offering/URL preservation. 108 tests and build pass, including reduced-motion resting, media-error fallback, cancellation and keyboard geometry. Actual browser resting duration 14.333333 seconds, rate 1, checksum matches locked SHA256. Mobile/desktop previews: artifacts/arrival-mobile.jpg and artifacts/arrival-desktop.jpg. Physical phone keyboard/safe-area check and user approval pending; do not work on the next UX state.
+- Published Arrival preview through npm run deploy: 6c172d9c-4397-4f2a-b337-1b0f063eac00. Live Start reached Website Context; live media reports the same 14.333333-second asset at rate 1. Saved live desktop/mobile screenshots. Awaiting transition review.
+
+## End-of-day handoff — 2026-10-13
+
+Stopped at the user's request. No further fixes or next-state work tonight. This handoff supersedes older pending/approved wording above.
+
+### Approved V1 baseline
+
+- Desktop and mobile landing compositions: checkpoint **f770fb2**, preserved separately as tag **v1-approved-landing-2026-10-13**. Preserve approved copy, Inter, forest, full-width mobile character framing, desktop framing, explainers and frosted treatment.
+- Approved resting animation: public/animations/resting-v1.mp4, unchanged checksum B438E1B3BC65BF9586619A4C7583107CF876E17760A307C43A9DF19D044D0E96. Browser duration is 14.333333 seconds at playback rate 1. Earlier 8-second and continuous 15-second sources remain preserved under design/character/resting-v1. Do not replace the running asset merely because earlier discussion mentioned a shorter loop.
+- Golden Flow, website-plan reasoning, page/FAQ separation, priorities and Excel export were previously confirmed by the user. Functional acceptance does not approve every subsequent UX layout.
+
+### Completed today, implemented but NOT approved
+
+- Shared continuous character stage and state-driven canvas sizing; configurable animation assignments in src/characterAnimations.ts. All assignments currently reuse the approved resting loop.
+- **Product Canvas — Arrival / Ready For Context → Product Canvas — Website Context requires further user review.** Explicit cancellable Arrival state treats the resting placeholder as already settled, proceeds without a timer or new performance, and expands the Website Context tray enough for its controls. Do not mark this transition approved or move to the next UX state until reviewed.
+- Pending work is saved as a separate review commit/tag **v1-arrival-pending-review-2026-10-13**, after the approved baseline. Live site currently contains this pending preview, deployment 6c172d9c-4397-4f2a-b337-1b0f063eac00 at https://ardent-fly-778.convex.site/. Saving to GitHub tonight does not deploy or change that live version.
+- Last validation: 108 tests and frontend/backend build checks passed. Browser checks covered desktop/mobile layouts, rapid Start, blank Continue, Back, offering/URL preservation and live asset duration. Keyboard geometry and reduced-motion behavior have automated coverage. Review screenshots are preserved in design/reviews/2026-10-13/.
+
+### Known issues and outstanding checks
+
+1. **Cluster-review interface is not the approved interaction.** It must follow the user-approved **Tinder-style card interaction**, rather than the current vertically stacked, internally scrolling layout. Treat this as a required UX correction, not an approved V1 review layout. Before implementation, reconcile the user's explicit direction with any older stacked-card/scroll wording in DESIGN.md. No cluster-review changes made tonight.
+2. Arrival transition remains pending review, including its visual pacing and immediate resting-placeholder handoff. Static previews do not prove the full motion feels right.
+3. Physical-phone keyboard opening/closing, safe areas and enlarged-text behavior still need device verification. Browser resize/unit tests are not substitutes.
+4. Exceptionally short 320x568 landing still overflows with approved copy/type and upper-third allocation. Do not silently shrink/remove text or clip controls; propose any hierarchy change first.
+5. Later canvas states, including review, processing and final results, still need state-by-state UX approval. Existing proportions and functional tests are not blanket design acceptance.
+6. DataForSEO remains optional with USE_DATAFORSEO=false as the expected V1 state; missing demand estimates are not zero demand. Funded, successful volume enrichment remains unverified.
+7. Real Razorpay charging/UPI checkout remains unverified pending provider setup; the invite-code path has been accepted. Preserve the current safe payment configuration.
+8. Build reports the existing large Excel-export bundle warning. Design detector flags Inter generically; Inter is explicitly approved and must remain. Neither warning failed validation.
+
+### Resume tomorrow
+
+Start by reviewing the pending Arrival-to-Website Context transition against DESIGN.md Sections 3/4 on desktop and mobile. Confirm the actual phone keyboard behavior. Await the user's decision before further state work. Then scope the Tinder-style cluster-card correction at its turn in the journey. Do not create new character animations. Approved baseline and pending-review work are separately recoverable in GitHub.

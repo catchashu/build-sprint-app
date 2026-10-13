@@ -1044,3 +1044,9 @@ These rules apply across Topic Gibbon unless an explicitly documented state-spec
 ## Approved landing copy placement amendment
 
 User approved a compact landing composition with headline, offering input, main action and four information triggers visible. Preserve the introductory paragraph verbatim inside What? and payment/subscription reassurance verbatim inside How?. This supersedes their original always-visible placement for this landing pass. Preserve Inter, forest, character and the upper-third stage. Use the approved resting loop unchanged as the temporary character performance. Later canvas transitions require separate initial-layout review first. Very short viewport/text-enlargement overflow remains an explicit unresolved constraint, not permission to shrink or remove copy.
+
+## V1 Arrival placeholder implementation
+
+Landing desktop/mobile baseline is checkpoint f770fb2. User approved implementing Arrival / Ready For Context using the existing resting performance as already settled. Enter the explicit Arrival state, then proceed immediately to Website Context without a timer, spinner or media-length wait. The canvas contracts the tray and expands the stage through the existing layout transition; do not force a separate collapsed-tray pause when no arrival performance exists. Reduced motion removes layout motion and must not block readiness.
+
+Website Context uses roughly the bottom third, expanding only enough to accommodate its question, URL field and navigation (currently 20.5rem minimum, capped at half the available viewport). Smaller viewports retain internal tray scrolling. Keyboard geometry takes precedence. Animation assignments live in src/characterAnimations.ts; all V1 states use the unchanged resting-v1.mp4, measured at 14.333333 seconds and playback rate 1. A future arrival performance needs its own approved completion behavior; changing the asset assignment alone does not introduce a wait.

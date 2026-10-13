@@ -57,6 +57,9 @@ body:has(.landing) dialog>button:last-child{position:sticky;bottom:0;background:
 #app.canvas[data-canvas-mode=review]{--tray-height:calc(var(--usable-height)/2)}
 #app.canvas[data-canvas-mode=processing]{--tray-height:min(14rem,calc(var(--usable-height)/3))}
 #app.canvas[data-canvas-mode=result]{--tray-height:calc(var(--usable-height)*2/3)}
+#app.canvas[data-canvas-mode=arrival]{--tray-height:4rem}
+/* Website Context needs its question, URL field and navigation visible together. */
+#app.canvas[data-canvas-step=website]{--tray-height:min(calc(var(--usable-height)/2),max(calc(var(--usable-height)/3),20.5rem))}
 #app.canvas .stage{display:flex;position:relative;height:100%;min-height:0;width:100vw;margin-left:calc((100% - 100vw)/2);overflow:hidden;flex:none}
 #app.canvas .stage video,#app.canvas .stage img{width:100%;height:100%;max-width:none;border-radius:0;object-fit:cover;object-position:center 48%;transform:scale(1.14)}
 #app.canvas .motion-control{position:absolute;right:max(1rem,env(safe-area-inset-right,0px));bottom:.25rem;background:rgb(247 248 245 / .9);font-size:.875rem;font-weight:400;min-height:44px;padding:.5rem}

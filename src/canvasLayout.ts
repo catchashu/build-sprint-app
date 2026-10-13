@@ -1,7 +1,8 @@
-export type CanvasMode = 'landing' | 'context' | 'processing' | 'review' | 'result';
+export type CanvasMode = 'landing' | 'arrival' | 'context' | 'processing' | 'review' | 'result';
 
 export function canvasMode(screen: string, phase?: string, hasQuestion = false): CanvasMode {
   if (screen === 'landing') return 'landing';
+  if (screen === 'arrival') return 'arrival';
   if (screen === 'website' || screen === 'references') return 'context';
   if (screen === 'unlock') return 'review';
   if (phase === 'failed' || phase === 'review_required') return 'review';

@@ -10,19 +10,21 @@ import { mountWebsitePlan } from "./websitePlan";
 import { readSavedState, saveState } from "./savedPlan";
 import { canvasMode, setCanvasMode, watchCanvasViewport } from "./canvasLayout";
 import { createRestingStage } from "./restingStage";
+import { arriveReady } from "./arrival";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
-type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string };
+type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "arrival" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string };
 const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: crypto.randomUUID() });
 let state: State;
 state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
 let stopReview: (() => void) | undefined;
-const { stage, stop: stopStage } = createRestingStage();
+const { stage, select: selectAnimation, stop: stopStage } = createRestingStage();
+let stopArrival: (() => void) | undefined;
 const panel = node("section", "", "panel"); app.append(stage, panel);
 const stopViewport = watchCanvasViewport(app);
-import.meta.hot?.dispose(() => { stopStage(); stopViewport(); unsubscribe?.(); stopReview?.(); });
+import.meta.hot?.dispose(() => { stopArrival?.(); stopStage(); stopViewport(); unsubscribe?.(); stopReview?.(); });
 let busy = false;
 function save() { saveState(sessionStorage, localStorage, storageKey, state); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
@@ -42,9 +44,12 @@ function field(label: string, value: string, placeholder: string, update: (value
   input.oninput = () => { update(input.value); save(); }; wrapper.append(input); return wrapper;
 }
 function render() {
+  stopArrival?.(); stopArrival = undefined;
   unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; panel.replaceChildren(); panel.scrollTop = 0;
   app.className = state.screen === "landing" ? "landing" : "canvas";
+  app.dataset.canvasStep = state.screen;
   setCanvasMode(app, canvasMode(state.screen));
+  selectAnimation(canvasMode(state.screen));
   panel.append(node("p", "Topic Gibbon", "brand"));
   const error = node("p", "", "error"); error.id = "message"; error.setAttribute("role", "alert");
   if (state.screen === "landing") {
@@ -54,7 +59,7 @@ function render() {
     const form = node("form");
     form.append(field("What do you offer?", state.offering, "Example: We supply hospital beds, examination tables & medical trolleys to hospitals across India.", value => state.offering = value, true));
     const next = button("Plan my website", () => {}, true); next.type = "submit"; form.append(error, next);
-    form.onsubmit = event => { event.preventDefault(); if (state.offering.trim().length < 10) { message("Tell us a little more about what you offer."); return; } go("website"); };
+    form.onsubmit = event => { event.preventDefault(); if (state.screen !== "landing") return; if (state.offering.trim().length < 10) { message("Tell us a little more about what you offer."); return; } go("arrival"); };
     panel.append(form);
     const explainers = node("nav", "", "explainers"); explainers.setAttribute("aria-label", "About Topic Gibbon");
     for (const label of ["What?", "Why?", "How?", "For me?"]) explainers.append(button(label, () => explain(label)));
@@ -63,6 +68,11 @@ function render() {
       try { const saved = JSON.parse(localStorage.getItem(`${storageKey}:plan`)!); if (saved?.id && saved?.token) { state = saved; go("plan"); } }
       catch { message("The saved plan could not be opened in this browser."); }
     }));
+  } else if (state.screen === "arrival") {
+    stopArrival = arriveReady(state.offering, () => go("website"), () => {
+      panel.append(node("p", "I lost that first detail. Tell me what you offer again.", "error"), button("Enter again", () => go("landing"), true));
+      setCanvasMode(app, "context");
+    });
   } else if (state.screen === "website" || state.screen === "references") {
     const own = state.screen === "website";
     const title = node("h2", own ? "Do you have a website I should use as context?" : "Any competitor or inspiration sites I should look at?"); title.tabIndex = -1;
