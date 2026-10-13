@@ -2,7 +2,7 @@ import type { ConvexClient } from 'convex/browser';
 import type { Id } from '../convex/_generated/dataModel';
 import { api } from '../convex/_generated/api';
 import type { Card } from '../shared/cardReview';
-import { planEvidence, type WebsitePlan, type WebsiteNode } from '../shared/websitePlan';
+import { planEvidence, isStandalone, type WebsitePlan, type WebsiteNode } from '../shared/websitePlan';
 
 type View = { id?: Id<'websitePlans'>; state: string; plan?: WebsitePlan | null; cards?: Card[]; offering?: string; question?: string | null; error?: string | null };
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') => { const node = document.createElement(tag); node.textContent = text; node.className = cls; return node; };
@@ -48,12 +48,15 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
     const plan = view.plan!;
     output.append(el('p', 'This is how I’d turn the demand into website coverage.'), el('p', plan.summary));
     output.append(el('p', 'Priority reflects business fit and customer intent. Demand is “Insufficient evidence” because search volumes are unavailable.', 'small muted'));
+    const pages = plan.nodes.filter(n => n.treatment === 'Page').length, resources = plan.nodes.filter(n => n.treatment === 'Supporting Content').length;
+    output.append(el('p', `${pages} website ${pages === 1 ? 'page' : 'pages'}${resources ? ` · ${resources} supporting ${resources === 1 ? 'resource' : 'resources'}` : ''} · ${plan.nodes.filter(n => !isStandalone(n)).length} on-page sections or FAQ groups. On-page content does not need a separate URL.`, 'small muted'));
     const ranks = { First: 0, Next: 1, Later: 2 };
-    function tree(parentId: string | null): HTMLOListElement {
+    function tree(parentId: string | null, standalone?: boolean): HTMLOListElement {
       const list = el('ol', '', 'plan-tree');
-      for (const node of plan.nodes.filter(n => n.parentId === parentId).sort((a, b) => ranks[a.priority] - ranks[b.priority])) {
+      for (const node of plan.nodes.filter(n => n.parentId === parentId && (standalone === undefined || isStandalone(n) === standalone)).sort((a, b) => ranks[a.priority] - ranks[b.priority])) {
         const item = el('li'), row = el('article', '', 'plan-node'), decision = el('div', '', 'plan-decision'); row.dataset.nodeId = node.id;
         decision.append(el('h3', node.label), el('p', `${node.treatment} · ${node.priority} priority`, 'plan-meta'), el('p', 'Demand: Insufficient evidence', 'small muted'));
+        decision.append(el('p', isStandalone(node) ? (node.treatment === 'Page' ? 'Separate website page' : 'Separate supporting resource') : 'Content on this page · no separate URL', 'small muted'));
         const why = el('details', '', 'plan-evidence'); why.append(el('summary', 'Why this?')); fillEvidence(why, node, view.cards ?? []);
         if (view.state === 'complete') {
           const correction = el('details', '', 'plan-fix'); correction.append(el('summary', 'Something’s off'));
@@ -62,7 +65,11 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
         }
         row.append(decision, why); item.append(row);
         const children = plan.nodes.filter(n => n.parentId === node.id);
-        if (children.length) { const branch = el('details', '', 'plan-branch'); branch.open = true; branch.append(el('summary', `${children.length} recommendations within ${node.label}`), tree(node.id)); item.append(branch); }
+        for (const separate of [false, true]) {
+          const count = children.filter(n => isStandalone(n) === separate).length;
+          if (count) { const branch = el('details', '', 'plan-branch'); branch.open = true;
+            branch.append(el('summary', separate ? `Subpages and resources (${count})` : `Content within ${node.label} (${count}) · no separate URL`), tree(node.id, separate)); item.append(branch); }
+        }
         list.append(item);
       }
       return list;
@@ -74,11 +81,11 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
     output.append(footer);
   }
   function fillEvidence(root: HTMLElement, node: WebsiteNode, cards: Card[]) {
-    const detail = el('div', '', 'plan-detail'); detail.append(el('h4', 'Why this recommendation'), el('p', node.rationale), el('h4', 'What to cover'));
+    const detail = el('div', '', 'plan-detail'); detail.append(el('h4', 'Why this treatment and priority'), el('p', node.rationale), el('h4', 'What to cover'));
     const coverage = el('ul'); node.coverage.forEach(text => coverage.append(el('li', text))); detail.append(coverage);
     const {areas, queries} = planEvidence(node, cards); detail.append(el('h4', 'Mapped demand areas'), el('p', areas.map(a => a.label).join(' · ')));
     const sourceList = (rows: typeof queries) => { const list = el('ul', '', 'plan-sources'); for (const query of rows) { const li = el('li', query.query); for (const source of query.sources) { const link = el('a', `${source.provider} · ${source.field === 'related_questions.question' ? 'Google question' : 'Google related search'} · ${source.retrievedAt}`); if (/^https?:\/\//i.test(source.reference)) link.href = source.reference; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); } list.append(li); } return list; };
-    detail.append(el('h4', 'Representative searches'), sourceList(queries.slice(0, 3)));
+    detail.append(el('h4', 'Searches from the mapped demand areas'), el('p', 'These searches describe the wider demand area. Not every search supports this particular recommendation.', 'small muted'), sourceList(queries.slice(0, 3)));
     const all = el('details'); all.append(el('summary', `View all search evidence (${queries.length})`), sourceList(queries)); detail.append(all);
     if (node.riskNote) detail.append(el('h4', 'Overlap or thin-page note'), el('p', node.riskNote));
     root.append(detail);

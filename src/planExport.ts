@@ -1,6 +1,6 @@
 import ExcelJS from 'exceljs';
 import type { Card } from '../shared/cardReview';
-import { orderedNodes, type WebsitePlan } from '../shared/websitePlan';
+import { orderedNodes, isStandalone, containingPage, type WebsitePlan } from '../shared/websitePlan';
 
 export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: string) {
   const workbook = new ExcelJS.Workbook();
@@ -14,8 +14,17 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
     ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: headings.length } };
     return ws;
   };
-  const structure = sheet('Website plan', ['ID', 'Parent ID', 'Level', 'Recommendation', 'Treatment', 'Priority', 'Demand', 'What to cover', 'Why this', 'Demand area IDs', 'Overlap or thin-page note'], [16, 16, 8, 38, 24, 14, 24, 60, 60, 32, 50]);
-  for (const {node, depth} of orderedNodes(plan.nodes)) structure.addRow([node.id, node.parentId ?? '', depth + 1, node.label, node.treatment, node.priority, 'Insufficient evidence', node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote]);
+  const structure = sheet('Website pages', ['ID', 'Parent page ID', 'Page level', 'Page or resource', 'Treatment', 'Priority', 'Demand', 'What to cover', 'Why this treatment and priority', 'Mapped demand area IDs', 'Overlap or thin-page note'], [16, 20, 12, 38, 24, 14, 24, 60, 70, 32, 50]);
+  const content = sheet('On-page content', ['ID', 'Containing page ID', 'Containing page', 'Content recommendation', 'Treatment', 'Priority', 'Demand', 'What to cover', 'Why this treatment and priority', 'Mapped demand area IDs', 'Overlap or thin-page note', 'Parent recommendation ID'], [16, 20, 38, 38, 24, 14, 24, 60, 70, 32, 50, 24]);
+  for (const {node} of orderedNodes(plan.nodes)) {
+    const owner = containingPage(node, plan.nodes);
+    const details = [node.label, node.treatment, node.priority, 'Insufficient evidence', node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote];
+    if (isStandalone(node)) {
+      let level = 1, ancestor = owner;
+      while (ancestor) { level++; ancestor = containingPage(ancestor, plan.nodes); }
+      structure.addRow([node.id, owner?.id ?? '', level, ...details]);
+    } else content.addRow([node.id, owner?.id ?? '', owner?.label ?? '', ...details, node.parentId ?? '']);
+  }
   const areas = sheet('Demand areas', ['Demand area ID', 'Label', 'Customer need', 'Demand'], [32, 40, 70, 24]);
   const evidence = sheet('Search evidence', ['Demand area ID', 'Query ID', 'Observed search', 'Provider', 'Source field', 'Source reference', 'Retrieved at'], [32, 20, 60, 18, 32, 65, 28]);
   for (const card of cards) {
@@ -24,6 +33,8 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   }
   const notes = sheet('Context and limits', ['Item', 'Details'], [28, 100]);
   notes.addRow(['Offering', offering]); notes.addRow(['Summary', plan.summary]);
+  notes.addRow(['How to read this plan', 'Website pages lists separate pages and supporting resources. On-page content lists sections and FAQs that belong within those pages, with no separate URL. Page level counts only separate pages/resources.']);
+  notes.addRow(['Evidence scope', 'Search evidence contains the full retained searches for each mapped demand area. These are area-level context; not every search supports every section or FAQ mapped to that area.']);
   notes.addRow(['Priority', 'First / Next / Later describes business fit, intent and importance, not search volume.']);
   notes.addRow(['Demand', 'Insufficient evidence: no reliable external search-volume measurements were available.']);
   for (const limitation of plan.limitations) notes.addRow(['Limitation', limitation]);

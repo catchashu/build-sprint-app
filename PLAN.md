@@ -2,6 +2,8 @@
 
 ## Milestones
 
+2026-10-13 approved output-quality follow-up to milestone 6: tighten the separate-page versus section/FAQ decision and priority explanations, distinguish separate pages/resources from on-page content on screen and in Excel, preserve saved plans and source evidence. Implemented and live; automated, real-model, phone-width and downloaded-workbook checks passed. User confirmed a fresh run: subpages, reasoning, separated FAQs and priorities all passed. Accepted for commit/push. Search-volume integration remains outside this change.
+
 2026-10-13 user acceptance: milestone 6 passed the full user flow, including the website plan, Excel download in the expected format, and Exit returning to the main screen. The invite-based end-to-end flow is accepted. Real Razorpay payment testing remains open; live charging stays disabled.
 
 2026-10-13 approved milestone 6: turn the confirmed Demand Map into a saved hierarchical website plan with Page / Section / FAQ / Supporting Content, First / Next / Later priorities, traceable retained search evidence, and Insufficient evidence for demand while volume data is unavailable. Provide Why this?, a structured Excel download, targeted recommendation correction, and consequential clarification rather than guessing. Reuse existing research, preserve earlier plans/corrections, and resume after refresh. Keep live Razorpay charging disabled pending checkout testing. Milestone 5 passed user phone review.

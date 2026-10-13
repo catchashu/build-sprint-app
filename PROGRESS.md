@@ -1,5 +1,8 @@
 ## Current handoff - 2026-10-13, milestone 6 accepted
 
+- USER PASS: the user completed a fresh run and confirmed useful subpages, very good reasoning, clearly separated FAQs, and clear priorities. Output-quality follow-up is accepted and live. Separate-page reasoning now requires a distinct task/offering, substantive different coverage and a reason a parent section is insufficient. Priorities must be explained; equally central services may both be First. FAQs cite relevant supplied wording in their rationale. Pages cannot nest under an on-page section. Screen distinguishes subpages from content without a separate URL; Excel separates Website pages and On-page content with owning page IDs/names. Full area evidence remains available and is honestly labelled as area-level context.
+- Verified follow-up: 83 tests, frontend/Convex TypeScript, production deployment `999f3563-f651-49ca-a7a2-c30f04021cb9`, fresh real AI generation using the dedicated assistant film-test run's unchanged evidence, live explanation expansion and Excel download, 390px screenshot and 320px no overflow. The old example exports as 3 pages + 2 FAQ groups; fresh generation produces 3 pages + 3 focused FAQs, with both core services First. Browser-downloaded workbook preserves all sources and correct owners. Earlier saved plans are not rewritten; clearer display/export applies immediately, new reasoning applies to fresh generation. No new searches or volume integration. User accepted these changes; saved in the checkpoint accompanying this entry. Prior accepted checkpoint is `b964870`.
+
 - Milestone 5 passed user phone review: invite, full research, relevance questions, card approval and saved map. Working checkpoint `7dad759` was committed and pushed.
 - Milestone 6 was approved and is now live at https://ardent-fly-778.convex.site. An already-confirmed Demand Map has **Build my website plan**; newly confirming a map opens planning directly. No new searches are made for architecture.
 - The result includes a collapsible hierarchy, Page / Section / FAQ / Supporting Content, First / Next / Later, Insufficient evidence for unavailable volumes, Why this?, all mapped sources, consequential questions, targeted corrections, and Download Excel. Prior completed plans and unaffected recommendations are preserved. Reopening the same browser restores the saved plan; there is no cross-device recovery.
@@ -11,7 +14,7 @@
 
 ### Next step
 
-Review the actual exported plan for usefulness before changing the product further. Real Razorpay payment testing still requires account setup; live charging remains disabled. Do not start another feature unasked.
+Output quality has passed user review. Next suggested work is connecting reliable search-volume data so demand can be shown; agree that scope before implementation. Real Razorpay payment testing still requires account setup; live charging remains disabled. Do not start another feature unasked.
 
 # Progress
 

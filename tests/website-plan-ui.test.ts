@@ -21,6 +21,9 @@ test('plan view starts once, exposes saved evidence, preserves open details, and
   emit({state:'ready'});emit({state:'ready'});assert.equal(calls.length,1);resolve();await settle();
   const {input,plan}=planFixture(),view={id:'job',state:'complete',plan,cards:input.review.cards.filter(c=>c.groupId!=='x'),offering:input.offering};emit(view);
   assert.match(root.textContent,/Your website plan/);assert.match(root.textContent,/First priority/);assert.match(root.textContent,/View all search evidence \(2\)/);
+  assert.match(root.textContent,/1 website page · 1 on-page sections or FAQ groups/);
+  assert.match(root.textContent,/Content within Film production \(1\) · no separate URL/);
+  assert.match(root.textContent,/Not every search supports this particular recommendation/);
   const detail=root.querySelector('.plan-evidence')!;detail.setAttribute('open','');emit(view);assert.equal(root.querySelector('.plan-evidence'),detail);
   assert.equal(root.querySelector('.plan-sources a')?.getAttribute('href'),input.review.cards[0].queries[0].sources[0].reference);
   const form=root.querySelector('form')!,inputEl=form.querySelector('textarea')!,submit=form.querySelector('button')!;

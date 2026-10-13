@@ -25,8 +25,17 @@ test('Excel round trip includes every node and exact evidence source, with untru
  const {input,plan}=planFixture();plan.nodes[0].label='=HYPERLINK("https://example.com")';
  const workbook=await planWorkbook(plan,input.review.cards.filter(c=>c.groupId!=='x'),input.offering);
  const bytes=await workbook.xlsx.writeBuffer();const ExcelJS=(await import('exceljs')).default;const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(bytes);
- assert.deepEqual(loaded.worksheets.map(s=>s.name),['Website plan','Demand areas','Search evidence','Context and limits']);
- assert.equal(loaded.getWorksheet('Website plan')!.rowCount,3);assert.equal(loaded.getWorksheet('Website plan')!.getCell('D2').value,plan.nodes[0].label);
+ assert.deepEqual(loaded.worksheets.map(s=>s.name),['Website pages','On-page content','Demand areas','Search evidence','Context and limits']);
+ assert.equal(loaded.getWorksheet('Website pages')!.rowCount,2);assert.equal(loaded.getWorksheet('Website pages')!.getCell('D2').value,plan.nodes[0].label);
+ assert.equal(loaded.getWorksheet('On-page content')!.rowCount,2);
+ assert.equal(loaded.getWorksheet('On-page content')!.getCell('B2').value,'p');
+ assert.equal(loaded.getWorksheet('On-page content')!.getCell('C2').value,plan.nodes[0].label);
  assert.equal(loaded.getWorksheet('Search evidence')!.rowCount,4);assert.equal(loaded.getWorksheet('Search evidence')!.getCell('F2').value,input.review.cards[0].queries[0].sources[0].reference);
- assert.equal(loaded.getWorksheet('Website plan')!.getCell('G2').value,'Insufficient evidence');
+ assert.equal(loaded.getWorksheet('Website pages')!.getCell('G2').value,'Insufficient evidence');
+});
+
+test('a subpage cannot be nested inside an on-page section',()=>{
+ const {input,plan}=planFixture();
+ plan.nodes.push({...plan.nodes[0],id:'child-page',parentId:'s'});
+ assert.throws(()=>validateWebsitePlan(plan,input),/page parent/);
 });
