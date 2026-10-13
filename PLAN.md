@@ -89,3 +89,6 @@ Use the earlier MRI experiment in `clustering logic/` as the starting point. The
 - The folder records aggregate model scores but does not include the full original Gemini/Claude responses or row-by-row scoring. Historical scores can be reported as recorded, not independently reproduced from these files.
 
 ## Parked (not now):
+
+## Mobile composition follow-up — initial landing first
+User requests exact DESIGN.md Sections 3/4 geometry, 90% frost, safe-area-aware viewport fit, approved copy/type/artwork preserved. First review corrected landing; only then implement state-driven canvas geometry and test transitions. Reuse approved resting loop without modification. One-screen landing conflicts with Section 3's explicit document-scroll fallback; content audit at 390x844 requires a user decision on internal panel scrolling versus moving supporting content before implementation.

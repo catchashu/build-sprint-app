@@ -1,0 +1,14 @@
+[
+    {
+        "sha256":  "B438E1B3BC65BF9586619A4C7583107CF876E17760A307C43A9DF19D044D0E96",
+        "file":  ".\\public\\animations\\resting-v1.mp4"
+    },
+    {
+        "sha256":  "C2E6AA9D38D41873A6639DD8AF1C93D05214C7635BD8D22ED60F82B44E40E9A7",
+        "file":  ".\\design\\character\\resting-v1\\source-continuous-15s.mp4"
+    },
+    {
+        "sha256":  "08C5A5D25894342903CFE97381F17816220912AFE9CF65253ADCC3572C86A931",
+        "file":  ".\\design\\character\\resting-v1\\source-original-8s.mp4"
+    }
+]
