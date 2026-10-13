@@ -65,3 +65,12 @@ Tests cover evidence accounting, separation from the answer key, output checks, 
 `npm run prepare:mri` rebuilds server fixtures from the original CSVs. Only evaluation receives the human answer key. This is a rules-informed evaluation of a known case, not a repeat of the untouched historical blind experiment.
 
 This development page has no production access controls. Browser verification and an actual generated MRI result are required before declaring the milestone complete.
+
+
+## Full research and demand map
+
+After the first-value review and invite/test-payment unlock, the same run opens full research. It reuses saved evidence and confirmed corrections, adds at most eight planned searches plus two bounded temporary-failure retries, and saves each completed request. Refreshing the current browser tab resumes the run. The current session link is still held in session storage; cross-device/account recovery is not implemented.
+
+Demand Map review exposes all retained queries and source links. Areas can be corrected, split, merged, excluded or restored. Only consequential relevance questions are asked, with a custom-answer option. Confirmation saves the corrected map for the next milestone. No search-volume data is currently available, so demand is labelled Insufficient evidence. Final website architecture is not implemented yet, and live payment keys remain rejected.
+
+`npm test` includes research access checks, evidence preservation, retry bounds, clarification persistence and a DOM-level scrolling check (not a visual phone test). The live scripts `scripts/verify-full-research.ts`, `scripts/verify-demand-map-review.ts` and `scripts/verify-full-research-production.ts` use private ignored fixtures under `artifacts/`; the first makes real development search requests, while the production script replays those responses without more provider searches. Do not print private receipt tokens or the invite-code file.

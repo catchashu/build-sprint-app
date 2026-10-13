@@ -4,11 +4,12 @@ import type { Id } from "../convex/_generated/dataModel";
 import type { materializeCards } from "../shared/firstValue";
 import "./style.css";
 import { mountReview } from "./cardReview";
+import { mountResearch } from "./research";
 import { mountUnlock } from "./unlock";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
-type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock"; id?: Id<"firstValueRuns">; token: string };
+type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock" | "research"; id?: Id<"firstValueRuns">; token: string };
 const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: crypto.randomUUID() });
 let state: State;
 try { state = JSON.parse(sessionStorage.getItem(storageKey) || "null") || blank(); } catch { state = blank(); }
@@ -70,10 +71,13 @@ function render() {
       if (own) { state.websiteText = texts.join("\n"); go("references"); }
       else { state.referenceText = texts.join("\n"); await launch(); }
     }); };
+  } else if (state.screen === "research") {
+    if (!state.id) { go("landing"); return; }
+    stopReview = mountResearch(client, { id: state.id, token: state.token }, panel);
   } else if (state.screen === "unlock") {
     if (!state.id) { go("landing"); return; }
     const unlock = node("div", "", "unlock"); panel.append(unlock);
-    stopReview = mountUnlock(client, { id: state.id, token: state.token }, unlock, () => go("result"));
+    stopReview = mountUnlock(client, { id: state.id, token: state.token }, unlock, () => go("result"), () => go("research"));
   } else {
     const title = node("h2", "Preparing your first search…"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");

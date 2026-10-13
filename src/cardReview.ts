@@ -2,10 +2,11 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { Review, Card } from "../shared/cardReview";
-type View = Review & { unlocked?: boolean; pending: { cardId: string; id: Id<"cardCorrections"> } | null; last: { id: Id<"cardCorrections">; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
+type View = Review & { clarificationPending?: boolean; unlocked?: boolean; pending: { cardId: string; id: string } | null; last: { id: string; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const e = document.createElement(tag); e.textContent = text; e.className = cls; return e; };
-const labels = { split: "You?ve grouped different things together", merge: "This should be grouped with another card", excluded: "This isn’t part of what I offer", label: "The label / meaning is wrong", other: "Something else" };
-export function mountReview(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, continueToUnlock: () => void) {
+const labels = { split: "These searches should not be grouped together", merge: "This should be grouped with another card", excluded: "This isn’t part of what I offer", label: "The label / meaning is wrong", other: "Something else" };
+export function mountReview(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, continueToUnlock: () => void, options: { demandMap?: boolean } = {}) {
+  const reviews = options.demandMap ? api.mapReview : api.cardReview;
   let current: View | null = null;
   let editing: { cardId: string; kind: keyof typeof labels | ""; note: string; requestId: string; queryIds?: string[]; targetCardId?: string } | null = null;
   let busy = false, error = "", dismissedJob = "", alive = true, savingCardId = "", failedCardId = "";
@@ -53,18 +54,24 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
       article.append(element("h3", card.label), element("p", card.need));
       if (decision === "excluded") {
         article.append(element("p", "Excluded from your offering", "muted"));
+        if (options.demandMap) article.append(button("Restore this area", () => void perform(async () => { await client.mutation(reviews.decision, { ...identity, revision: current!.revision, cardId: card.groupId, decision: "correct" }); }, card.groupId)));
         continue;
       }
-      article.append(sourceList(card), element("p", "Sourced from live Google search evidence · India", "small muted"));
+      if (options.demandMap) article.append(element("p", "Insufficient evidence - search volumes unavailable", "small muted"));
+      if (options.demandMap && card.queries.length > 3) {
+        article.append(sourceList({ ...card, queries: card.queries.slice(0, 3) }));
+        const all = element("details"); all.dataset.queryId = `area:${card.groupId}`; all.append(element("summary", `View all ${card.queries.length} searches`), sourceList(card)); article.append(all);
+      } else article.append(sourceList(card));
+      article.append(element("p", "Sourced from live Google search evidence · India", "small muted"));
       const actions = element("div", "", "review-actions");
       const saveStatus = element("p", "", "small review-save-state"); saveStatus.setAttribute("role", "status"); article.append(saveStatus);
       const correct = button("Correct", () => void perform(async () => {
         const revision = current!.revision;
-        await client.mutation(api.cardReview.decision, { ...identity, revision, cardId: card.groupId, decision: "correct" });
+        await client.mutation(reviews.decision, { ...identity, revision, cardId: card.groupId, decision: "correct" });
         // A successful write can be acknowledged without waiting for another notification.
         if (current?.revision === revision) current = { ...current, revision: revision + 1, accepted: false, decisions: { ...current.decisions, [card.groupId]: "correct" } };
       }, card.groupId)); correct.dataset.action = "correct"; actions.append(correct);
-      actions.append(button("Fix this", () => { editing = { cardId: card.groupId, kind: "", note: "", requestId: crypto.randomUUID() }; error = ""; draw(); root.querySelector<HTMLElement>(".correction-title")?.focus(); }));
+      actions.append(button(options.demandMap ? "Something is off" : "Fix this", () => { editing = { cardId: card.groupId, kind: "", note: "", requestId: crypto.randomUUID() }; error = ""; draw(); root.querySelector<HTMLElement>(".correction-title")?.focus(); }));
       if (!current.unlocked) article.append(actions);
       if (current.pending?.cardId === card.groupId) { const p = element("p", "Updating this with your correction…"); p.setAttribute("role", "status"); article.append(p); }
       else if (current.last?.cardId === card.groupId && current.last.state === "complete" && decision === "pending") article.append(element("p", "Updated. Check this again.", "review-correction-status"));
@@ -80,9 +87,9 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         if (editing.kind === "excluded") form.append(element("p", "I’ll exclude this from my understanding of your offering."));
         else if (editing.kind === "split" || editing.kind === "merge") {
           const splitting = editing.kind === "split";
-          const choices = element("fieldset"); choices.append(element("legend", splitting ? "Which of these doesn?t belong here?" : "Which area should this be grouped with?"));
-          const options = splitting ? card.queries.map(q => ({ id: q.id, text: q.query })) : current.cards.filter(c => c.groupId !== card.groupId && current!.decisions[c.groupId] !== "excluded").map(c => ({ id: c.groupId, text: `${c.label} ? ${c.queries[0]?.query ?? ""}` }));
-          if (!options.length) choices.append(element("p", "There?s no other remaining card to merge with."));
+          const choices = element("fieldset"); choices.append(element("legend", splitting ? "Which of these does not belong here?" : "Which area should this be grouped with?"));
+          const options = splitting ? card.queries.map(q => ({ id: q.id, text: q.query })) : current.cards.filter(c => c.groupId !== card.groupId && current!.decisions[c.groupId] !== "excluded").map(c => ({ id: c.groupId, text: `${c.label} - ${c.queries[0]?.query ?? ""}` }));
+          if (!options.length) choices.append(element("p", "There is no other remaining card to merge with."));
           for (const option of options) {
             const label = element("label", "", "review-choice"), control = element("input"); control.type = splitting ? "checkbox" : "radio"; control.name = "grouping-choice";
             control.checked = splitting ? !!editing.queryIds?.includes(option.id) : editing.targetCardId === option.id; control.disabled = busy || !!current.pending;
@@ -103,8 +110,8 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         apply.dataset.invalid = String(!valid());
         if (input) input.oninput = () => { editing!.note = input!.value; editing!.requestId = crypto.randomUUID(); apply.dataset.invalid = String(!valid()); apply.disabled = busy || !!current?.pending || !valid(); };
         form.onsubmit = event => { event.preventDefault(); if (!valid()) return; const draft = { ...editing! }; void perform(async () => {
-          if (draft.kind === "excluded") { await client.mutation(api.cardReview.decision, { ...identity, revision: current!.revision, cardId: draft.cardId, decision: "excluded" }); editing = null; }
-          else { await client.mutation(api.cardReview.apply, { ...identity, revision: current!.revision, cardId: draft.cardId, kind: draft.kind as "label" | "other" | "split" | "merge", queryIds: draft.queryIds, targetCardId: draft.targetCardId, note: draft.note, requestId: draft.requestId }); }
+          if (draft.kind === "excluded") { await client.mutation(reviews.decision, { ...identity, revision: current!.revision, cardId: draft.cardId, decision: "excluded" }); editing = null; }
+          else { await client.mutation(reviews.apply, { ...identity, revision: current!.revision, cardId: draft.cardId, kind: draft.kind as "label" | "other" | "split" | "merge", queryIds: draft.queryIds, targetCardId: draft.targetCardId, note: draft.note, requestId: draft.requestId }); }
         }); };
         const buttons = element("div", "", "review-actions"); buttons.append(button("Cancel", () => { dismissedJob = current?.last?.id ?? ""; editing = null; error = ""; draw(); }), apply); form.append(buttons); article.append(form);
       }
@@ -133,18 +140,19 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     if (!active.length) nextOutside.append(element("p", "All cards are excluded. Edit your context to research the offering you want to cover.", "review-wide"));
     else if (current.accepted) {
       const saved = element("div", "", "review-footer"); saved.setAttribute("role", "status");
-      saved.append(element("h3", "Your review is saved."), element("p", "You’ve finished the review. This is the end of the current version; full research and website planning aren’t available yet."));
+      saved.append(element("p", options.demandMap ? "Your demand map is saved. Website planning is the next milestone." : "Your confirmed understanding is saved."));
+      if (!options.demandMap) saved.append(button("Continue", continueToUnlock, true));
       nextOutside.append(saved);
     }
     else {
-      const next = button("Continue", () => void perform(async () => { await client.mutation(api.cardReview.accept, { ...identity, revision: current!.revision }); continueToUnlock(); }), true);
-      next.disabled = next.disabled || !allCorrect || !!editing;
-      const footer = element("div", "", "review-footer"); footer.append(element("p", allCorrect ? "Your cards are ready to confirm." : "Mark each remaining card Correct before continuing.", "small muted"), next); nextOutside.append(footer);
+      const next = button(options.demandMap ? "Confirm demand map" : "Continue", () => void perform(async () => { await client.mutation(reviews.accept, { ...identity, revision: current!.revision }); continueToUnlock(); }), true);
+      next.disabled = next.disabled || !allCorrect || !!editing || !!current.clarificationPending;
+      const footer = element("div", "", "review-footer"); footer.append(element("p", current.clarificationPending ? "Answer the question above before confirming the map." : allCorrect ? "Your cards are ready to confirm." : "Mark each remaining card Correct before continuing.", "small muted"), next); nextOutside.append(footer);
     }
-    nextOutside.append(element("p", "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
+    nextOutside.append(element("p", options.demandMap ? "This map retains the observed searches and their sources. No search-volume estimates are available." : "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
     outsideCards.replaceChildren(nextOutside);
   }
-  const stop = client.onUpdate(api.cardReview.get, identity, (view: View | null) => {
+  const stop = client.onUpdate(reviews.get, identity, (view: View | null) => {
     if (!view || (current && view.revision < current.revision)) return;
     const previous = current; current = view;
     if (view.last?.state === "complete" && previous?.pending?.id === view.last.id) editing = null;

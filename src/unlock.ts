@@ -18,7 +18,12 @@ function loadCheckout() {
   return checkoutScript;
 }
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const el = document.createElement(tag); el.textContent = text; el.className = cls; return el; };
-export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, back: () => void) {
+export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, back: () => void, onUnlocked: () => void) {
+  let transitioned = false;
+  const content = element("div"), inviteSlot = element("div"), feedback = element("div"), footer = element("div");
+  root.replaceChildren(content, inviteSlot, feedback, footer);
+  let inviteInput: HTMLInputElement | undefined, inviteApply: HTMLButtonElement | undefined, inviteClear: HTMLButtonElement | undefined, inviteShow: HTMLButtonElement | undefined, inviteHelp: HTMLParagraphElement | undefined;
+  let codeVisible = false;
   let alive = true, busy = false, checking = false, message = "", error = "", code = "", inviteOpen = false;
   let checkout: Checkout | undefined, timer: ReturnType<typeof setTimeout> | undefined, checks = 0;
   let state: { accepted: boolean; unlocked: { via: "comped" | "test" | "paid" } | null; paymentReady: boolean; inviteReady: boolean; orderPending: boolean; testMode: boolean } | undefined;
@@ -38,19 +43,65 @@ export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValue
     finally { checking = false; if (alive) draw(); }
     if (alive && !state?.unlocked && ++checks < 12) timer = setTimeout(() => void checkPayment(), 5000);
   }
+  function drawFeedback() {
+    feedback.replaceChildren();
+    if (message) { const p = element("p", message); p.setAttribute("role", "status"); feedback.append(p); }
+    if (error) { const p = element("p", error, "error"); p.setAttribute("role", "alert"); feedback.append(p); }
+  }
+  function drawInvite() {
+    if (!inviteInput) {
+      const form = element("form", "", "invite-form"), label = element("label", "Enter invite code"), input = element("input");
+      inviteInput = input; input.id = "invite-code"; input.type = "password"; input.autocomplete = "off"; input.maxLength = 128;
+      input.setAttribute("autocapitalize", "none"); input.setAttribute("autocorrect", "off"); input.spellcheck = false;
+      input.placeholder = "Paste your invite code"; input.setAttribute("aria-describedby", "invite-help");
+      const controls = element("div", "", "invite-edit-controls");
+      inviteShow = button("Show code", () => {
+        const start = input.selectionStart, end = input.selectionEnd;
+        codeVisible = !codeVisible; drawInvite(); input.focus();
+        if (start !== null && end !== null) input.setSelectionRange(start, end);
+      });
+      inviteShow.setAttribute("aria-controls", "invite-code");
+      inviteClear = button("Clear code", () => {
+        code = ""; input.value = ""; error = ""; message = "Invite code cleared. Enter a new code.";
+        drawInvite(); drawFeedback(); input.focus();
+      });
+      inviteApply = button("Apply", () => {}, true); inviteApply.type = "submit";
+      inviteHelp = element("p", "", "small muted"); inviteHelp.id = "invite-help";
+      input.oninput = () => { code = input.value; error = ""; message = ""; drawInvite(); drawFeedback(); };
+      controls.append(inviteShow, inviteClear); label.append(input); form.append(label, controls, inviteHelp, inviteApply);
+      form.onsubmit = event => {
+        event.preventDefault(); if (busy || !code.trim() || !state?.inviteReady) return;
+        const submittedCode = code;
+        void work(async () => {
+          const result = await client.mutation(api.payments.invite, { ...identity, code: submittedCode });
+          if (!result.ok) error = result.message;
+          else { code = ""; input.value = ""; message = result.message; }
+        });
+      };
+      inviteSlot.append(form);
+    }
+    const type = codeVisible ? "text" : "password";
+    if (inviteInput.type !== type) inviteInput.type = type;
+    inviteInput.disabled = busy;
+    inviteShow!.textContent = codeVisible ? "Hide code" : "Show code"; inviteShow!.disabled = busy;
+    inviteShow!.setAttribute("aria-pressed", String(codeVisible));
+    inviteClear!.disabled = busy || !code;
+    inviteApply!.disabled = busy || !code.trim() || !state?.inviteReady;
+    inviteApply!.textContent = busy ? "Applying..." : "Apply";
+    inviteHelp!.textContent = state?.inviteReady ? "Capital and small letters must match. Use Show code to check what you entered." : "Invite codes aren?t available yet. Your review is saved.";
+  }
   function draw() {
     if (!alive) return;
-    root.replaceChildren();
-    if (!state) { root.append(element("p", "Opening your saved run…")); return; }
+    content.replaceChildren(); feedback.replaceChildren(); footer.replaceChildren(); inviteSlot.hidden = true;
+    if (!state) { content.append(element("p", "Opening your saved run…")); return; }
     if (state.unlocked) {
-      root.append(element("h2", state.unlocked.via === "test" ? "Test payment confirmed." : "Your full run is unlocked."));
-      root.append(element("p", state.unlocked.via === "comped" ? "Invite code applied. Your full run is unlocked." : state.unlocked.via === "test" ? "No money was charged. Your test unlock is saved." : "Payment received. Your unlock is saved."));
-      root.append(element("p", "Your confirmed cards and corrections are saved. Full research and website planning are the next stage being built; they haven’t started yet."));
-      root.append(button("Back to your cards", back)); return;
+      content.append(element("p", "Opening your full research..."));
+      if (!transitioned) { transitioned = true; queueMicrotask(() => { if (alive) onUnlocked(); }); }
+      return;
     }
-    if (!state.accepted) { root.append(element("p", "Confirm your cards before unlocking this run."), button("Back to your cards", back, true)); return; }
-    root.append(element("h2", "Unlock the full Topic Gibbon plan"), element("p", "You’ve seen the first demand areas. Unlock the full India demand map and prioritised website plan."), element("p", "₹399 · one-time", "count"), element("p", "No subscription. No account needed."));
-    root.append(element("p", "Payment testing only: no money will be charged. Full research and website planning aren’t available yet.", "small"));
+    if (!state.accepted) { content.append(element("p", "Confirm your cards before unlocking this run."), button("Back to your cards", back, true)); return; }
+    content.append(element("h2", "Unlock the full Topic Gibbon plan"), element("p", "You’ve seen the first demand areas. Unlock the full India demand map and prioritised website plan."), element("p", "₹399 · one-time", "count"), element("p", "No subscription. No account needed."));
+    content.append(element("p", "Payment testing only: no money will be charged. Full research and website planning aren’t available yet.", "small"));
     const pay = button("Pay ₹399 with UPI", () => void work(async () => {
       await loadCheckout();
       const order = await client.action(api.payments.createOrder, identity);
@@ -68,28 +119,20 @@ export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValue
       checkout.on("payment.failed", () => { if (alive) { error = "Payment couldn’t be confirmed. Your first-value results are safe."; draw(); } });
       checkout.open();
     }), true);
-    pay.disabled = busy || !state.paymentReady; root.append(pay);
-    if (!state.paymentReady) root.append(element("p", "Test payments aren’t set up yet. Your review is saved.", "small muted"));
-    root.append(element("p", "On a phone, use an available UPI app. On a computer, scan the QR shown by Razorpay. Test mode may use a simulated payment screen.", "small muted"), element("p", "Secure payments powered by Razorpay", "small muted"));
-    root.append(button("Have an invite code?", () => { inviteOpen = !inviteOpen; draw(); if (inviteOpen) root.querySelector<HTMLInputElement>("#invite-code")?.focus(); }));
-    if (inviteOpen) {
-      const form = element("form", "", "invite-form"), label = element("label", "Enter invite code"), input = element("input"); input.id = "invite-code"; input.type = "password"; input.autocomplete = "off"; input.maxLength = 128; input.value = code; input.disabled = busy;
-      const apply = button("Apply", () => {}, true); apply.type = "submit"; apply.disabled = busy || !code.trim() || !state.inviteReady;
-      input.oninput = () => { code = input.value; apply.disabled = busy || !code.trim() || !state?.inviteReady; }; label.append(input); form.append(label, apply);
-      if (!state.inviteReady) form.append(element("p", "Invite codes aren’t available yet. Your review is saved.", "small muted"));
-      form.onsubmit = event => { event.preventDefault(); void work(async () => { const result = await client.mutation(api.payments.invite, { ...identity, code }); if (!result.ok) error = result.message; else { code = ""; message = result.message; } }); };
-      root.append(form);
-    }
-    if (message) { const p = element("p", message); p.setAttribute("role", "status"); root.append(p); }
-    if (error) { const p = element("p", error, "error"); p.setAttribute("role", "alert"); root.append(p); }
-    if (state.orderPending) root.append(button(checking ? "Checking your payment…" : "Check payment status", () => { checks = 0; void checkPayment(); }));
-    root.append(button("Close", back));
+    pay.disabled = busy || !state.paymentReady; content.append(pay);
+    if (!state.paymentReady) content.append(element("p", "Test payments aren’t set up yet. Your review is saved.", "small muted"));
+    content.append(element("p", "On a phone, use an available UPI app. On a computer, scan the QR shown by Razorpay. Test mode may use a simulated payment screen.", "small muted"), element("p", "Secure payments powered by Razorpay", "small muted"));
+    content.append(button("Have an invite code?", () => { inviteOpen = !inviteOpen; draw(); if (inviteOpen) root.querySelector<HTMLInputElement>("#invite-code")?.focus(); }));
+    if (inviteOpen) { inviteSlot.hidden = false; drawInvite(); }
+    drawFeedback();
+    if (state.orderPending) footer.append(button(checking ? "Checking your payment…" : "Check payment status", () => { checks = 0; void checkPayment(); }));
+    footer.append(button("Close", back));
   }
   const stop = client.onUpdate(api.payments.get, identity, next => {
     const first = !state; state = next;
     if (state?.unlocked) { clearTimeout(timer); checkout?.close(); }
     draw(); if (first && state?.orderPending) void checkPayment();
-  }, () => { error = "Your saved run couldn’t be opened. Reload to reconnect."; root.replaceChildren(element("p", error, "error"), button("Back to your cards", back)); });
+  }, () => { error = "Your saved run couldn’t be opened. Reload to reconnect."; content.replaceChildren(element("p", error, "error"), button("Back to your cards", back)); inviteSlot.hidden = true; feedback.replaceChildren(); footer.replaceChildren(); });
   const onFocus = () => { checks = 0; void checkPayment(); }; window.addEventListener("focus", onFocus);
   draw();
   return () => { alive = false; stop(); clearTimeout(timer); window.removeEventListener("focus", onFocus); checkout?.close(); };

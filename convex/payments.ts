@@ -16,7 +16,7 @@ function reviewed(run: Doc<"firstValueRuns">) {
 }
 function keys() {
   const keyId = process.env.RAZORPAY_KEY_ID, secret = process.env.RAZORPAY_KEY_SECRET;
-  // Full research is not connected yet: this milestone must never take real money.
+  // Final website planning and real checkout validation are not complete: never take real money yet.
   if (!keyId?.startsWith("rzp_test_") || !secret) throw new ConvexError("Test payments aren’t set up yet. Your review is saved.");
   return { keyId, secret };
 }

@@ -16,3 +16,6 @@ button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;padding
 .correction-form fieldset{border:0;padding:0;margin:16px 0;min-width:0}.review-choice{display:flex;align-items:flex-start;gap:12px;min-height:48px;font-weight:400;cursor:pointer}.review-choice input{width:20px;height:20px;flex:0 0 20px;margin:4px 0;padding:0;accent-color:var(--green)}.review-choice span{overflow-wrap:anywhere}
 
 .unlock>.primary{width:100%;margin:8px 0 16px}.unlock>h2{margin-top:8px}.invite-form{margin:16px 0 24px!important}.unlock>button.secondary{display:block;margin-top:16px}.unlock .error{margin-top:16px}
+.research-question:not(:empty){padding:24px 0;margin-bottom:24px;border-bottom:1px solid #78867d}.research-question>button{display:block;width:100%;text-align:left;margin-top:8px}.demand-map .cards{max-height:56svh}.demand-map article{overflow-wrap:anywhere}.demand-map details>summary{font-weight:600}.demand-map .review-footer{position:relative}@media(max-width:600px){.demand-map .cards{max-height:60svh}.research-question:not(:empty){padding:16px 0}}
+
+.invite-edit-controls{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.invite-edit-controls button{flex:1;min-width:120px}

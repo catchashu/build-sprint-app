@@ -1,3 +1,24 @@
+## Current handoff - 2026-10-12, after invite-field fix
+
+This is the current stopping point; older milestone notes below are historical.
+
+### Where we stopped
+
+- Live app: https://ardent-fly-778.convex.site. The invite-entry fix was deployed successfully using `npm run deploy`; the live JavaScript was checked for the new controls.
+- Invite entry now has Show code / Hide code and Clear code. Clearing shows an explicit confirmation. The input stays mounted during updates so editing and cursor position are preserved. Phone capitalization/autocorrection are disabled, and a rejected code can be replaced without duplicate submissions.
+- All 72 automated tests and the production build passed. Browser access was unavailable, so these checks do not constitute visual verification on a phone. The user has not yet confirmed the latest invite-field fix.
+- The invite code has NOT changed. Production matches the private copy in `artifacts/invite-code.txt`; never print or commit it. A separate live test confirmed that the valid code unlocks and survives reopening. The user's latest known run was still locked after one rejected attempt; no automatic unlock was applied.
+- The user confirmed the earlier one-card recovery: refresh showed the correct card and Continue reached payment. Original searches were preserved. The first view now permits 1-4 cards, with at least two sourced queries per card.
+- Milestone 5 (full research and Demand Map review) is implemented and deployed, with live server checks completed, but user phone acceptance is still pending. Milestone 6 (final website plan) has not been implemented. Real Razorpay payments remain disabled; the user does not yet have a test account.
+- Last pushed checkpoint: `97f84d3` (one supported first-view card). Milestone 5 and the latest invite-field changes remain in the working tree, including new files. Preserve them; do not reset or discard them.
+
+### What to do next
+
+1. On the SAME phone tab, refresh, open Have an invite code?, tap Clear code, paste the existing code, inspect it with Show code, then tap Apply. Confirm that clearing/replacing works and the run opens full research.
+2. If entry still fails, inspect the exact visible error and saved run state before changing code. Do not rotate the code, repeat searches, or bypass review/payment checks to hide the problem.
+3. After unlock, finish the milestone-5 phone check: let research complete, inspect the full query/source list, try a correction, answer any consequential question, confirm the Demand Map, and refresh to verify it remains saved without restarting searches.
+4. After the user confirms the relevant flow works, save and push its working changes and record acceptance here. Then discuss the milestone-6 website-plan implementation before writing new code.
+
 # Progress
 
 - 2026-10-12 — Fixed Correct feedback and card-list jumps. The scrolling list and unchanged cards now stay mounted during saves, preserve scroll/source expansion, and show Saving immediately on the selected card. Marked correct appears only after a confirmed server write; failures stay on the affected card with retry available. Already-correct cards cannot send duplicate saves. Added in-memory UI regressions for delayed success, failure/retry and correction-form validation/Cancel; they reproduced the old failures. All 57 tests and build passed. Three separate live test-run saves took 301/296/357 ms from this computer (`artifacts/card-save-timing.json`); that is not phone timing. Phone visual/interaction verification remains unavailable and awaits user confirmation.
@@ -74,3 +95,7 @@ Milestone 1 is not complete. The approved scope is one offering in India: real s
 - 2026-10-12 - Approved first-view fix: allow 1-4 cards while retaining at least two sourced examples per card; reject zero cards and missing sources. All 70 automated tests, frontend build and Convex checks passed. Live development replay of the reported saved grouping produced one card with three exact sourced examples, approved and reopened successfully. Deployed through npm run deploy and recovered the original production run: one card, original four searches/responses/batches unchanged, no additional searches, user review left pending. Browser unavailable; phone check pending: refresh the same tab, review the card, then Continue. Milestone 5 phone acceptance is still pending.
 
 - 2026-10-12 - USER PASS: refreshing the recovered run showed the single card with correct options and Continue reached the invite/payment screen. Production invite setting matches the existing private local code; separate live invite validation passed. User run has one rejected invite attempt and remains locked; no code rotation or automatic unlock performed.
+
+- 2026-10-12 - Invite-entry fix approved and implemented: keep the same input mounted during saved-state updates; add Show/Hide and Clear code with an explicit cleared message; disable phone capitalization/autocorrection; preserve replacement entry after rejection and block duplicate submits. Two new UI regression tests reproduce the original replacement problem and verify correction. All 72 tests and build pass; phone visual verification remains unavailable.
+
+- 2026-10-13 - USER PASS: invite entry, full research, relevance questions, card approval and saved Demand Map completed on the user's phone. Milestone 5 accepted; milestone 6 website structure approved next.

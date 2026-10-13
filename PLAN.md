@@ -2,7 +2,12 @@
 
 ## Milestones
 
-2026-10-12 user acceptance: the complete start-to-invite-unlock flow passed on the user's phone, including stable cards, correction, approval, Continue and invite-code submission. Milestone 3 is passed; the invite path of milestone 4 is passed. Razorpay payment testing remains open until account setup. Next: milestone 5, full research and Demand Map review after unlock; implementation plan awaiting confirmation.
+2026-10-12 approved bug fix: first value may contain 1-4 supported cards. Each card still requires at least two distinct sourced queries. Never split one need just to reach a card count; preserve saved searches when recovering the reported run.
+
+Milestone 5 (approved 2026-10-12): after unlock, expand the same confirmed run with up to eight new searches and two bounded temporary-failure retries, retain completed evidence, group by customer need, preserve corrections and exclusions, and show a saved Demand Map with full source inspection and area corrections. Ask only consequential relevance questions; save their answers. No invented search-volume ratings. Website architecture remains milestone 6; live Razorpay charging stays disabled until that promised output and checkout testing are complete.
+
+
+2026-10-12 user acceptance: the complete start-to-invite-unlock flow passed on the user's phone, including stable cards, correction, approval, Continue and invite-code submission. Milestone 3 is passed; the invite path of milestone 4 is passed. Razorpay payment testing remains open until account setup. Next: milestone 5, full research and Demand Map review after unlock; implementation approved by the user; in progress.
 
 
 Milestone 4 (approved 2026-10-12): connect saved-review Continue to the ₹399 UPI/invite unlock tray, preserving the same run and allowing Close/back. User has no Razorpay account yet. Implement and verify the server-only invite path; prepare UPI-only Razorpay test checkout, signed confirmation, webhook and return recovery. Reject live payment keys until the promised full research is connected. A saved unlock currently leads to an honest not-yet-started research status, not simulated research. Razorpay account setup, actual checkout/device testing, and the full-research handoff remain open.
