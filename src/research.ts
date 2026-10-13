@@ -1,3 +1,4 @@
+import { canvasMode, setCanvasMode } from "./canvasLayout";
 import type { ConvexClient } from 'convex/browser';
 import type { Id } from '../convex/_generated/dataModel';
 import { api } from '../convex/_generated/api';
@@ -16,7 +17,7 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
  retry.onclick=()=>void start();
  const stop=client.onUpdate(api.fullResearch.get,identity,run=>{
   if(!alive)return;
-  if(!run){heading.textContent='This research could not be opened.';error.textContent='Return to your saved run and unlock it first.';return;}
+  if(!run){setCanvasMode(root,'review');heading.textContent='This research could not be opened.';error.textContent='Return to your saved run and unlock it first.';return;}
   if(run.state==='ready'&&!started){started=true;void start();}
   if(run.state==='complete'&&!volumesRequested){volumesRequested=true;void client.mutation(api.searchVolume.start,identity).catch(()=>{});}
   const phases:Record<string,string>={ready:'Preparing your full research',planning:'Choosing searches from your confirmed offering',searching:'Researching real search demand in India',cleaning:'Cleaning and organising the evidence',grouping:'Grouping searches by underlying need',complete:'Here is your India demand map',failed:'Research paused. Your work is safe.'};
@@ -28,6 +29,7 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
   if(run.state==='complete'&&run.hasCards&&!stopReview)stopReview=mountReview(client,identity,map,onConfirmed,{demandMap:true});
   if(run.state==='complete'&&!run.hasCards)status.textContent='There is not enough observable evidence for a demand map. Your research remains saved.';
   const pending:Clarification|undefined=run.questions.find((q:Clarification)=>!run.answers.some((a:{questionId:string})=>a.questionId===q.id));
+  setCanvasMode(root,canvasMode('research',run.state,!!pending));
   const key=pending?.id??'';
   if(key!==questionKey){questionKey=key;questions.replaceChildren();
    if(pending){questions.append(el('h3','One decision before you confirm the map'),el('p',pending.question));

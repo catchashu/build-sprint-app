@@ -51,3 +51,47 @@ body:has(.landing) dialog>button:last-child{position:sticky;bottom:0;background:
 /* The scene spans the viewport; only the working panel keeps side gutters. */
 @media(max-width:600px){.landing .stage{width:100vw;max-width:none;margin-left:calc((100% - 100vw)/2)}.landing .stage video{width:100%;max-width:none;height:100%;object-fit:cover;object-position:center 48%}.landing .motion-control{right:max(1rem,env(safe-area-inset-right,0px))}}
 @media(max-width:600px){.landing .stage video{transform:scale(1.14)}}
+
+/* State-driven canvas: geometry changes; the approved video does not. */
+#app.canvas{--usable-height:calc(100svh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));--tray-height:calc(var(--usable-height)/3);height:100svh;min-height:0;max-width:none;display:grid;grid-template-rows:minmax(0,1fr) minmax(0,var(--tray-height));padding:env(safe-area-inset-top,0px) max(1rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(1rem,env(safe-area-inset-left,0px));transition:grid-template-rows 350ms cubic-bezier(.16,1,.3,1)}
+#app.canvas[data-canvas-mode=review]{--tray-height:calc(var(--usable-height)/2)}
+#app.canvas[data-canvas-mode=processing]{--tray-height:min(14rem,calc(var(--usable-height)/3))}
+#app.canvas[data-canvas-mode=result]{--tray-height:calc(var(--usable-height)*2/3)}
+#app.canvas .stage{display:flex;position:relative;height:100%;min-height:0;width:100vw;margin-left:calc((100% - 100vw)/2);overflow:hidden;flex:none}
+#app.canvas .stage video,#app.canvas .stage img{width:100%;height:100%;max-width:none;border-radius:0;object-fit:cover;object-position:center 48%;transform:scale(1.14)}
+#app.canvas .motion-control{position:absolute;right:max(1rem,env(safe-area-inset-right,0px));bottom:.25rem;background:rgb(247 248 245 / .9);font-size:.875rem;font-weight:400;min-height:44px;padding:.5rem}
+#app.canvas .panel{height:100%;min-height:0;width:100%;max-width:60rem;margin:0 auto;padding:1rem;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable;background:#F7F8F5}
+#app.canvas .panel .cards{max-height:none;overflow:visible}
+#app.canvas .panel .brand{margin-bottom:.5rem}
+#app.canvas .panel .controls{margin-top:1rem}
+#app.canvas .panel .controls button{min-height:48px}
+#app.canvas .plan-node{min-width:0}
+body:has(#app.canvas){overflow:hidden;min-width:0}
+@supports ((backdrop-filter:blur(16px)) or (-webkit-backdrop-filter:blur(16px))){#app.canvas .panel{background:rgb(247 248 245 / .9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}}
+/* Actual visible viewport, not focus alone, decides whether the keyboard is open. */
+#app[data-keyboard=true]{position:fixed;top:var(--keyboard-top,0px);left:0;right:0;height:var(--keyboard-height);min-height:0;max-width:none;padding-bottom:0;grid-template-rows:minmax(0,min(4rem,15%)) minmax(0,1fr);transition:none}
+#app[data-keyboard=true] .panel{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;margin-top:0}
+#app[data-keyboard=true] .stage{min-height:0;height:100%}
+@media(max-width:374px){#app.canvas{padding-left:max(.5rem,env(safe-area-inset-left,0px));padding-right:max(.5rem,env(safe-area-inset-right,0px))}#app.canvas .panel{padding:.5rem}}
+@media(min-width:601px){#app.canvas .stage video,#app.canvas .stage img{width:auto;max-width:100%;object-fit:contain;transform:none}#app.canvas .panel{padding:1.5rem 2rem}}
+@media(prefers-reduced-motion:reduce){#app.canvas{transition:none}}
+@media(prefers-reduced-transparency:reduce){#app.canvas .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){#app.canvas .panel,#app.canvas .motion-control{background:Canvas;color:CanvasText}}
+/* Use matching grid tracks so navigation can interpolate the stage allocation. */
+#app.landing{grid-template-rows:minmax(0,calc(var(--usable-height)/3)) minmax(0,1fr)}
+#app.canvas{grid-template-rows:minmax(0,calc(var(--usable-height) - var(--tray-height))) minmax(0,1fr)}
+#app[data-keyboard=true]{grid-template-rows:minmax(0,min(4rem,15%)) minmax(0,1fr)}
+
+/* Desktop: frame the portrait performance at a readable size in the wide forest. */
+@media(min-width:601px){
+  #app.landing .stage{width:100vw;margin-left:calc((100% - 100vw)/2)}
+  #app.landing .stage video,#app.landing .stage img,
+  #app.canvas .stage video,#app.canvas .stage img{
+    width:min(100vw,48rem);max-width:none;height:100%;object-fit:cover;
+    object-position:center 42%;transform:none;border-radius:0;
+    mask-image:linear-gradient(to right,transparent 8%,#000 24%,#000 76%,transparent 92%);
+  }
+  #app.landing .motion-control,#app.canvas .motion-control{
+    right:max(1rem,calc((100vw - 56rem)/2));bottom:.5rem;
+  }
+}

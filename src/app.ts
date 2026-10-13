@@ -1,4 +1,4 @@
-﻿import { ConvexClient } from "convex/browser";
+import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { materializeCards } from "../shared/firstValue";
@@ -8,6 +8,8 @@ import { mountResearch } from "./research";
 import { mountUnlock } from "./unlock";
 import { mountWebsitePlan } from "./websitePlan";
 import { readSavedState, saveState } from "./savedPlan";
+import { canvasMode, setCanvasMode, watchCanvasViewport } from "./canvasLayout";
+import { createRestingStage } from "./restingStage";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
@@ -17,7 +19,10 @@ let state: State;
 state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
 let stopReview: (() => void) | undefined;
-let stopStage: (() => void) | undefined;
+const { stage, stop: stopStage } = createRestingStage();
+const panel = node("section", "", "panel"); app.append(stage, panel);
+const stopViewport = watchCanvasViewport(app);
+import.meta.hot?.dispose(() => { stopStage(); stopViewport(); unsubscribe?.(); stopReview?.(); });
 let busy = false;
 function save() { saveState(sessionStorage, localStorage, storageKey, state); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
@@ -25,9 +30,9 @@ function button(text: string, action: () => void, primary = false) { const b = n
 function message(text: string) { document.querySelector<HTMLElement>("#message")!.textContent = text; }
 async function work(fn: () => Promise<void>) {
   if (busy) return; busy = true;
-  app.querySelectorAll<HTMLButtonElement>("button").forEach(b => b.disabled = true);
+  panel.querySelectorAll<HTMLButtonElement>("button").forEach(b => b.disabled = true);
   try { await fn(); } catch { message("This step couldn’t finish. Your context is saved. Please try again."); }
-  finally { busy = false; app.querySelectorAll<HTMLButtonElement>("button").forEach(b => b.disabled = false); }
+  finally { busy = false; panel.querySelectorAll<HTMLButtonElement>("button").forEach(b => b.disabled = false); }
 }
 function go(screen: State["screen"]) { state.screen = screen; save(); render(); document.querySelector<HTMLElement>("h1, h2")?.focus(); }
 function field(label: string, value: string, placeholder: string, update: (value: string) => void, multiline = false) {
@@ -37,26 +42,10 @@ function field(label: string, value: string, placeholder: string, update: (value
   input.oninput = () => { update(input.value); save(); }; wrapper.append(input); return wrapper;
 }
 function render() {
-  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; stopStage?.(); stopStage = undefined; app.replaceChildren();
+  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; panel.replaceChildren(); panel.scrollTop = 0;
   app.className = state.screen === "landing" ? "landing" : "canvas";
-  const stage = node("div", "", "stage");
-  if (state.screen === "landing") {
-    const video = node("video"); video.src = "/animations/resting-v1.mp4"; video.poster = "/images/gibbon-placeholder.jpg";
-    video.muted = true; video.loop = true; video.playsInline = true; video.preload = "metadata";
-    video.setAttribute("aria-label", "Gibbon resting quietly in the forest");
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)"); let paused = reduced.matches;
-    const toggle = button(paused ? "Play animation" : "Pause animation", () => { paused = !paused; sync(); });
-    toggle.className = "motion-control";
-    function sync() { toggle.textContent = paused ? "Play animation" : "Pause animation"; if (paused || document.hidden) video.pause(); else void video.play().catch(() => { paused = true; toggle.textContent = "Play animation"; }); }
-    const preference = () => { paused = reduced.matches; sync(); };
-    document.addEventListener("visibilitychange", sync); reduced.addEventListener("change", preference);
-    stopStage = () => { video.pause(); document.removeEventListener("visibilitychange", sync); reduced.removeEventListener("change", preference); };
-    stage.append(video, toggle); sync();
-  } else {
-    const image = node("img"); image.src = "/images/gibbon-placeholder.jpg"; image.alt = "A golden gibbon resting on a log in a green forest"; stage.append(image);
-  }
-  app.append(stage);
-  const panel = node("section", "", "panel"); app.append(panel); panel.append(node("p", "Topic Gibbon", "brand"));
+  setCanvasMode(app, canvasMode(state.screen));
+  panel.append(node("p", "Topic Gibbon", "brand"));
   const error = node("p", "", "error"); error.id = "message"; error.setAttribute("role", "alert");
   if (state.screen === "landing") {
     const h = node("h1"); h.tabIndex = -1;
@@ -117,7 +106,8 @@ function render() {
     controls.append(retry, edit); panel.append(title, count, status, error, cards, searches, controls);
     if (!state.id) { message("This run couldn’t be opened. Your context is saved."); edit.hidden = false; return; }
     unsubscribe = client.onUpdate(api.firstValue.get, { id: state.id, token: state.token }, run => {
-      if (!run) { message("This saved run couldn’t be opened."); edit.hidden = false; return; }
+      if (!run) { setCanvasMode(app, "review"); message("This saved run couldn’t be opened."); edit.hidden = false; return; }
+      setCanvasMode(app, canvasMode("result", run.state));
       count.textContent = `Searches used: ${run.searchCount} / ${run.searchLimit}`;
       log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => node("li", `${s.query} — ${s.status}${s.error ? `: ${s.error}` : ""}`, s.status === "failed" ? "error" : "")));
       if (run.searches.some((s: { status: string }) => s.status === "failed")) searches.open = true;
@@ -159,4 +149,3 @@ function explain(label: string) {
   dialog.append(button("Close", () => dialog.close())); dialog.onclose = () => dialog.remove(); document.body.append(dialog); dialog.showModal();
 }
 render();
-

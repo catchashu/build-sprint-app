@@ -1,3 +1,4 @@
+import { canvasMode, setCanvasMode } from "./canvasLayout";
 import type { ConvexClient } from 'convex/browser';
 import type { Id } from '../convex/_generated/dataModel';
 import { api } from '../convex/_generated/api';
@@ -95,6 +96,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   }
   const stop = client.onUpdate(api.websitePlan.get, identity, (view: View) => {
     if (!alive) return; current = view;
+    setCanvasMode(root,canvasMode('plan',view.state));
     if(view.state==='complete'&&!volumesRequested){volumesRequested=true;void client.mutation(api.searchVolume.start,identity).catch(()=>{});}
     const key = JSON.stringify(view); if (key === lastDraw) return; lastDraw = key;
     controls.replaceChildren(); question.replaceChildren(); output.replaceChildren(); error.textContent = view.error ?? '';
