@@ -4,7 +4,7 @@ import { api } from '../convex/_generated/api';
 import { mountReview } from './cardReview';
 import type { Clarification } from '../shared/fullResearch';
 const el=<K extends keyof HTMLElementTagNameMap>(tag:K,text='',cls='')=>{const n=document.createElement(tag);n.textContent=text;n.className=cls;return n;};
-export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRuns'>;token:string},root:HTMLElement){
+export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRuns'>;token:string},root:HTMLElement,onConfirmed:()=>void=()=>{}){
  let alive=true,starting=false,started=false,stopReview:(()=>void)|undefined,questionKey='',answerBusy=false;
  const heading=el('h2','Preparing your full research'),status=el('p','','muted'),error=el('p','','error'),questions=el('section','','research-question'),map=el('div','','review demand-map'),activity=el('details'),log=el('ul');
  heading.tabIndex=-1;status.setAttribute('role','status');error.setAttribute('role','alert');activity.append(el('summary','Search activity'),log);
@@ -23,7 +23,7 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
   error.textContent=run.error??'';retry.hidden=run.state!=='failed';
   log.replaceChildren(...run.searches.map((s:{query:string;status:string;error?:string})=>el('li',`${s.query} - ${s.status}${s.error?`: ${s.error}`:''}`,s.status==='failed'?'error':'')));
   if(run.searches.some((s:{status:string})=>s.status==='failed')){limits.textContent='Some searches failed. The map uses successful saved results; coverage may be incomplete.';}
-  if(run.state==='complete'&&run.hasCards&&!stopReview)stopReview=mountReview(client,identity,map,()=>{heading.focus();},{demandMap:true});
+  if(run.state==='complete'&&run.hasCards&&!stopReview)stopReview=mountReview(client,identity,map,onConfirmed,{demandMap:true});
   if(run.state==='complete'&&!run.hasCards)status.textContent='There is not enough observable evidence for a demand map. Your research remains saved.';
   const pending:Clarification|undefined=run.questions.find((q:Clarification)=>!run.answers.some((a:{questionId:string})=>a.questionId===q.id));
   const key=pending?.id??'';

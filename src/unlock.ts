@@ -101,7 +101,7 @@ export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValue
     }
     if (!state.accepted) { content.append(element("p", "Confirm your cards before unlocking this run."), button("Back to your cards", back, true)); return; }
     content.append(element("h2", "Unlock the full Topic Gibbon plan"), element("p", "You’ve seen the first demand areas. Unlock the full India demand map and prioritised website plan."), element("p", "₹399 · one-time", "count"), element("p", "No subscription. No account needed."));
-    content.append(element("p", "Payment testing only: no money will be charged. Full research and website planning aren’t available yet.", "small"));
+    content.append(element("p", "Payment testing only: no money will be charged. An invite code unlocks the full research and website plan.", "small"));
     const pay = button("Pay ₹399 with UPI", () => void work(async () => {
       await loadCheckout();
       const order = await client.action(api.payments.createOrder, identity);

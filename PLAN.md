@@ -2,6 +2,10 @@
 
 ## Milestones
 
+2026-10-13 user acceptance: milestone 6 passed the full user flow, including the website plan, Excel download in the expected format, and Exit returning to the main screen. The invite-based end-to-end flow is accepted. Real Razorpay payment testing remains open; live charging stays disabled.
+
+2026-10-13 approved milestone 6: turn the confirmed Demand Map into a saved hierarchical website plan with Page / Section / FAQ / Supporting Content, First / Next / Later priorities, traceable retained search evidence, and Insufficient evidence for demand while volume data is unavailable. Provide Why this?, a structured Excel download, targeted recommendation correction, and consequential clarification rather than guessing. Reuse existing research, preserve earlier plans/corrections, and resume after refresh. Keep live Razorpay charging disabled pending checkout testing. Milestone 5 passed user phone review.
+
 2026-10-12 approved bug fix: first value may contain 1-4 supported cards. Each card still requires at least two distinct sourced queries. Never split one need just to reach a card count; preserve saved searches when recovering the reported run.
 
 Milestone 5 (approved 2026-10-12): after unlock, expand the same confirmed run with up to eight new searches and two bounded temporary-failure retries, retain completed evidence, group by customer need, preserve corrections and exclusions, and show a saved Demand Map with full source inspection and area corrections. Ask only consequential relevance questions; save their answers. No invented search-volume ratings. Website architecture remains milestone 6; live Razorpay charging stays disabled until that promised output and checkout testing are complete.

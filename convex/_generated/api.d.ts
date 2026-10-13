@@ -26,6 +26,7 @@ import type * as research from "../research.js";
 import type * as researchAI from "../researchAI.js";
 import type * as runFields from "../runFields.js";
 import type * as websiteContext from "../websiteContext.js";
+import type * as websitePlan from "../websitePlan.js";
 
 import type {
   ApiFromModules,
@@ -52,6 +53,7 @@ declare const fullApi: ApiFromModules<{
   researchAI: typeof researchAI;
   runFields: typeof runFields;
   websiteContext: typeof websiteContext;
+  websitePlan: typeof websitePlan;
 }>;
 
 /**

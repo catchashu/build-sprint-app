@@ -3,6 +3,13 @@ import { v } from "convex/values";
 import { runFields } from "./runFields";
 
 export default defineSchema({
+  websitePlans: defineTable({
+    runId: v.id("firstValueRuns"), mapRevision: v.number(), inputJson: v.string(),
+    state: v.union(v.literal("generating"), v.literal("checking"), v.literal("complete"), v.literal("failed"), v.literal("clarification")),
+    rawJson: v.optional(v.string()), planJson: v.optional(v.string()), error: v.optional(v.string()),
+    previousPlanJson: v.optional(v.string()), selectedNodeId: v.optional(v.string()), correction: v.optional(v.string()),
+    workflowId: v.optional(v.string()),
+  }).index("by_run", ["runId"]),
   firstValueRuns: defineTable({
     token: v.string(), offering: v.string(), context: v.string(), state: v.string(), searchCount: v.number(),
     searches: v.array(v.object({ query: v.string(), status: v.string(), error: v.optional(v.string()) })),

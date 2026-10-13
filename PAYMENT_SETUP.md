@@ -2,7 +2,7 @@
 
 The saved review now has Continue, which opens the unlock screen. Closing it preserves the run. A valid invite code saves a comped unlock on the same run; reopening it shows that saved unlock rather than asking for payment again.
 
-Full research and Demand Map review are now connected after unlock. Reopening an unlocked run resumes its saved research. Final website planning is the next milestone. Checkout currently rejects live Razorpay credentials, so this version cannot charge real money.
+Full research, Demand Map review and final website planning with Excel export are now connected after unlock. Reopening an unlocked run resumes its saved work. Checkout still rejects live Razorpay credentials pending actual payment testing, so this version cannot charge real money.
 
 ## Invite code
 

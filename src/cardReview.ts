@@ -140,8 +140,10 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     if (!active.length) nextOutside.append(element("p", "All cards are excluded. Edit your context to research the offering you want to cover.", "review-wide"));
     else if (current.accepted) {
       const saved = element("div", "", "review-footer"); saved.setAttribute("role", "status");
-      saved.append(element("p", options.demandMap ? "Your demand map is saved. Website planning is the next milestone." : "Your confirmed understanding is saved."));
-      if (!options.demandMap) saved.append(button("Continue", continueToUnlock, true));
+      saved.append(element("p", options.demandMap ? "Your demand map is saved. It’s ready to become your website plan." : "Your confirmed understanding is saved."));
+      const continueSaved = button(options.demandMap ? "Build my website plan" : "Continue", continueToUnlock, true);
+      continueSaved.disabled = continueSaved.disabled || !!editing;
+      saved.append(continueSaved);
       nextOutside.append(saved);
     }
     else {

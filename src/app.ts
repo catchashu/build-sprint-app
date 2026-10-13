@@ -6,17 +6,19 @@ import "./style.css";
 import { mountReview } from "./cardReview";
 import { mountResearch } from "./research";
 import { mountUnlock } from "./unlock";
+import { mountWebsitePlan } from "./websitePlan";
+import { readSavedState, saveState } from "./savedPlan";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
-type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock" | "research"; id?: Id<"firstValueRuns">; token: string };
+type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string };
 const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: crypto.randomUUID() });
 let state: State;
-try { state = JSON.parse(sessionStorage.getItem(storageKey) || "null") || blank(); } catch { state = blank(); }
+state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
 let stopReview: (() => void) | undefined;
 let busy = false;
-function save() { sessionStorage.setItem(storageKey, JSON.stringify(state)); }
+function save() { saveState(sessionStorage, localStorage, storageKey, state); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
 function button(text: string, action: () => void, primary = false) { const b = node("button", text, primary ? "primary" : "secondary"); b.type = "button"; b.onclick = action; return b; }
 function message(text: string) { document.querySelector<HTMLElement>("#message")!.textContent = text; }
@@ -51,6 +53,10 @@ function render() {
     const explainers = node("nav", "", "explainers"); explainers.setAttribute("aria-label", "About Topic Gibbon");
     for (const label of ["What?", "Why?", "How?", "For me?"]) explainers.append(button(label, () => explain(label)));
     panel.append(explainers);
+    if (localStorage.getItem(`${storageKey}:plan`)) panel.append(button("Reopen saved website plan", () => {
+      try { const saved = JSON.parse(localStorage.getItem(`${storageKey}:plan`)!); if (saved?.id && saved?.token) { state = saved; go("plan"); } }
+      catch { message("The saved plan could not be opened in this browser."); }
+    }));
   } else if (state.screen === "website" || state.screen === "references") {
     const own = state.screen === "website";
     const title = node("h2", own ? "Do you have a website I should use as context?" : "Any competitor or inspiration sites I should look at?"); title.tabIndex = -1;
@@ -71,9 +77,13 @@ function render() {
       if (own) { state.websiteText = texts.join("\n"); go("references"); }
       else { state.referenceText = texts.join("\n"); await launch(); }
     }); };
+  } else if (state.screen === "plan") {
+    if (!state.id) { go("landing"); return; }
+    app.classList.add("plan-screen");
+    stopReview = mountWebsitePlan(client, { id: state.id, token: state.token }, panel, () => go("research"), () => { state = blank(); go("landing"); });
   } else if (state.screen === "research") {
     if (!state.id) { go("landing"); return; }
-    stopReview = mountResearch(client, { id: state.id, token: state.token }, panel);
+    stopReview = mountResearch(client, { id: state.id, token: state.token }, panel, () => go("plan"));
   } else if (state.screen === "unlock") {
     if (!state.id) { go("landing"); return; }
     const unlock = node("div", "", "unlock"); panel.append(unlock);

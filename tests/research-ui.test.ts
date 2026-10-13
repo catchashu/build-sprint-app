@@ -12,7 +12,8 @@ test('research auto-starts once, preserves the demand-map list and exposes all e
  const callbacks=new Map<string,(value:any)=>void>(),calls:string[]=[];
  const client={onUpdate:(ref:any,_args:any,callback:(value:any)=>void)=>{const name=getFunctionName(ref);callbacks.set(name,callback);return()=>callbacks.delete(name);},mutation:async(ref:any)=>{calls.push(getFunctionName(ref));return null;}} as unknown as ConvexClient;
  const root=window.document.createElement('section');window.document.body.append(root);
- const stop=mountResearch(client,{id:'fake' as Id<'firstValueRuns'>,token:'test-token'},root as unknown as HTMLElement);
+ let openedPlan=0;
+ const stop=mountResearch(client,{id:'fake' as Id<'firstValueRuns'>,token:'test-token'},root as unknown as HTMLElement,()=>openedPlan++);
  try{
  const ready={state:'ready',searches:[],searchCount:0,questions:[],answers:[],accepted:false};
  callbacks.get('fullResearch:get')!(ready);callbacks.get('fullResearch:get')!(ready);await Promise.resolve();assert.deepEqual(calls,['fullResearch:start']);
@@ -23,5 +24,8 @@ test('research auto-starts once, preserves the demand-map list and exposes all e
  assert.match(root.textContent,/View all 5 searches/);assert.match(root.textContent,/Insufficient evidence/);
  callbacks.get('fullResearch:get')!(complete);assert.equal(root.querySelector('.cards'),list);assert.equal(list.scrollTop,350);
  assert.equal([...root.querySelectorAll('button')].find(b=>b.textContent==='Confirm demand map')?.disabled,false);
+ [...root.querySelectorAll('button')].find(b=>b.textContent==='Confirm demand map')!.click();await new Promise<void>(r=>setImmediate(r));assert.equal(openedPlan,1);assert.equal(calls.at(-1),'mapReview:accept');
+ callbacks.get('mapReview:get')!({revision:0,cards:[{groupId:'a',label:'Need',need:'Confirmed need',queries}],decisions:{a:'correct'},notes:[],accepted:true,pending:null,last:null});
+ const build=[...root.querySelectorAll('button')].find(b=>b.textContent==='Build my website plan');assert.ok(build);build.click();assert.equal(openedPlan,2);
  }finally{stop();assert.equal(callbacks.size,0);globalThis.document=oldDocument;globalThis.Option=oldOption;await window.happyDOM.close();}
 });
