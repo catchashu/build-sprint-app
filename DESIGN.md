@@ -1040,3 +1040,7 @@ These rules apply across Topic Gibbon unless an explicitly documented state-spec
 
 14\. \*\*Keep design principles separate from one-off fixes.\*\* Record permanent cross-screen rules here. Keep individual screen treatments in Section 4, copy in Section 5 & technical implementation details in their appropriate specifications.
 
+
+## Approved landing copy placement amendment
+
+User approved a compact landing composition with headline, offering input, main action and four information triggers visible. Preserve the introductory paragraph verbatim inside What? and payment/subscription reassurance verbatim inside How?. This supersedes their original always-visible placement for this landing pass. Preserve Inter, forest, character and the upper-third stage. Use the approved resting loop unchanged as the temporary character performance. Later canvas transitions require separate initial-layout review first. Very short viewport/text-enlargement overflow remains an explicit unresolved constraint, not permission to shrink or remove copy.

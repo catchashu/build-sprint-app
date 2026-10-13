@@ -17,6 +17,7 @@ let state: State;
 state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
 let stopReview: (() => void) | undefined;
+let stopStage: (() => void) | undefined;
 let busy = false;
 function save() { saveState(sessionStorage, localStorage, storageKey, state); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
@@ -36,20 +37,36 @@ function field(label: string, value: string, placeholder: string, update: (value
   input.oninput = () => { update(input.value); save(); }; wrapper.append(input); return wrapper;
 }
 function render() {
-  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; app.replaceChildren();
+  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; stopStage?.(); stopStage = undefined; app.replaceChildren();
   app.className = state.screen === "landing" ? "landing" : "canvas";
-  const stage = node("div", "", "stage"); const image = node("img"); image.src = "/images/gibbon-placeholder.jpg"; image.alt = "A golden gibbon resting on a log in a green forest"; stage.append(image); app.append(stage);
+  const stage = node("div", "", "stage");
+  if (state.screen === "landing") {
+    const video = node("video"); video.src = "/animations/resting-v1.mp4"; video.poster = "/images/gibbon-placeholder.jpg";
+    video.muted = true; video.loop = true; video.playsInline = true; video.preload = "metadata";
+    video.setAttribute("aria-label", "Gibbon resting quietly in the forest");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)"); let paused = reduced.matches;
+    const toggle = button(paused ? "Play animation" : "Pause animation", () => { paused = !paused; sync(); });
+    toggle.className = "motion-control";
+    function sync() { toggle.textContent = paused ? "Play animation" : "Pause animation"; if (paused || document.hidden) video.pause(); else void video.play().catch(() => { paused = true; toggle.textContent = "Play animation"; }); }
+    const preference = () => { paused = reduced.matches; sync(); };
+    document.addEventListener("visibilitychange", sync); reduced.addEventListener("change", preference);
+    stopStage = () => { video.pause(); document.removeEventListener("visibilitychange", sync); reduced.removeEventListener("change", preference); };
+    stage.append(video, toggle); sync();
+  } else {
+    const image = node("img"); image.src = "/images/gibbon-placeholder.jpg"; image.alt = "A golden gibbon resting on a log in a green forest"; stage.append(image);
+  }
+  app.append(stage);
   const panel = node("section", "", "panel"); app.append(panel); panel.append(node("p", "Topic Gibbon", "brand"));
   const error = node("p", "", "error"); error.id = "message"; error.setAttribute("role", "alert");
   if (state.screen === "landing") {
     const h = node("h1"); h.tabIndex = -1;
     h.innerHTML = 'Plan your website<span class="phone-break"></span> around<span class="wide-break"></span> what<span class="phone-break"></span> customers search for.';
-    panel.append(h, node("p", "Get a website plan based on real searches in India, with suggested pages, what each should cover & what to prioritise. Just tell us what you offer.", "intro"));
+    panel.append(h);
     const form = node("form");
     form.append(field("What do you offer?", state.offering, "Example: We supply hospital beds, examination tables & medical trolleys to hospitals across India.", value => state.offering = value, true));
     const next = button("Plan my website", () => {}, true); next.type = "submit"; form.append(error, next);
     form.onsubmit = event => { event.preventDefault(); if (state.offering.trim().length < 10) { message("Tell us a little more about what you offer."); return; } go("website"); };
-    panel.append(form, node("p", "Start free & see the first search results. Then choose whether to pay ₹399 once via UPI for the full research & website plan.", "small reassurance"), node("p", "No subscription or account needed.", "small"));
+    panel.append(form);
     const explainers = node("nav", "", "explainers"); explainers.setAttribute("aria-label", "About Topic Gibbon");
     for (const label of ["What?", "Why?", "How?", "For me?"]) explainers.append(button(label, () => explain(label)));
     panel.append(explainers);
@@ -132,6 +149,8 @@ const copy: Record<string, { title: string; paragraphs: string[] }> = {
 };
 function explain(label: string) {
   const dialog = node("dialog"); const content = copy[label]; dialog.setAttribute("aria-label", content.title); dialog.append(node("h2", content.title));
+  if (label === "What?") dialog.append(node("p", "Get a website plan based on real searches in India, with suggested pages, what each should cover & what to prioritise. Just tell us what you offer."));
+  if (label === "How?") dialog.append(node("p", "Start free & see the first search results. Then choose whether to pay ₹399 once via UPI for the full research & website plan."), node("p", "No subscription or account needed."));
   if (label === "For me?") {
     const paragraph = node("p", content.paragraphs[0]);
     for (const [i, name] of ["I’m planning my own website", "I’m doing this for a client/team"].entries()) dialog.append(button(name, () => paragraph.textContent = content.paragraphs[i]));
