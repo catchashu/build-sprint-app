@@ -2,7 +2,8 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { Review, Card } from "../shared/cardReview";
-type View = Review & { clarificationPending?: boolean; unlocked?: boolean; pending: { cardId: string; id: string } | null; last: { id: string; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
+import {demandSummary,queryVolumeText,VOLUME_NOTE,type VolumeSnapshot} from '../shared/searchVolume';
+type View = Review & { volumes?:VolumeSnapshot|null; volumeState?:string|null; clarificationPending?: boolean; unlocked?: boolean; pending: { cardId: string; id: string } | null; last: { id: string; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const e = document.createElement(tag); e.textContent = text; e.className = cls; return e; };
 const labels = { split: "These searches should not be grouped together", merge: "This should be grouped with another card", excluded: "This isn’t part of what I offer", label: "The label / meaning is wrong", other: "Something else" };
 export function mountReview(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, continueToUnlock: () => void, options: { demandMap?: boolean } = {}) {
@@ -25,6 +26,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     const list = element("ul");
     for (const query of card.queries) {
       const item = element("li", query.query), detail = element("details"); detail.dataset.queryId = query.id; detail.append(element("summary", "Source"));
+      if(options.demandMap)detail.append(element('p',queryVolumeText(query.query,current?.volumes),'small muted'));
       for (const source of query.sources) {
         const a = element("a", `${source.field === "related_questions.question" ? "Google question" : "Google related search"} · ${source.retrievedAt}`);
         a.href = source.reference; a.target = "_blank"; a.rel = "noopener noreferrer"; detail.append(a);
@@ -39,7 +41,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     const openSources = new Set([...cardList.querySelectorAll<HTMLDetailsElement>("details[open]")].map(detail => detail.dataset.queryId));
     const nextOutside = document.createDocumentFragment();
     for (const [index, card] of current.cards.entries()) {
-      const key = JSON.stringify({ card, excluded: current.decisions[card.groupId] === "excluded", editing: editing?.cardId === card.groupId ? editing : null, unlocked: current.unlocked,
+      const key = JSON.stringify({ card, volumes:current.volumes, volumeState:current.volumeState, excluded: current.decisions[card.groupId] === "excluded", editing: editing?.cardId === card.groupId ? editing : null, unlocked: current.unlocked,
         pending: current.pending?.cardId === card.groupId ? current.pending : null, last: current.last?.cardId === card.groupId ? current.last : null });
       const cached = cardNodes.get(card.groupId);
       if (cached?.key === key) {
@@ -57,7 +59,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         if (options.demandMap) article.append(button("Restore this area", () => void perform(async () => { await client.mutation(reviews.decision, { ...identity, revision: current!.revision, cardId: card.groupId, decision: "correct" }); }, card.groupId)));
         continue;
       }
-      if (options.demandMap) article.append(element("p", "Insufficient evidence - search volumes unavailable", "small muted"));
+      if (options.demandMap) article.append(element("p", ['queued','running'].includes(current.volumeState??'')?'Checking India search volumes…':`Demand: ${demandSummary(card.queries,current.volumes).text}`, "small muted"));
       if (options.demandMap && card.queries.length > 3) {
         article.append(sourceList({ ...card, queries: card.queries.slice(0, 3) }));
         const all = element("details"); all.dataset.queryId = `area:${card.groupId}`; all.append(element("summary", `View all ${card.queries.length} searches`), sourceList(card)); article.append(all);
@@ -151,7 +153,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
       next.disabled = next.disabled || !allCorrect || !!editing || !!current.clarificationPending;
       const footer = element("div", "", "review-footer"); footer.append(element("p", current.clarificationPending ? "Answer the question above before confirming the map." : allCorrect ? "Your cards are ready to confirm." : "Mark each remaining card Correct before continuing.", "small muted"), next); nextOutside.append(footer);
     }
-    nextOutside.append(element("p", options.demandMap ? "This map retains the observed searches and their sources. No search-volume estimates are available." : "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
+    nextOutside.append(element("p", options.demandMap ? VOLUME_NOTE : "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
     outsideCards.replaceChildren(nextOutside);
   }
   const stop = client.onUpdate(reviews.get, identity, (view: View | null) => {

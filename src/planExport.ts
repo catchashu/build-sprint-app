@@ -1,8 +1,9 @@
 import ExcelJS from 'exceljs';
 import type { Card } from '../shared/cardReview';
-import { orderedNodes, isStandalone, containingPage, type WebsitePlan } from '../shared/websitePlan';
+import { orderedNodes, isStandalone, containingPage, planEvidence, type WebsitePlan } from '../shared/websitePlan';
+import {demandSummary,volumeFor,VOLUME_NOTE,VOLUME_ENDPOINT,type VolumeSnapshot} from '../shared/searchVolume';
 
-export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: string) {
+export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: string, volumes?:VolumeSnapshot|null) {
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'Topic Gibbon'; workbook.created = new Date();
   const sheet = (name: string, headings: string[], widths: number[]) => {
@@ -18,7 +19,8 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   const content = sheet('On-page content', ['ID', 'Containing page ID', 'Containing page', 'Content recommendation', 'Treatment', 'Priority', 'Demand', 'What to cover', 'Why this treatment and priority', 'Mapped demand area IDs', 'Overlap or thin-page note', 'Parent recommendation ID'], [16, 20, 38, 38, 24, 14, 24, 60, 70, 32, 50, 24]);
   for (const {node} of orderedNodes(plan.nodes)) {
     const owner = containingPage(node, plan.nodes);
-    const details = [node.label, node.treatment, node.priority, 'Insufficient evidence', node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote];
+    const demand=demandSummary(planEvidence(node,cards).queries,volumes);
+    const details = [node.label, node.treatment, node.priority, demand.peak===null?'Insufficient evidence':demand.text, node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote];
     if (isStandalone(node)) {
       let level = 1, ancestor = owner;
       while (ancestor) { level++; ancestor = containingPage(ancestor, plan.nodes); }
@@ -28,7 +30,8 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   const areas = sheet('Demand areas', ['Demand area ID', 'Label', 'Customer need', 'Demand'], [32, 40, 70, 24]);
   const evidence = sheet('Search evidence', ['Demand area ID', 'Query ID', 'Observed search', 'Provider', 'Source field', 'Source reference', 'Retrieved at'], [32, 20, 60, 18, 32, 65, 28]);
   for (const card of cards) {
-    areas.addRow([card.groupId, card.label, card.need, 'Insufficient evidence']);
+    const demand=demandSummary(card.queries,volumes);
+    areas.addRow([card.groupId, card.label, card.need, demand.peak===null?'Insufficient evidence':demand.text]);
     for (const query of card.queries) for (const source of query.sources) evidence.addRow([card.groupId, query.id, query.query, source.provider, source.field, source.reference, source.retrievedAt]);
   }
   const notes = sheet('Context and limits', ['Item', 'Details'], [28, 100]);
@@ -36,8 +39,16 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   notes.addRow(['How to read this plan', 'Website pages lists separate pages and supporting resources. On-page content lists sections and FAQs that belong within those pages, with no separate URL. Page level counts only separate pages/resources.']);
   notes.addRow(['Evidence scope', 'Search evidence contains the full retained searches for each mapped demand area. These are area-level context; not every search supports every section or FAQ mapped to that area.']);
   notes.addRow(['Priority', 'First / Next / Later describes business fit, intent and importance, not search volume.']);
-  notes.addRow(['Demand', 'Insufficient evidence: no reliable external search-volume measurements were available.']);
+  notes.addRow(['Demand', VOLUME_NOTE]);
+  notes.addRow(['Volume availability',volumes?`Saved lookup from ${volumes.retrievedAt}. Blank/unavailable values are unknown, not zero. Saved reasoning may predate this lookup.`:'No saved volume lookup is available.']);
   for (const limitation of plan.limitations) notes.addRow(['Limitation', limitation]);
+  if(volumes){
+    const metrics=sheet('Search volumes',['Observed search','Monthly searches (estimate)','Market','Language','Provider','Retrieved at','Task ID','Endpoint','Monthly history'],[60,26,14,14,28,28,40,65,65]);
+    const queries=[...new Map(cards.flatMap(c=>c.queries).map(q=>[q.query.trim().toLowerCase(),q])).values()];
+    for(const q of queries){const row=volumes.rows.find(r=>r.keyword===q.query.trim().toLowerCase().replace(/\s+/g,' '));
+      metrics.addRow([q.query,volumeFor(q.query,volumes)??'Unavailable','India','English','DataForSEO / Google Ads',volumes.retrievedAt,volumes.taskId,VOLUME_ENDPOINT,row?.monthly.map(m=>`${m.year}-${String(m.month).padStart(2,'0')}: ${m.volume}`).join('\n')??'']);
+    }
+  }
   for (const ws of workbook.worksheets) ws.eachRow((row, i) => {
     row.alignment = { vertical: 'top', wrapText: true };
     if (i > 1) {
@@ -52,8 +63,8 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   return workbook;
 }
 
-export async function downloadPlan(plan: WebsitePlan, cards: Card[], offering: string) {
-  const workbook = await planWorkbook(plan, cards, offering);
+export async function downloadPlan(plan: WebsitePlan, cards: Card[], offering: string,volumes?:VolumeSnapshot|null) {
+  const workbook = await planWorkbook(plan, cards, offering,volumes);
   const bytes = await workbook.xlsx.writeBuffer();
   const url = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
   const link = document.createElement('a'); link.href = url; link.download = 'topic-gibbon-website-plan.xlsx'; document.body.append(link); link.click(); link.remove();

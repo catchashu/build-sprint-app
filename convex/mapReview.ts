@@ -6,6 +6,7 @@ import { Output } from "ai";
 import { mutation, query, internalMutation, internalQuery, internalAction } from "./_generated/server";
 import { internal, components } from "./_generated/api";
 import { BATCH_RULES, BATCH_SETTINGS } from "../shared/batchedPlanning";
+import {readVolumes} from '../shared/searchVolume';
 import { readReview, reviewCard, decide, correctMeaning, correctionSchema, acceptedUnderstanding, groupingInput, groupingSchema, correctGrouping } from "../shared/cardReview";
 import type { Doc } from "./_generated/dataModel";
 async function find(ctx: { db: import("./_generated/server").QueryCtx["db"] }, id: import("./_generated/dataModel").Id<"firstValueRuns">) { return ctx.db.query("fullResearchRuns").withIndex("by_run", q => q.eq("runId", id)).unique(); }
@@ -22,7 +23,7 @@ export const get = query({ args: identity, returns: v.any(), handler: async (ctx
   if (!run || run.token !== token || !run.cards) return null;
   const pending = run.reviewPending ? await ctx.db.get(run.reviewPending) : null;
   const last = run.reviewLast ? await ctx.db.get(run.reviewLast) : null;
-  return { ...readReview(run.cards, run.reviewJson), unlocked: false, clarificationPending: JSON.parse(run.questionsJson ?? "[]").some((q: {id:string}) => !JSON.parse(run.answersJson ?? "[]").some((a: {questionId:string}) => a.questionId === q.id)), pending: pending ? { cardId: pending.cardId, id: pending._id } : null, last: last ? { id: last._id, cardId: last.cardId, kind: last.kind, queryIds: last.queryIds, targetCardId: last.targetCardId, note: last.note, state: last.state, error: last.error ?? null } : null };
+  return { ...readReview(run.cards, run.reviewJson), volumes:readVolumes(run.volumeJson), volumeState:run.volumeState??null, unlocked: false, clarificationPending: JSON.parse(run.questionsJson ?? "[]").some((q: {id:string}) => !JSON.parse(run.answersJson ?? "[]").some((a: {questionId:string}) => a.questionId === q.id)), pending: pending ? { cardId: pending.cardId, id: pending._id } : null, last: last ? { id: last._id, cardId: last.cardId, kind: last.kind, queryIds: last.queryIds, targetCardId: last.targetCardId, note: last.note, state: last.state, error: last.error ?? null } : null };
 } });
 export const decision = mutation({ args: { ...identity, revision: v.number(), cardId: v.string(), decision: v.union(v.literal("correct"), v.literal("excluded")) }, returns: v.null(), handler: async (ctx, { id, token, revision, cardId, decision }) => {
   const run = await find(ctx, id), review = authorize(run, token, revision);

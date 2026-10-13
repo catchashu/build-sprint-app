@@ -54,6 +54,8 @@ export const pipeline=workflow.define({args:{researchId:v.id('fullResearchRuns')
   for(let i=0;i<10;i++){const ran:boolean=await step.runAction(internal.fullResearch.searchNext,{researchId},{retry:false});if(!ran)break;}
   await step.runMutation(internal.fullResearch.save,{researchId,state:'cleaning'});
   await step.runAction(internal.fullResearch.group,{researchId},{retry:false});
+  try { await step.runAction(internal.searchVolume.lookup,{researchId},{retry:false}); }
+  catch { /* Volume enrichment must never stop the saved research flow. */ }
  }catch{await step.runMutation(internal.fullResearch.save,{researchId,state:'failed',error:'Research paused. Your work is safe. Try again to resume completed steps.'});}
  return null;
 });

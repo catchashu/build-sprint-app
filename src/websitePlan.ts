@@ -3,10 +3,12 @@ import type { Id } from '../convex/_generated/dataModel';
 import { api } from '../convex/_generated/api';
 import type { Card } from '../shared/cardReview';
 import { planEvidence, isStandalone, type WebsitePlan, type WebsiteNode } from '../shared/websitePlan';
+import {demandSummary,queryVolumeText,VOLUME_NOTE,type VolumeSnapshot} from '../shared/searchVolume';
 
-type View = { id?: Id<'websitePlans'>; state: string; plan?: WebsitePlan | null; cards?: Card[]; offering?: string; question?: string | null; error?: string | null };
+type View = { id?: Id<'websitePlans'>; state: string; plan?: WebsitePlan | null; cards?: Card[]; offering?: string; question?: string | null; error?: string | null; volumes?:VolumeSnapshot|null; volumeState?:string|null };
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') => { const node = document.createElement(tag); node.textContent = text; node.className = cls; return node; };
 export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstValueRuns'>; token: string}, root: HTMLElement, back: () => void, reset: () => void) {
+  let volumesRequested=false;
   let alive = true, started = false, busy = false, exporting = false, current: View | null = null, lastDraw = '';
   const heading = el('h2', 'Loading your website plan…'); heading.tabIndex = -1;
   const status = el('p'); status.setAttribute('role', 'status');
@@ -27,7 +29,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   }
   async function download() {
     if (!current?.plan || exporting) return; exporting = true; status.textContent = 'Preparing your Excel file…'; error.textContent = ''; updateDisabled();
-    try { const {downloadPlan} = await import('./planExport'); await downloadPlan(current.plan, current.cards ?? [], current.offering ?? ''); if (alive) status.textContent = 'Your Excel file is ready.'; }
+    try { const {downloadPlan} = await import('./planExport'); await downloadPlan(current.plan, current.cards ?? [], current.offering ?? '',current.volumes); if (alive) status.textContent = 'Your Excel file is ready.'; }
     catch { if (alive) error.textContent = 'I couldn’t prepare the Excel file. Your website plan is safe. Try download again.'; }
     finally { exporting = false; if (alive) updateDisabled(); }
   }
@@ -47,7 +49,8 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   function renderPlan(view: View) {
     const plan = view.plan!;
     output.append(el('p', 'This is how I’d turn the demand into website coverage.'), el('p', plan.summary));
-    output.append(el('p', 'Priority reflects business fit and customer intent. Demand is “Insufficient evidence” because search volumes are unavailable.', 'small muted'));
+    output.append(el('p', 'Priority reflects business fit and customer intent. Demand describes the mapped areas, not expected page visits.', 'small muted'));
+    const method=el('details');method.append(el('summary','How demand is measured'),el('p',VOLUME_NOTE,'small muted'));output.append(method);
     const pages = plan.nodes.filter(n => n.treatment === 'Page').length, resources = plan.nodes.filter(n => n.treatment === 'Supporting Content').length;
     output.append(el('p', `${pages} website ${pages === 1 ? 'page' : 'pages'}${resources ? ` · ${resources} supporting ${resources === 1 ? 'resource' : 'resources'}` : ''} · ${plan.nodes.filter(n => !isStandalone(n)).length} on-page sections or FAQ groups. On-page content does not need a separate URL.`, 'small muted'));
     const ranks = { First: 0, Next: 1, Later: 2 };
@@ -55,7 +58,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
       const list = el('ol', '', 'plan-tree');
       for (const node of plan.nodes.filter(n => n.parentId === parentId && (standalone === undefined || isStandalone(n) === standalone)).sort((a, b) => ranks[a.priority] - ranks[b.priority])) {
         const item = el('li'), row = el('article', '', 'plan-node'), decision = el('div', '', 'plan-decision'); row.dataset.nodeId = node.id;
-        decision.append(el('h3', node.label), el('p', `${node.treatment} · ${node.priority} priority`, 'plan-meta'), el('p', 'Demand: Insufficient evidence', 'small muted'));
+        decision.append(el('h3', node.label), el('p', `${node.treatment} · ${node.priority} priority`, 'plan-meta'), el('p', ['queued','running'].includes(view.volumeState??'')?'Checking India search volumes…':`Mapped-area demand: ${demandSummary(planEvidence(node,view.cards??[]).queries,view.volumes).text}`, 'small muted'));
         decision.append(el('p', isStandalone(node) ? (node.treatment === 'Page' ? 'Separate website page' : 'Separate supporting resource') : 'Content on this page · no separate URL', 'small muted'));
         const why = el('details', '', 'plan-evidence'); why.append(el('summary', 'Why this?')); fillEvidence(why, node, view.cards ?? []);
         if (view.state === 'complete') {
@@ -75,7 +78,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
       return list;
     }
     output.append(tree(null));
-    if (plan.limitations.length) { const limits = el('details', '', 'plan-limits'); limits.append(el('summary', 'Research limits')); const list = el('ul'); plan.limitations.forEach(t => list.append(el('li', t))); limits.append(list); output.append(limits); }
+    if (plan.limitations.length) { const limits = el('details', '', 'plan-limits'); limits.append(el('summary', 'Research limits')); if(view.volumes)limits.append(el('p','These planning notes were saved with the plan. The displayed volume lookup may be newer; it does not rewrite your saved recommendations.','small muted')); const list = el('ul'); plan.limitations.forEach(t => list.append(el('li', t))); limits.append(list); output.append(limits); }
     const footer = el('div', '', 'plan-actions'); const exportButton = button('Download Excel', () => void download(), true); exportButton.dataset.export = 'true'; footer.append(exportButton);
     if (view.state === 'complete') footer.append(button('Start a new run', () => confirmEnd(false)), button('Exit', () => confirmEnd(true)));
     output.append(footer);
@@ -84,7 +87,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
     const detail = el('div', '', 'plan-detail'); detail.append(el('h4', 'Why this treatment and priority'), el('p', node.rationale), el('h4', 'What to cover'));
     const coverage = el('ul'); node.coverage.forEach(text => coverage.append(el('li', text))); detail.append(coverage);
     const {areas, queries} = planEvidence(node, cards); detail.append(el('h4', 'Mapped demand areas'), el('p', areas.map(a => a.label).join(' · ')));
-    const sourceList = (rows: typeof queries) => { const list = el('ul', '', 'plan-sources'); for (const query of rows) { const li = el('li', query.query); for (const source of query.sources) { const link = el('a', `${source.provider} · ${source.field === 'related_questions.question' ? 'Google question' : 'Google related search'} · ${source.retrievedAt}`); if (/^https?:\/\//i.test(source.reference)) link.href = source.reference; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); } list.append(li); } return list; };
+    const sourceList = (rows: typeof queries) => { const list = el('ul', '', 'plan-sources'); for (const query of rows) { const li = el('li', query.query); li.append(el('p',queryVolumeText(query.query,current?.volumes),'small muted')); for (const source of query.sources) { const link = el('a', `${source.provider} · ${source.field === 'related_questions.question' ? 'Google question' : 'Google related search'} · ${source.retrievedAt}`); if (/^https?:\/\//i.test(source.reference)) link.href = source.reference; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); } list.append(li); } return list; };
     detail.append(el('h4', 'Searches from the mapped demand areas'), el('p', 'These searches describe the wider demand area. Not every search supports this particular recommendation.', 'small muted'), sourceList(queries.slice(0, 3)));
     const all = el('details'); all.append(el('summary', `View all search evidence (${queries.length})`), sourceList(queries)); detail.append(all);
     if (node.riskNote) detail.append(el('h4', 'Overlap or thin-page note'), el('p', node.riskNote));
@@ -92,6 +95,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   }
   const stop = client.onUpdate(api.websitePlan.get, identity, (view: View) => {
     if (!alive) return; current = view;
+    if(view.state==='complete'&&!volumesRequested){volumesRequested=true;void client.mutation(api.searchVolume.start,identity).catch(()=>{});}
     const key = JSON.stringify(view); if (key === lastDraw) return; lastDraw = key;
     controls.replaceChildren(); question.replaceChildren(); output.replaceChildren(); error.textContent = view.error ?? '';
     const phases: Record<string, string> = {ready:'Turning demand into website decisions…', generating:'Turning demand into website decisions…', checking:'Checking the website hierarchy and evidence…', complete:'Your website plan', failed:'Your website plan needs another step', clarification:'One decision before your website plan', review_required:'Your demand map needs confirmation'};

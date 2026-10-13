@@ -9,6 +9,7 @@ import type { Id } from './_generated/dataModel';
 import { internal, components } from './_generated/api';
 import { PLAN_RULES, groundedPlanSchema, validateWebsitePlan, retainedCards, type PlanInput } from '../shared/websitePlan';
 import { BATCH_SETTINGS } from '../shared/batchedPlanning';
+import {readVolumes} from '../shared/searchVolume';
 const identity = { id: v.id('firstValueRuns'), token: v.string() };
 const workflow = new WorkflowManager(components.workflow, { workpoolOptions: { retryActionsByDefault: false } });
 async function authorized(ctx: QueryCtx, id: Id<'firstValueRuns'>, token: string) {
@@ -25,7 +26,7 @@ function snapshot(map: NonNullable<Awaited<ReturnType<typeof authorized>>>): Pla
   const review = JSON.parse(map.reviewJson!);
   const questions = JSON.parse(map.questionsJson ?? '[]'), answers = JSON.parse(map.answersJson ?? '[]');
   if (!review.accepted || map.reviewPending || !map.understandingJson || questions.some((q: {id:string}) => !answers.some((a: {questionId:string}) => a.questionId === q.id))) throw new ConvexError('Confirm your demand map and answer its questions before building the website plan.');
-  return { offering: map.offering, context: map.context, review, questions, answers, unresolved: JSON.parse(map.mapJson ?? '{}').unresolved ?? [], clarifications: [] };
+  return { offering: map.offering, context: map.context, review, questions, answers, unresolved: JSON.parse(map.mapJson ?? '{}').unresolved ?? [], clarifications: [], volumes:readVolumes(map.volumeJson) };
 }
 export const get = query({ args: identity, returns: v.any(), handler: async (ctx, { id, token }) => {
   const map = await authorized(ctx, id, token), plan = await latest(ctx, id);
@@ -36,7 +37,7 @@ export const get = query({ args: identity, returns: v.any(), handler: async (ctx
   return { id: plan._id, state: plan.state, error: plan.error ?? null,
     plan: plan.planJson ? JSON.parse(plan.planJson) : plan.previousPlanJson ? JSON.parse(plan.previousPlanJson) : null,
     question: plan.state === 'clarification' && plan.rawJson ? JSON.parse(plan.rawJson).question : null,
-    cards: retainedCards(input), offering: input.offering, mapRevision: plan.mapRevision };
+    cards: retainedCards(input), offering: input.offering, mapRevision: plan.mapRevision, volumes:readVolumes(map.volumeJson), volumeState:map.volumeState??null };
 } });
 export async function reservePlan(ctx: MutationCtx, args: { id: Id<'firstValueRuns'>; token: string; expectedId?: Id<'websitePlans'>; selectedNodeId?: string; correction?: string; answer?: string }) {
   const map = await authorized(ctx, args.id, args.token), input = snapshot(map), previous = await latest(ctx, args.id);

@@ -25,6 +25,7 @@ import type * as payments from "../payments.js";
 import type * as research from "../research.js";
 import type * as researchAI from "../researchAI.js";
 import type * as runFields from "../runFields.js";
+import type * as searchVolume from "../searchVolume.js";
 import type * as websiteContext from "../websiteContext.js";
 import type * as websitePlan from "../websitePlan.js";
 
@@ -52,6 +53,7 @@ declare const fullApi: ApiFromModules<{
   research: typeof research;
   researchAI: typeof researchAI;
   runFields: typeof runFields;
+  searchVolume: typeof searchVolume;
   websiteContext: typeof websiteContext;
   websitePlan: typeof websitePlan;
 }>;

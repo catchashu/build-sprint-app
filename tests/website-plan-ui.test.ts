@@ -28,7 +28,7 @@ test('plan view starts once, exposes saved evidence, preserves open details, and
   assert.equal(root.querySelector('.plan-sources a')?.getAttribute('href'),input.review.cards[0].queries[0].sources[0].reference);
   const form=root.querySelector('form')!,inputEl=form.querySelector('textarea')!,submit=form.querySelector('button')!;
   assert.equal(submit.disabled,true);inputEl.value='Use a clearer title';inputEl.dispatchEvent(new window.Event('input'));submit.click();submit.click();
-  assert.equal(calls.length,2);assert.equal(calls[1].selectedNodeId,'p');assert.equal(calls[1].expectedId,'job');assert.equal(calls[1].correction,'Use a clearer title');
+  assert.equal(calls.length,3);assert.deepEqual(calls[1],{id:'test',token:'test-only'});assert.equal(calls[2].selectedNodeId,'p');assert.equal(calls[2].expectedId,'job');assert.equal(calls[2].correction,'Use a clearer title');
   resolve();await settle();emit({...view,state:'failed',error:'Try again'});assert.match(root.textContent,/Film production/);assert.ok([...root.querySelectorAll('button')].some(b=>b.textContent==='Try again'));
  }finally{stop();await window.happyDOM.close();}
 });

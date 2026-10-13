@@ -5,6 +5,7 @@ import { mountReview } from './cardReview';
 import type { Clarification } from '../shared/fullResearch';
 const el=<K extends keyof HTMLElementTagNameMap>(tag:K,text='',cls='')=>{const n=document.createElement(tag);n.textContent=text;n.className=cls;return n;};
 export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRuns'>;token:string},root:HTMLElement,onConfirmed:()=>void=()=>{}){
+ let volumesRequested=false;
  let alive=true,starting=false,started=false,stopReview:(()=>void)|undefined,questionKey='',answerBusy=false;
  const heading=el('h2','Preparing your full research'),status=el('p','','muted'),error=el('p','','error'),questions=el('section','','research-question'),map=el('div','','review demand-map'),activity=el('details'),log=el('ul');
  heading.tabIndex=-1;status.setAttribute('role','status');error.setAttribute('role','alert');activity.append(el('summary','Search activity'),log);
@@ -17,6 +18,7 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
   if(!alive)return;
   if(!run){heading.textContent='This research could not be opened.';error.textContent='Return to your saved run and unlock it first.';return;}
   if(run.state==='ready'&&!started){started=true;void start();}
+  if(run.state==='complete'&&!volumesRequested){volumesRequested=true;void client.mutation(api.searchVolume.start,identity).catch(()=>{});}
   const phases:Record<string,string>={ready:'Preparing your full research',planning:'Choosing searches from your confirmed offering',searching:'Researching real search demand in India',cleaning:'Cleaning and organising the evidence',grouping:'Grouping searches by underlying need',complete:'Here is your India demand map',failed:'Research paused. Your work is safe.'};
   heading.textContent=phases[run.state]??'Opening your research';
   status.textContent=run.state==='complete'?'Searches are grouped by what people are trying to do. Inspect the evidence or correct an area below.':run.state==='searching'?`${run.searchCount} search attempts started. Refreshing will resume this run.`:'';

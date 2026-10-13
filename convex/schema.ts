@@ -21,6 +21,10 @@ export default defineSchema({
     inviteAttempts: v.optional(v.number()), inviteWindow: v.optional(v.number()),
   }),
   fullResearchRuns: defineTable({
+    volumeState: v.optional(v.union(v.literal('queued'),v.literal('running'),v.literal('complete'),v.literal('unavailable'))),
+    volumeJson: v.optional(v.string()), volumeStartedAt: v.optional(v.number()),
+    volumeFailure: v.optional(v.string()),
+    volumeErrorBody: v.optional(v.string()),
     runId: v.id("firstValueRuns"), token: v.string(), offering: v.string(), context: v.string(), state: v.string(),
     seeds: v.optional(v.array(v.string())), searches: v.array(v.object({query:v.string(),status:v.string(),error:v.optional(v.string())})),
     responses: v.array(v.string()), batches: v.array(v.string()), merge: v.optional(v.string()), mapJson: v.optional(v.string()),
