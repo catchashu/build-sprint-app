@@ -1064,3 +1064,8 @@ User approved a compact landing composition with headline, offering input, main 
 ## Phase 1 Arrival placeholder implementation - Step 1 approved 2026-10-15
 
 The approved behaviour is specified in Section 4 (keyboard, Arrival and Website Context). Implementation keeps the same video and panel nodes, animates measured grid heights and never waits for the resting loop to finish. All animation assignments remain the unchanged resting-v1.mp4, measured at 14.333333 seconds with playback rate 1. State-specific performances remain Phase 2. Earlier fixed 20.5rem / half-viewport Website Context sizing is superseded by the content-sized approved tray. Reference Context is separately approved under Step 2. Initial Research and later states remain pending review.
+
+
+## Session status - 2026-10-15 wrap-up
+
+Phase 1 Steps 0, 1 and 2 are approved. Next is Step 3: Finding Your Customers / Initial Research, starting with review of the research questions and cluster-review UX. Preserve one topic cluster at a time with Tinder-style tick/cross controls and no unwanted internal scrolling. Use the unchanged approved resting Gibbon animation throughout Phase 1; state-specific performances remain Phase 2 work. Production deployment is deferred until Phase 1 is complete and the full user journey has been tested. This records workflow/status only; no additional design changes are authorized tonight.

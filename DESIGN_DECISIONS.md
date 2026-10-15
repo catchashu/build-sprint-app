@@ -46,3 +46,7 @@ User approved Competitor / Inspiration Context after physically testing both URL
 - Test each field without manually scrolling it into view; retain regression coverage for viewport offsets and keyboard-height changes.
 
 Stop development after this checkpoint. Step 3 (Finding Your Customers / Initial Research), research questions and cluster-card UX are pending review. The existing approved cluster direction remains one topic cluster at a time with Tinder-style tick/cross controls. No Step 3 or cluster redesign implemented tonight. Character performances remain Phase 2 work.
+
+## 2026-10-15 - End-of-day release decision
+
+All approved work through Phase 1 Step 2 is saved in GitHub. Continue local review for remaining Phase 1 steps; defer production deployment until Phase 1 is complete and the full user journey has been tested. Reason: save approved checkpoints without publishing design experiments or partially reviewed flows. Step 3 review is next; keep the resting animation through Phase 1 and defer state-specific animations to Phase 2.
