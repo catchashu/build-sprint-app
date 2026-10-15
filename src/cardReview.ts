@@ -1,3 +1,4 @@
+import { randomId } from "./randomId";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
@@ -73,7 +74,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         // A successful write can be acknowledged without waiting for another notification.
         if (current?.revision === revision) current = { ...current, revision: revision + 1, accepted: false, decisions: { ...current.decisions, [card.groupId]: "correct" } };
       }, card.groupId)); correct.dataset.action = "correct"; actions.append(correct);
-      actions.append(button(options.demandMap ? "Something is off" : "Fix this", () => { editing = { cardId: card.groupId, kind: "", note: "", requestId: crypto.randomUUID() }; error = ""; draw(); root.querySelector<HTMLElement>(".correction-title")?.focus(); }));
+      actions.append(button(options.demandMap ? "Something is off" : "Fix this", () => { editing = { cardId: card.groupId, kind: "", note: "", requestId: randomId() }; error = ""; draw(); root.querySelector<HTMLElement>(".correction-title")?.focus(); }));
       if (!current.unlocked) article.append(actions);
       if (current.pending?.cardId === card.groupId) { const p = element("p", "Updating this with your correction…"); p.setAttribute("role", "status"); article.append(p); }
       else if (current.last?.cardId === card.groupId && current.last.state === "complete" && decision === "pending") article.append(element("p", "Updated. Check this again.", "review-correction-status"));
@@ -83,7 +84,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         select.append(new Option("Choose a reason", ""));
         for (const [value, label] of Object.entries(labels)) select.append(new Option(label, value));
         select.value = editing.kind; select.disabled = busy || !!current.pending;
-        select.onchange = () => { editing!.queryIds = []; editing!.targetCardId = ""; editing!.kind = select.value as keyof typeof labels; editing!.requestId = crypto.randomUUID(); error = ""; draw(); root.querySelector<HTMLTextAreaElement>(".correction-form textarea")?.focus(); };
+        select.onchange = () => { editing!.queryIds = []; editing!.targetCardId = ""; editing!.kind = select.value as keyof typeof labels; editing!.requestId = randomId(); error = ""; draw(); root.querySelector<HTMLTextAreaElement>(".correction-form textarea")?.focus(); };
         selectLabel.append(select); form.append(selectLabel);
         let input: HTMLTextAreaElement | undefined;
         if (editing.kind === "excluded") form.append(element("p", "I’ll exclude this from my understanding of your offering."));
@@ -95,7 +96,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
           for (const option of options) {
             const label = element("label", "", "review-choice"), control = element("input"); control.type = splitting ? "checkbox" : "radio"; control.name = "grouping-choice";
             control.checked = splitting ? !!editing.queryIds?.includes(option.id) : editing.targetCardId === option.id; control.disabled = busy || !!current.pending;
-            control.onchange = () => { if (splitting) editing!.queryIds = control.checked ? [...(editing!.queryIds ?? []), option.id] : editing!.queryIds?.filter(id => id !== option.id); else editing!.targetCardId = option.id; editing!.requestId = crypto.randomUUID(); apply.dataset.invalid = String(!valid()); apply.disabled = busy || !!current?.pending || !valid(); };
+            control.onchange = () => { if (splitting) editing!.queryIds = control.checked ? [...(editing!.queryIds ?? []), option.id] : editing!.queryIds?.filter(id => id !== option.id); else editing!.targetCardId = option.id; editing!.requestId = randomId(); apply.dataset.invalid = String(!valid()); apply.disabled = busy || !!current?.pending || !valid(); };
             label.append(control, element("span", option.text)); choices.append(label);
           }
           if (splitting) choices.append(element("p", "Leave at least one search unselected so Gibbon can separate the needs.", "small muted"));
@@ -110,7 +111,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         const valid = () => !!editing?.kind && (editing.kind === "excluded" || (editing.kind === "split" ? !!editing.queryIds?.length && editing.queryIds.length < card.queries.length : editing.kind === "merge" ? !!editing.targetCardId : !!editing.note.trim()));
         apply.disabled = busy || !!current.pending || !valid();
         apply.dataset.invalid = String(!valid());
-        if (input) input.oninput = () => { editing!.note = input!.value; editing!.requestId = crypto.randomUUID(); apply.dataset.invalid = String(!valid()); apply.disabled = busy || !!current?.pending || !valid(); };
+        if (input) input.oninput = () => { editing!.note = input!.value; editing!.requestId = randomId(); apply.dataset.invalid = String(!valid()); apply.disabled = busy || !!current?.pending || !valid(); };
         form.onsubmit = event => { event.preventDefault(); if (!valid()) return; const draft = { ...editing! }; void perform(async () => {
           if (draft.kind === "excluded") { await client.mutation(reviews.decision, { ...identity, revision: current!.revision, cardId: draft.cardId, decision: "excluded" }); editing = null; }
           else { await client.mutation(reviews.apply, { ...identity, revision: current!.revision, cardId: draft.cardId, kind: draft.kind as "label" | "other" | "split" | "merge", queryIds: draft.queryIds, targetCardId: draft.targetCardId, note: draft.note, requestId: draft.requestId }); }
@@ -135,7 +136,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     if (error && !failedCardId) { const p = element("p", error, "error review-wide"); p.setAttribute("role", "alert"); nextOutside.append(p); }
     if (current.last?.state === "failed" && current.last.id !== dismissedJob && !current.pending) {
       const p = element("p", `I couldn’t apply that change. Your original card is still here. ${current.last.error ?? ""}`, "error review-wide"); p.setAttribute("role", "alert"); nextOutside.append(p);
-      nextOutside.append(button("Try again", () => { const last = current!.last!; editing = { cardId: last.cardId, kind: last.kind, queryIds: last.queryIds, targetCardId: last.targetCardId, note: last.note, requestId: crypto.randomUUID() }; dismissedJob = last.id; draw(); }));
+      nextOutside.append(button("Try again", () => { const last = current!.last!; editing = { cardId: last.cardId, kind: last.kind, queryIds: last.queryIds, targetCardId: last.targetCardId, note: last.note, requestId: randomId() }; dismissedJob = last.id; draw(); }));
     }
     const active = current.cards.filter(c => current!.decisions[c.groupId] !== "excluded");
     const allCorrect = active.length > 0 && active.every(c => current!.decisions[c.groupId] === "correct");
@@ -160,7 +161,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     if (!view || (current && view.revision < current.revision)) return;
     const previous = current; current = view;
     if (view.last?.state === "complete" && previous?.pending?.id === view.last.id) editing = null;
-    if (!previous && view.pending && view.last) editing = { cardId: view.last.cardId, kind: view.last.kind, queryIds: view.last.queryIds, targetCardId: view.last.targetCardId, note: view.last.note, requestId: crypto.randomUUID() };
+    if (!previous && view.pending && view.last) editing = { cardId: view.last.cardId, kind: view.last.kind, queryIds: view.last.queryIds, targetCardId: view.last.targetCardId, note: view.last.note, requestId: randomId() };
     draw();
   }, () => { error = "The review connection was interrupted. Your saved cards are still here. Reload to reconnect."; draw(); });
   return () => { alive = false; stop(); };

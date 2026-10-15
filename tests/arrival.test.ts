@@ -38,7 +38,7 @@ test('state selection preserves the resting player and reduced motion never bloc
     assert.equal(video.currentTime, 4);
     assert.equal(video.getAttribute('src'), characterAnimations.landing.src);
     assert.equal(video.paused, true);
-    assert.equal(player.stage.querySelector('button')!.textContent, 'Play animation');
+    assert.equal(player.stage.querySelector('button'), null);
     let ready = false;
     arriveReady('Saved offering', () => { ready = true; }, () => assert.fail());
     await Promise.resolve(); assert.equal(ready, true);

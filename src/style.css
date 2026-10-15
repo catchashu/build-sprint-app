@@ -24,30 +24,34 @@ body:has(.plan-screen){min-width:0}.plan-screen .stage{height:20svh;min-height:1
 @media(max-width:600px){.plan-node{grid-template-columns:minmax(0,1fr);gap:8px;padding:24px 0}.plan-branch{margin-left:0;padding-left:8px}.plan-screen .stage{height:18svh;min-height:96px}.plan-actions>.primary{width:100%}.plan-actions button{padding:12px 16px}}
 
 /* Landing only: the approved compact pre-start composition. */
-#app.landing{--usable-height:calc(100svh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));height:100svh;min-height:0;padding:env(safe-area-inset-top,0px) max(1rem,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(1rem,env(safe-area-inset-left,0px));display:grid;grid-template-rows:calc(var(--usable-height)/3) minmax(0,1fr)}
+#app.landing{--usable-height:calc(100svh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));height:100svh;min-height:0;max-width:none;padding:env(safe-area-inset-top,0px) 0 0;display:grid;grid-template-rows:minmax(calc(var(--usable-height)/3),1fr) auto}
 .landing .stage{height:auto;min-height:0;position:relative;flex:none}
 .landing .stage video{height:100%;max-width:100%;object-fit:contain;display:block}
-.landing .motion-control{position:absolute;right:0;bottom:.25rem;background:rgb(247 248 245 / .9);font-size:.875rem;font-weight:400;min-height:44px;padding:.5rem}
-.landing .panel{align-self:start;width:100%;max-width:56rem;margin:0 auto;padding:1.5rem 1rem;background:#F7F8F5}
-@supports ((backdrop-filter:blur(16px)) or (-webkit-backdrop-filter:blur(16px))){.landing .panel{background:rgb(247 248 245 / .90);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}}
+.landing .stage .motion-control{display:none}
+.landing .panel{position:relative;isolation:isolate;align-self:end;width:100%;max-width:780px;margin:0 auto;padding:1rem 1rem max(1rem,env(safe-area-inset-bottom,0px));border-radius:10px 10px 0 0;background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}
+@supports ((backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px))){.landing .panel{background:transparent}.landing .panel::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgb(255 255 255 / .45);pointer-events:none}}
+/* Crop only the supplied file's whitespace; preserve the original artwork. */
+.landing-logo{position:relative;width:11rem;aspect-ratio:2.9/1;overflow:hidden;margin:0 auto .75rem}
+.landing-logo img{position:absolute;width:130%;max-width:none;height:auto;left:-15%;top:-29%}
 .landing h1{font-size:clamp(1.75rem,calc(1.25rem + 2.5vw),3rem);max-width:44rem;margin:0 auto 1rem}
 .landing form{width:100%;max-width:35rem}
 .landing textarea{height:7rem;min-height:7rem;resize:none}
-.landing .explainers{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.landing .explainers{display:flex;flex-wrap:nowrap;gap:.5rem;margin-top:.5rem}
 .landing .explainers button{padding:.5rem;min-width:44px}
 .landing .explainers button::after{content:'';display:inline-block;width:.875rem;height:.875rem;margin-left:.25rem;vertical-align:-.125rem;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6.5' fill='none' stroke='black'/%3E%3Cpath d='M8 7v5M8 4v1' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") center/contain no-repeat}
-.landing .panel>button.secondary{font-size:.875rem;min-height:44px;padding:.5rem;margin-top:.25rem}
-@media(max-width:374px){#app.landing{padding-left:max(.5rem,env(safe-area-inset-left,0px));padding-right:max(.5rem,env(safe-area-inset-right,0px))}.landing .panel{padding-left:.5rem;padding-right:.5rem}.landing textarea{height:8.5rem}}
+.landing .panel>button.secondary{font-size:.875rem;font-weight:400;min-height:44px;padding:.5rem;margin-top:0;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:374px){.landing textarea{height:8.5rem}}
 @media(min-width:480px){.landing .panel{padding-left:1.5rem;padding-right:1.5rem}}
+@media(min-width:601px){.landing-logo{width:14rem;margin-bottom:1rem}}
 @media(min-width:640px){.landing .phone-break{display:none}.landing .wide-break{display:block}}
-@media(prefers-reduced-transparency:reduce){.landing .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
-@media(forced-colors:active){.landing .panel,.landing .motion-control{background:Canvas;color:CanvasText}.landing .panel{border:1px solid CanvasText}}
+@media(prefers-reduced-transparency:reduce){.landing .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}.landing .panel::before{display:none}}
+@media(forced-colors:active){.landing .panel,.landing .motion-control{background:Canvas;color:CanvasText}.landing .panel{border:1px solid CanvasText}.landing .panel::before{display:none}.landing-logo img{mix-blend-mode:normal}}
 /* Keep the four information triggers in one balanced row where they fit. */
 .landing .explainers button{padding-left:.25rem;padding-right:.25rem}
-@media(max-width:600px) and (max-height:800px){.landing .panel{padding-top:.5rem;padding-bottom:.5rem}.landing .brand{margin-bottom:.5rem}.landing h1{margin-bottom:.5rem}.landing label{margin-bottom:.5rem}.landing .explainers{margin-top:.5rem}}
+@media(max-width:600px) and (max-height:800px){.landing .panel{padding-top:.5rem;padding-bottom:.5rem}.landing-logo{width:9rem;margin-bottom:.25rem}.landing h1{margin-bottom:.5rem}.landing label{margin-bottom:.5rem}.landing .explainers{margin-top:0;gap:.25rem}.landing textarea{height:6rem;min-height:6rem;margin-top:.25rem;padding:12px}.landing .explainers button{white-space:nowrap}}
 
 body:has(.landing) dialog{width:min(40rem,calc(100% - 2rem));max-height:calc(100svh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 2rem);margin:auto auto max(1rem,env(safe-area-inset-bottom,0px));overflow-y:auto}
-body:has(.landing) dialog>button:last-child{position:sticky;bottom:0;background:#F7F8F5}
+
 /* The scene spans the viewport; only the working panel keeps side gutters. */
 @media(max-width:600px){.landing .stage{width:100vw;max-width:none;margin-left:calc((100% - 100vw)/2)}.landing .stage video{width:100%;max-width:none;height:100%;object-fit:cover;object-position:center 48%}.landing .motion-control{right:max(1rem,env(safe-area-inset-right,0px))}}
 @media(max-width:600px){.landing .stage video{transform:scale(1.14)}}
@@ -81,7 +85,7 @@ body:has(#app.canvas){overflow:hidden;min-width:0}
 @media(prefers-reduced-transparency:reduce){#app.canvas .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
 @media(forced-colors:active){#app.canvas .panel,#app.canvas .motion-control{background:Canvas;color:CanvasText}}
 /* Use matching grid tracks so navigation can interpolate the stage allocation. */
-#app.landing{grid-template-rows:minmax(0,calc(var(--usable-height)/3)) minmax(0,1fr)}
+#app.landing{grid-template-rows:minmax(calc(var(--usable-height)/3),1fr) auto}
 #app.canvas{grid-template-rows:minmax(0,calc(var(--usable-height) - var(--tray-height))) minmax(0,1fr)}
 #app[data-keyboard=true]{grid-template-rows:minmax(0,min(4rem,15%)) minmax(0,1fr)}
 
@@ -98,3 +102,17 @@ body:has(#app.canvas){overflow:hidden;min-width:0}
     right:max(1rem,calc((100vw - 56rem)/2));bottom:.5rem;
   }
 }
+
+/* Selected Phase 1 landing: edge-to-edge tray, with safe-area padding inside. */
+@media(max-width:600px){.landing .panel{max-width:none;padding-left:max(1rem,env(safe-area-inset-left,0px));padding-right:max(1rem,env(safe-area-inset-right,0px));padding-bottom:max(.5rem,env(safe-area-inset-bottom,0px))}}
+
+/* Shared landing explainers: one visible close button and explicit audience selection. */
+.explainer-header{position:sticky;top:-2rem;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;background:#F7F8F5;padding:0 0 16px}
+.explainer-header h2{margin:0;align-self:center}
+.explainer-close{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;min-height:44px;padding:8px 12px;border:1px solid #78867d;background:#F7F8F5;font-size:14px;font-weight:600}
+.audience-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.audience-tabs button{min-height:48px;padding:12px;text-align:left;font-weight:400;border:1px solid #78867d;background:transparent}
+.audience-tabs button[aria-selected=true]{background:#e0e9e2;border-color:#21634A;font-weight:600}
+.audience-tabs button:hover{background:#e8ede8}
+.explainer-dialog [role=tabpanel]{margin-bottom:0}
+@media(max-width:600px){.audience-tabs{grid-template-columns:1fr}.explainer-dialog{padding:24px}.explainer-header{top:-24px;gap:8px}}

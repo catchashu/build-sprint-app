@@ -1,5 +1,13 @@
 # PLAN.md
 
+## Current strategy — approved 2026-10-15
+
+Phase 1 is UX and visual polish only, using the unchanged approved resting animation in every state. Phase 2 adds the state-specific Character Bible / DESIGN.md animations after Phase 1 approval. Phase 3 addresses deeper research, discovery, clustering, demand, priorities, output accuracy and integrations. This ordering supersedes older priority notes below.
+
+Review one step at a time: 0 Landing (reopened for refinement); 1 Landing to Website Context; 2 reference context; 3 initial research; 4 initial cluster review; 5 unlock; 6 full research and Demand Map review; 7 plan generation; 8 final plan; 9 Excel / Exit / new run; 10 complete responsive journey. Cluster review means one cluster card at a time with tick/cross controls, not individual-topic cards or the older stacked-card layout. Preserve approved copy and design except explicitly authorized changes.
+
+Phase 1 Step 0 is approved and complete (2026-10-15), including the Landing and four explainer popups. Save implementation and documentation together in GitHub. Current scope: Step 1, Landing to Website Context, explanation and review only; no implementation changes until authorized. State-specific animations remain Phase 2 work.
+
 ## Milestones
 
 2026-10-13 approved next step: connect DataForSEO Google Ads live search-volume estimates for India/English using server-only credentials. One saved batch of up to 1,000 supported observed phrases per unlocked run; no automatic paid retries. Preserve search evidence and saved recommendations; show estimates, provenance and honest missing values in the map, plan and Excel. Demand bands use the strongest measured query (Low <100, Medium 100–999, High >=1,000) rather than summing overlapping phrases; disclose method and coverage. Integration is retained but optional by user approval: V1 uses server-side USE_DATAFORSEO=false in development and production. Only exact true plus both server credentials enables requests. Disabled, missing credentials, and provider/auth/funding failures must never block the Golden Flow. Real-volume success verification is deferred until explicitly enabled; no account top-up is required to test the app. User confirmed a fresh full run with a different offering worked end to end; optional V1 flow accepted.

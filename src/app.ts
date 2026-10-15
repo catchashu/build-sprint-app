@@ -1,3 +1,5 @@
+import { explainerClose, audienceTabs } from "./explainerControls";
+import { randomId } from "./randomId";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
@@ -15,7 +17,7 @@ const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
 type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "arrival" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string };
-const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: crypto.randomUUID() });
+const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: randomId() });
 let state: State;
 state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
@@ -50,7 +52,11 @@ function render() {
   app.dataset.canvasStep = state.screen;
   setCanvasMode(app, canvasMode(state.screen));
   selectAnimation(canvasMode(state.screen));
-  panel.append(node("p", "Topic Gibbon", "brand"));
+  if (state.screen === "landing") {
+    const brand = node("div", "", "landing-logo");
+    const logo = node("img"); logo.src = "/images/topic-gibbon-logo-transparent.png"; logo.alt = "Topic Gibbon";
+    logo.width = 1040; logo.height = 440; brand.append(logo); panel.append(brand);
+  } else panel.append(node("p", "Topic Gibbon", "brand"));
   const error = node("p", "", "error"); error.id = "message"; error.setAttribute("role", "alert");
   if (state.screen === "landing") {
     const h = node("h1"); h.tabIndex = -1;
@@ -112,7 +118,7 @@ function render() {
     const searches = node("details"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
     const controls = node("div", "", "controls");
     const retry = button("Try again", () => void work(async () => { await client.mutation(api.firstValue.start, { id: state.id!, token: state.token }); }), true); retry.hidden = true;
-    const edit = button("Edit context", () => { state.id = undefined; state.token = crypto.randomUUID(); go("landing"); }); edit.hidden = true;
+    const edit = button("Edit context", () => { state.id = undefined; state.token = randomId(); go("landing"); }); edit.hidden = true;
     controls.append(retry, edit); panel.append(title, count, status, error, cards, searches, controls);
     if (!state.id) { message("This run couldn’t be opened. Your context is saved."); edit.hidden = false; return; }
     unsubscribe = client.onUpdate(api.firstValue.get, { id: state.id, token: state.token }, run => {
@@ -148,14 +154,14 @@ const copy: Record<string, { title: string; paragraphs: string[] }> = {
   "For me?": { title: "Is Topic Gibbon for Me?", paragraphs: ["Know which pages your website needs, what each should cover & what to prioritise. Give your designer or writer a clear starting point, so your website addresses what potential customers are searching for, rather than just what you think it should say.", "Turn search demand into a website architecture you can explain & defend, with topic clusters, page recommendations & the underlying queries available to inspect. Show your client or team what to build first, what belongs together & why, so you can agree on the direction before design & content production begin."] },
 };
 function explain(label: string) {
-  const dialog = node("dialog"); const content = copy[label]; dialog.setAttribute("aria-label", content.title); dialog.append(node("h2", content.title));
+  const dialog = node("dialog", "", "explainer-dialog"); const content = copy[label]; dialog.setAttribute("aria-label", content.title);
+  const header = node("div", "", "explainer-header"); header.append(node("h2", content.title), explainerClose(() => dialog.close())); dialog.append(header);
   if (label === "What?") dialog.append(node("p", "Get a website plan based on real searches in India, with suggested pages, what each should cover & what to prioritise. Just tell us what you offer."));
   if (label === "How?") dialog.append(node("p", "Start free & see the first search results. Then choose whether to pay ₹399 once via UPI for the full research & website plan."), node("p", "No subscription or account needed."));
   if (label === "For me?") {
-    const paragraph = node("p", content.paragraphs[0]);
-    for (const [i, name] of ["I’m planning my own website", "I’m doing this for a client/team"].entries()) dialog.append(button(name, () => paragraph.textContent = content.paragraphs[i]));
-    dialog.append(paragraph);
+    const audience = audienceTabs(["I\u2019m planning my own website", "I\u2019m doing this for a client/team"], content.paragraphs);
+    dialog.append(audience.tabs, audience.content);
   } else for (const paragraph of content.paragraphs) dialog.append(node("p", paragraph));
-  dialog.append(button("Close", () => dialog.close())); dialog.onclose = () => dialog.remove(); document.body.append(dialog); dialog.showModal();
+  dialog.onclose = () => dialog.remove(); document.body.append(dialog); dialog.showModal();
 }
 render();

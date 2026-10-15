@@ -147,7 +147,7 @@ If a source reference, generated storyboard or proposed implementation conflicts
 
 **Sizes:** Display 28–48px responsive for the main headline or one primary result · heading 20px · body 16px · small 14px. Use relative units & only these four named sizes; do not shrink body, input or primary-button text on phones.
 
-**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Panel tint: \#F7F8F5 at 90% opacity with 16px backdrop blur. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
+**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Approved Landing panel tint: \#F7F8F5 at 65% opacity with 12px backdrop blur. Other Product Canvas states retain their existing 90% tint / 16px blur until their separate Phase 1 review. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
 
 **Accent:** Solid deep green \#21634A with white text, only on the current screen/state’s main action, as defined in Section 4\. Secondary actions stay neutral. Hover/pressed: \#194D39. Keep the main-action button opaque on the pale panel. The green scenery is separate from the interface-accent rule.
 
@@ -155,7 +155,7 @@ If a source reference, generated storyboard or proposed implementation conflicts
 
 ### Essential implementation rules
 
-**Gibbon & composition:** **Reserve the upper one-third of the initial landing-screen height for the Gibbon**, not one-third of the scrollable page. The frosted panel starts below it. Preserve this space even before artwork loads. Centre the panel, heading & narrower form on the same horizontal axis, with canopy visible in the gutters. Later proportions follow Section 4\. Allow vertical scrolling rather than reclaiming the Gibbon space.
+**Gibbon & composition:** **Reserve the upper one-third of the initial landing-screen height for the Gibbon**, not one-third of the scrollable page. The frosted panel starts below it. Preserve this space even before artwork loads. Centre the heading and narrower form inside the panel. On Landing, use a full-width mobile panel with no outer side/bottom margins and a centered 780px maximum-width desktop panel with canopy visible beside it. Anchor the panel to the viewport bottom, retain 10px upper corners, and put safe-area padding inside the panel. Extra vertical space belongs to the Gibbon stage. Later proportions follow Section 4\. Allow vertical scrolling rather than reclaiming the Gibbon space.
 
 **Type behaviour:** Display line height 1.12 & letter spacing −0.03em; heading 1.30 & −0.01em; body/small 1.50 & normal spacing. Copy-specific headline breaks are in Section 5\. Spacing, tap-size & check rules are in Section 6\.
 
@@ -173,7 +173,9 @@ Flow: Landing \+ first offering input → Start → Gibbon Arrival / Ready for C
 
 For: Understand what Topic Gibbon does, give the first small piece of business context, and begin the experience.
 
-Top to bottom: Full-screen calm forest/canopy environment. On mobile, reserve only the upper one-third, with scrolling allowed.  of the viewport for Topic Gibbon at a distance in the canopy, in the quiet ambient one-arm hanging pose. Below that, a pale frosted-glass content surface occupies the remaining majority of the viewport with dark high-contrast text. Inside it: headline \+ short explanatory paragraph \+ offering-description input with a strong 2–3 line example/placeholder \+ primary CTA (all words in Section 5); compact bottom explainer strip with What · Why · How · For me. Tapping a label raises one shared bottom-sheet explainer with a prominent close control. For me includes Planning my own website and Doing this for a client/team. Informational payment reassurance may state one-time UPI/QR payment through a trusted provider (words/provider treatment in Section 5). Keep the Landing within one mobile viewport in V1; the bottom sheet may expand/scroll internally. The Landing is the compact pre-start composition; after Start, the Product Canvas rebalances to give the Gibbon much more stage space.
+Top to bottom: Full-screen calm forest/canopy with the unchanged resting Gibbon loop as the Phase 1 placeholder. Reserve at least the upper third of the viewport for the Gibbon. The bottom-anchored frosted Interaction Tray contains the centered transparent Topic Gibbon logo, approved headline, offering input, primary CTA, one-row What? / Why? / How? / For me? controls, and secondary underlined Reopen saved website plan action when available. Logo source is public/images/topic-gibbon-logo-transparent.png, preserved unchanged; displayed width is 176px normally, 144px on shorter phones and 224px on desktop. CSS trims surrounding transparent whitespace. Keep the approved introductory paragraph in What? and payment/subscription reassurance in How?, verbatim. Use Section 3's approved Landing geometry and glass treatment. Common phone sizes fit without page scrolling; at 320x568, the saved-plan state needs about 61px of page scrolling. Preserve access rather than clip content or shrink typography.
+
+Shared explainers: use one bottom-aligned dialog with its own scrolling when needed. All four have the same compact outlined X + Close button in the sticky header, with a minimum 44px tap target. Keep the X decorative for assistive technology and retain the Close label. No visible animation controls anywhere; system reduced-motion preference and hidden-tab pausing remain supported. For me? defaults to the own-website tab, filled pale green (#e0e9e2) with green border and semibold text; inactive tabs are unfilled with neutral borders. Tabs update content and selected state immediately, expose accessible tab/tabpanel relationships, and support arrow/Home/End keys. Stack the two options on phones; place them side by side on desktop. Preserve all approved explainer copy.
 
 Main action: Primary CTA (words in Section 5\) → retain the offering description as the first business-context input, open Topic Gibbon Product Canvas, and begin Gibbon Arrival.
 
@@ -203,6 +205,8 @@ Use the approved Topic Gibbon \- Character Bible & Appearance References [v0.4.m
 All character poses, expressions & animations must derive from one consistent, approved adult Gibbon asset/model. Preserve the locked appearance across every screen and state. Do not independently regenerate the character per frame or state.
 
 Follow the existing Motion Bible for choreography, transitions & interruptibility. The approved motion storyboards establish visual direction, not finished production animation assets.
+
+Phase boundary: all state-specific character performances described below remain planned Phase 2 work. During Phase 1, use the unchanged approved resting-v1.mp4 loop in every state, at playback rate 1, with system reduced-motion support. Do not create new animations or add artificial waits. Approving the Landing does not approve later-state layouts or transitions.
 
 ### \#\#\# Product Canvas — Arrival / Ready For Context
 
@@ -932,7 +936,7 @@ No subscription or account needed.
 What? · Why? · How? · For me?
 
 **Wordmark implementation:**  
-Keep Topic Gibbon visible as a separate brand label within the frosted content area, using Section 3’s styling. Do not insert it into the headline, description or CTA, and do not place it in the Gibbon’s reserved upper-third stage.
+Use the supplied transparent Topic Gibbon logo as the centered brand mark inside the Landing tray header, with accessible text "Topic Gibbon", as specified in Section 4. Do not insert it into the headline, description or CTA, and do not place it in the Gibbon’s reserved upper-third stage. Other states retain their existing brand treatment until separately reviewed.
 
 ### **5.2 Shared Explainer Copy**
 
@@ -1045,7 +1049,7 @@ These rules apply across Topic Gibbon unless an explicitly documented state-spec
 
 User approved a compact landing composition with headline, offering input, main action and four information triggers visible. Preserve the introductory paragraph verbatim inside What? and payment/subscription reassurance verbatim inside How?. This supersedes their original always-visible placement for this landing pass. Preserve Inter, forest, character and the upper-third stage. Use the approved resting loop unchanged as the temporary character performance. Later canvas transitions require separate initial-layout review first. Very short viewport/text-enlargement overflow remains an explicit unresolved constraint, not permission to shrink or remove copy.
 
-## V1 Arrival placeholder implementation
+## Phase 1 Arrival placeholder implementation (Step 1 review pending)
 
 Landing desktop/mobile baseline is checkpoint f770fb2. User approved implementing Arrival / Ready For Context using the existing resting performance as already settled. Enter the explicit Arrival state, then proceed immediately to Website Context without a timer, spinner or media-length wait. The canvas contracts the tray and expands the stage through the existing layout transition; do not force a separate collapsed-tray pause when no arrival performance exists. Reduced motion removes layout motion and must not block readiness.
 

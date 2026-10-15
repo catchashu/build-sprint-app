@@ -8,18 +8,15 @@ export function createRestingStage(animations: Record<CharacterState, CharacterA
   video.muted = true; video.loop = selected.loop; video.playsInline = true; video.preload = 'metadata';
   video.setAttribute('aria-label', selected.label);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)'); let paused = reduced.matches, failed = false;
-  const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'motion-control';
   function sync() {
-    toggle.textContent = paused ? 'Play animation' : 'Pause animation';
     if (paused || document.hidden || failed) video.pause();
-    else void video.play().catch(() => { paused = true; toggle.textContent = 'Play animation'; });
+    else void video.play().catch(() => { paused = true; });
   }
-  toggle.onclick = () => { paused = !paused; sync(); };
   const preference = () => { paused = reduced.matches; sync(); };
-  video.addEventListener('error', () => { failed = true; video.hidden = true; fallback.hidden = false; toggle.hidden = true; });
+  video.addEventListener('error', () => { failed = true; video.hidden = true; fallback.hidden = false; });
   fallback.hidden = true;
   document.addEventListener('visibilitychange', sync); reduced.addEventListener('change', preference);
-  stage.append(fallback, video, toggle); sync();
+  stage.append(fallback, video); sync();
   function select(state: CharacterState) {
     const next = animations[state];
     if (next === selected) return;
@@ -28,7 +25,7 @@ export function createRestingStage(animations: Record<CharacterState, CharacterA
     fallback.src = next.poster; fallback.alt = next.label; video.poster = next.poster;
     video.loop = next.loop; video.setAttribute('aria-label', next.label);
     if (changedSource) {
-      failed = false; fallback.hidden = true; video.hidden = false; toggle.hidden = false;
+      failed = false; fallback.hidden = true; video.hidden = false;
       video.src = next.src; sync();
     }
   }
