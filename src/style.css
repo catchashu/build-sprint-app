@@ -117,21 +117,36 @@ body:has(#app.canvas){overflow:hidden;min-width:0}
 .explainer-dialog [role=tabpanel]{margin-bottom:0}
 @media(max-width:600px){.audience-tabs{grid-template-columns:1fr}.explainer-dialog{padding:24px}.explainer-header{top:-24px;gap:8px}}
 /* Step 1 review: Website Context continues the approved landing tray. */
-#app.canvas[data-canvas-step=website]{padding:env(safe-area-inset-top,0px) 0 0;grid-template-rows:minmax(calc(var(--usable-height)/3),1fr) auto;transition:none}
-#app.canvas[data-canvas-step=website] .panel{position:relative;isolation:isolate;height:auto;max-width:780px;align-self:end;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));border-radius:10px 10px 0 0;overflow:visible;scrollbar-gutter:auto;background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}
-#app.canvas[data-canvas-step=website] .panel form{max-width:35rem}
-#app.canvas[data-canvas-step=website] .panel h2,#app.canvas[data-canvas-step=website] .panel>.muted{max-width:35rem;margin-left:auto;margin-right:auto}
-#app.canvas[data-canvas-step=website] .panel .controls{margin-top:16px}
-@supports ((backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px))){#app.canvas[data-canvas-step=website] .panel{background:transparent}#app.canvas[data-canvas-step=website] .panel::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgb(255 255 255 / .45);pointer-events:none}}
-@media(max-width:600px){#app.canvas[data-canvas-step=website] .panel{padding:8px max(16px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}}
+#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]){padding:env(safe-area-inset-top,0px) 0 0;grid-template-rows:minmax(calc(var(--usable-height)/3),1fr) auto;transition:none}
+#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel{position:relative;isolation:isolate;height:auto;max-width:780px;align-self:end;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));border-radius:10px 10px 0 0;overflow:visible;scrollbar-gutter:auto;background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}
+#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel form{max-width:35rem}
+#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel h2,#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel>.muted{max-width:35rem;margin-left:auto;margin-right:auto}
+#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel .controls{margin-top:16px}
+@supports ((backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px))){#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel{background:transparent}#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgb(255 255 255 / .45);pointer-events:none}}
+@media(max-width:600px){#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel{padding:8px max(16px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}}
 /* With the keyboard present, devote the visible area to the task, not the headline. */
-#app.landing[data-keyboard=true],#app.canvas[data-canvas-step=website][data-keyboard=true]{grid-template-rows:minmax(0,min(3rem,12%)) minmax(0,1fr);transition:none}
-#app.landing[data-keyboard=true] .panel,#app.canvas[data-canvas-step=website][data-keyboard=true] .panel{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;padding-top:12px;padding-bottom:12px}
-#app.landing[data-keyboard=true] .landing-logo,#app.landing[data-keyboard=true] h1,#app.landing[data-keyboard=true] .explainers,#app.landing[data-keyboard=true] .panel>button.secondary,#app.canvas[data-canvas-step=website][data-keyboard=true] .landing-logo{display:none}
+#app.landing[data-keyboard=true],#app.canvas:is([data-canvas-step=website],[data-canvas-step=references])[data-keyboard=true]{grid-template-rows:minmax(0,min(3rem,12%)) minmax(0,1fr);transition:none}
+#app.landing[data-keyboard=true] .panel,#app.canvas:is([data-canvas-step=website],[data-canvas-step=references])[data-keyboard=true] .panel{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;padding-top:12px;padding-bottom:12px}
+#app.landing[data-keyboard=true] .landing-logo,#app.landing[data-keyboard=true] h1,#app.landing[data-keyboard=true] .explainers,#app.landing[data-keyboard=true] .panel>button.secondary,#app.canvas:is([data-canvas-step=website],[data-canvas-step=references])[data-keyboard=true] .landing-logo{display:none}
 #app.landing[data-keyboard=true] form{margin:0 auto}
 #app.landing[data-keyboard=true] label{margin-bottom:12px}
 #app.landing[data-keyboard=true] textarea{height:6rem;min-height:6rem;margin-top:8px;padding:12px}
 body:has(#app[data-keyboard=true]){overflow:hidden}
-@media(prefers-reduced-transparency:reduce){#app.canvas[data-canvas-step=website] .panel{background:#F7F8F5}#app.canvas[data-canvas-step=website] .panel::before{display:none}}
-@media(forced-colors:active){#app.canvas[data-canvas-step=website] .panel{background:Canvas;color:CanvasText;border:1px solid CanvasText}#app.canvas[data-canvas-step=website] .panel::before{display:none}}
-#app.landing[data-tray-moving=true] .panel,#app.canvas[data-canvas-step=website][data-tray-moving=true] .panel{height:100%;min-height:0;overflow:hidden}
+@media(prefers-reduced-transparency:reduce){#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel{background:#F7F8F5}#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel::before{display:none}}
+@media(forced-colors:active){#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel{background:Canvas;color:CanvasText;border:1px solid CanvasText}#app.canvas:is([data-canvas-step=website],[data-canvas-step=references]) .panel::before{display:none}}
+#app.landing[data-tray-moving=true] .panel,#app.canvas:is([data-canvas-step=website],[data-canvas-step=references])[data-tray-moving=true] .panel{height:100%;min-height:0;overflow:hidden}
+
+/* Reference Context needs two fields: let its tray grow upward before scrolling. */
+#app.canvas[data-canvas-step=references]{grid-template-rows:minmax(0,1fr) auto}
+#app.canvas[data-canvas-step=references] .panel{max-height:calc(var(--usable-height) - min(3rem,10svh));overflow-y:auto;overscroll-behavior-y:contain}
+#app.canvas[data-canvas-step=references][data-keyboard=true]{grid-template-rows:minmax(0,min(3rem,12%)) minmax(0,1fr)}
+#app.canvas[data-canvas-step=references][data-keyboard=true] .panel{max-height:100%}
+/* Keep the glass attached to the reference tray while its content scrolls. */
+@supports ((backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px))){#app.canvas[data-canvas-step=references] .panel{background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgb(255 255 255 / .45)}#app.canvas[data-canvas-step=references] .panel::before{display:none}}
+@media(prefers-reduced-transparency:reduce){#app.canvas[data-canvas-step=references] .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){#app.canvas[data-canvas-step=references] .panel{background:Canvas;backdrop-filter:none;-webkit-backdrop-filter:none}}
+/* Reference keyboard mode: reuse Landing's form-first treatment. */
+#app.canvas[data-canvas-step=references][data-keyboard=true]{grid-template-rows:0 minmax(0,1fr)}
+#app.canvas[data-canvas-step=references][data-keyboard=true] .panel>h2,#app.canvas[data-canvas-step=references][data-keyboard=true] .panel>.muted{display:none}
+#app.canvas[data-canvas-step=references][data-keyboard=true] .panel label{margin-bottom:12px}
+#app.canvas[data-canvas-step=references][data-keyboard=true] .panel .controls{margin-top:12px}

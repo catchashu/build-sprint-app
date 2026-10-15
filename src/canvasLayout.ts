@@ -20,6 +20,17 @@ export function keyboardOpen(editing: boolean, mobile: boolean, baseline: number
   return editing && mobile && scale <= 1.05 && baseline - available > Math.max(120, baseline * .2);
 }
 
+export function revealReferenceInput(app: HTMLElement) {
+  if (app.dataset.canvasStep !== 'references' || app.dataset.keyboard !== 'true') return;
+  const input = document.activeElement;
+  const panel = app.querySelector<HTMLElement>('.panel');
+  if (!(input instanceof HTMLElement) || !input.matches('input') || !panel?.contains(input)) return;
+  const field = input.getBoundingClientRect(), tray = panel.getBoundingClientRect();
+  const top = tray.top + 8, bottom = tray.bottom - 8;
+  if (field.bottom > bottom) panel.scrollTop += field.bottom - bottom;
+  else if (field.top < top) panel.scrollTop -= top - field.top;
+}
+
 export function watchCanvasViewport(app: HTMLElement) {
   const viewport = window.visualViewport;
   let baseline = window.innerHeight, width = window.innerWidth, frame = 0, wasOpen = false;
@@ -39,6 +50,9 @@ export function watchCanvasViewport(app: HTMLElement) {
       if (wasOpen) { const panel = app.querySelector<HTMLElement>('.panel'); if (panel) panel.scrollTop = 0; }
     }
     wasOpen = open;
+    // Android may pan the visible viewport after focus, independently of resize.
+    // Adjust only the tray; never scroll the whole page or disturb video playback.
+    if (open) revealReferenceInput(app);
   }
   const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
   viewport?.addEventListener('resize', schedule); viewport?.addEventListener('scroll', schedule);

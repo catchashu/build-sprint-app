@@ -34,3 +34,15 @@ User approved Landing to Website Context after physical Android testing; desktop
 - Preserve the Website Context copy, optional field, Back/Continue behaviour, offering and saved URL. Phase 2 character-animation plans remain unchanged.
 
 Step 2 is review-only next; its existing design is not approved by this checkpoint.
+
+## 2026-10-15 - Phase 1 Step 2 approved and complete
+
+User approved Competitor / Inspiration Context after physically testing both URL fields with the Android keyboard, navigation and visual treatment.
+
+- Let the bottom-anchored tray grow upward to fit both fields and navigation, reducing the Gibbon area first: avoid hidden controls and unnecessary internal scrolling while keeping text readable.
+- Carry forward the transparent logo, 65% tint / 12px blur, matching typography/inputs/buttons, full-width mobile and centered maximum-780px desktop layout: preserve one coherent interface.
+- During reference entry, prioritize both fields and navigation; temporarily hide introductory content and the Gibbon strip. Automatically reveal the focused field through keyboard resizing and browser panning. Restore layout and URLs on dismissal: physical Android testing exposed a gap in the earlier simulation.
+- Smoothly resize the same tray between context states while preserving the resting video and honoring reduced motion. Both references remain optional, including proceeding with both blank.
+- Test each field without manually scrolling it into view; retain regression coverage for viewport offsets and keyboard-height changes.
+
+Stop development after this checkpoint. Step 3 (Finding Your Customers / Initial Research), research questions and cluster-card UX are pending review. The existing approved cluster direction remains one topic cluster at a time with Tinder-style tick/cross controls. No Step 3 or cluster redesign implemented tonight. Character performances remain Phase 2 work.

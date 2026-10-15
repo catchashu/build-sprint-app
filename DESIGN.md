@@ -147,7 +147,7 @@ If a source reference, generated storyboard or proposed implementation conflicts
 
 **Sizes:** Display 28–48px responsive for the main headline or one primary result · heading 20px · body 16px · small 14px. Use relative units & only these four named sizes; do not shrink body, input or primary-button text on phones.
 
-**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Approved Landing and Website Context panel tint: \#F7F8F5 at 65% opacity with 12px backdrop blur. Other, not-yet-reviewed Product Canvas states retain their existing 90% tint / 16px blur until their separate Phase 1 review. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
+**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Approved Landing, Website Context and Reference Context panel tint: \#F7F8F5 at 65% opacity with 12px backdrop blur. Other, not-yet-reviewed Product Canvas states retain their existing 90% tint / 16px blur until their separate Phase 1 review. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
 
 **Accent:** Solid deep green \#21634A with white text, only on the current screen/state’s main action, as defined in Section 4\. Secondary actions stay neutral. Hover/pressed: \#194D39. Keep the main-action button opaque on the pale panel. The green scenery is separate from the interface-accent rule.
 
@@ -206,7 +206,7 @@ All character poses, expressions & animations must derive from one consistent, a
 
 Follow the existing Motion Bible for choreography, transitions & interruptibility. The approved motion storyboards establish visual direction, not finished production animation assets.
 
-Phase boundary: all state-specific character performances described below remain planned Phase 2 work. During Phase 1, use the unchanged approved resting-v1.mp4 loop in every state, at playback rate 1, with system reduced-motion support. Do not create new animations or add artificial waits. Phase 1 Steps 0 and 1 (Landing and Landing to Website Context) are approved; later-state layouts and transitions still require separate review.
+Phase boundary: all state-specific character performances described below remain planned Phase 2 work. During Phase 1, use the unchanged approved resting-v1.mp4 loop in every state, at playback rate 1, with system reduced-motion support. Do not create new animations or add artificial waits. Phase 1 Steps 0, 1 and 2 (Landing, Website Context and Reference Context) are approved; later-state layouts and transitions still require separate review.
 
 ### \#\#\# Product Canvas — Arrival / Ready For Context
 
@@ -244,6 +244,12 @@ For: Add optional competitor or inspiration context without turning onboarding i
 
 Top to bottom: Gibbon remains attentive/quiet in the upper Stage. The lower Interaction Tray shows: “Any competitor or inspiration sites I should look at?” “Optional · Add up to 2.” URL inputs. Bottom navigation: \[Back\] as secondary navigation and \[Continue\] as the one main action. Text entry follows the locked keyboard rule.
 
+Approved Phase 1 Step 2 (2026-10-15): use the transparent Topic Gibbon logo, Inter, 65% light tint / 12px blur, matching inputs/buttons and spacing. Keep the mobile tray full-width and bottom-anchored, and the desktop tray centered at maximum 780px. Size the tray to both optional URL fields and Back/Continue; let it expand upward and reduce the Gibbon area instead of constraining it to the lower third. At 375x667, 390x844, 320x568 and 1280x900, the complete closed-keyboard form fits without tray or page scrolling. Preserve readable text and comfortable tap targets. Allow limited tray scrolling only when space requires it; the glass stays attached to the tray while its contents scroll.
+
+Approved reference keyboard behaviour: reuse Step 1 visible-viewport detection. While the keyboard is open, temporarily hide the logo, heading/helper text and Gibbon strip to prioritize both fields and navigation. Automatically reveal whichever URL field is focused after focus, viewport resizing or browser panning. Back and Continue remain accessible. Keep the keyboard layout stable until dismissal, then restore the approved composition, reset temporary scroll and retain both URLs. Both fields passed physical Android testing individually. Do not change other approved screens.
+
+Approved transition: animate measured tray/stage heights directly between Website Context and Reference Context in both directions over 350ms, using the existing bottom-anchored panel and uninterrupted resting video. Respect reduced motion and prioritize keyboard resizing. Both references remain optional, including proceeding with both blank. No new character performances; those remain Phase 2 work.
+
 Main action: “Continue” → Context Accepted / Lightweight Grounded Search Pass.  
 Empty, first visit: “Paste a URL”  
 Empty, coming back: Preserve any URLs already added in the current run.  
@@ -253,6 +259,8 @@ Done: Available reference context is retained.
 If the AI answer is wrong: Competitor/reference information never overrides the user's own business context; interpretation is reviewed later through Correct / Fix this.
 
 ### \#\#\# Product Canvas — Context Accepted / Lightweight Grounded Search Pass
+
+Phase 1 Step 3 status: Finding Your Customers / Initial Research is pending review. Research questions and cluster-card UX have significant reported issues. The existing implementation is not approved. The approved cluster-review direction is one topic cluster at a time with Tinder-style tick/cross controls, not individual-topic cards or vertically stacked cards with internal scrolling. Detailed review and implementation remain future work.
 
 For: Communicate that Topic Gibbon has received the context and has begun real India-focused search research.
 
@@ -1055,4 +1063,4 @@ User approved a compact landing composition with headline, offering input, main 
 
 ## Phase 1 Arrival placeholder implementation - Step 1 approved 2026-10-15
 
-The approved behaviour is specified in Section 4 (keyboard, Arrival and Website Context). Implementation keeps the same video and panel nodes, animates measured grid heights and never waits for the resting loop to finish. All animation assignments remain the unchanged resting-v1.mp4, measured at 14.333333 seconds with playback rate 1. State-specific performances remain Phase 2. Earlier fixed 20.5rem / half-viewport Website Context sizing is superseded by the content-sized approved tray. This approval does not extend to Reference Context or later states.
+The approved behaviour is specified in Section 4 (keyboard, Arrival and Website Context). Implementation keeps the same video and panel nodes, animates measured grid heights and never waits for the resting loop to finish. All animation assignments remain the unchanged resting-v1.mp4, measured at 14.333333 seconds with playback rate 1. State-specific performances remain Phase 2. Earlier fixed 20.5rem / half-viewport Website Context sizing is superseded by the content-sized approved tray. Reference Context is separately approved under Step 2. Initial Research and later states remain pending review.
