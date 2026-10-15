@@ -6,7 +6,7 @@ Phase 1 is UX and visual polish only, using the unchanged approved resting anima
 
 Review one step at a time: 0 Landing (reopened for refinement); 1 Landing to Website Context; 2 reference context; 3 initial research; 4 initial cluster review; 5 unlock; 6 full research and Demand Map review; 7 plan generation; 8 final plan; 9 Excel / Exit / new run; 10 complete responsive journey. Cluster review means one cluster card at a time with tick/cross controls, not individual-topic cards or the older stacked-card layout. Preserve approved copy and design except explicitly authorized changes.
 
-Phase 1 Step 0 is approved and complete (2026-10-15), including the Landing and four explainer popups. Save implementation and documentation together in GitHub. Current scope: Step 1, Landing to Website Context, explanation and review only; no implementation changes until authorized. State-specific animations remain Phase 2 work.
+Phase 1 Steps 0 and 1 are approved and complete (2026-10-15). Step 1 includes physical Android keyboard and transition acceptance plus desktop checks. Current scope: Step 2, Website Context to Competitor/Inspiration Context, explain and review the existing flow only; no changes yet. State-specific animations remain Phase 2 work.
 
 ## Milestones
 

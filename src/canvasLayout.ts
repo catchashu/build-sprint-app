@@ -22,18 +22,23 @@ export function keyboardOpen(editing: boolean, mobile: boolean, baseline: number
 
 export function watchCanvasViewport(app: HTMLElement) {
   const viewport = window.visualViewport;
-  let baseline = window.innerHeight, width = window.innerWidth, frame = 0;
+  let baseline = window.innerHeight, width = window.innerWidth, frame = 0, wasOpen = false;
   function update() {
     const editing = document.activeElement?.matches('input,textarea,[contenteditable="true"]') ?? false;
     if (Math.abs(window.innerWidth - width) > 80) { baseline = window.innerHeight; width = window.innerWidth; }
     if (!editing) baseline = Math.max(baseline, window.innerHeight);
     const available = viewport?.height ?? window.innerHeight;
-    const open = keyboardOpen(editing, window.innerWidth <= 600, baseline, available, viewport?.scale);
+    // Tapping a button blurs the input before Android has finished hiding its keyboard.
+    const open = keyboardOpen(editing || wasOpen, window.innerWidth <= 600, baseline, available, viewport?.scale);
     app.dataset.keyboard = String(open);
     if (open) {
       app.style.setProperty('--keyboard-height', `${available}px`);
       app.style.setProperty('--keyboard-top', `${viewport?.offsetTop ?? 0}px`);
-    } else { app.style.removeProperty('--keyboard-height'); app.style.removeProperty('--keyboard-top'); }
+    } else {
+      app.style.removeProperty('--keyboard-height'); app.style.removeProperty('--keyboard-top');
+      if (wasOpen) { const panel = app.querySelector<HTMLElement>('.panel'); if (panel) panel.scrollTop = 0; }
+    }
+    wasOpen = open;
   }
   const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
   viewport?.addEventListener('resize', schedule); viewport?.addEventListener('scroll', schedule);

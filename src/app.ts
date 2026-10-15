@@ -13,6 +13,7 @@ import { readSavedState, saveState } from "./savedPlan";
 import { canvasMode, setCanvasMode, watchCanvasViewport } from "./canvasLayout";
 import { createRestingStage } from "./restingStage";
 import { arriveReady } from "./arrival";
+import { trayGeometry, transitionTray } from "./trayTransition";
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
@@ -38,7 +39,16 @@ async function work(fn: () => Promise<void>) {
   try { await fn(); } catch { message("This step couldn’t finish. Your context is saved. Please try again."); }
   finally { busy = false; panel.querySelectorAll<HTMLButtonElement>("button").forEach(b => b.disabled = false); }
 }
-function go(screen: State["screen"]) { state.screen = screen; save(); render(); document.querySelector<HTMLElement>("h1, h2")?.focus(); }
+let trayAnimation: Animation | undefined;
+function go(screen: State["screen"]) {
+  const previous = app.dataset.canvasStep;
+  const animate = (previous === 'landing' && screen === 'website') || (previous === 'website' && screen === 'landing');
+  const from = animate ? trayGeometry(app) : undefined;
+  trayAnimation?.cancel(); trayAnimation = undefined; delete app.dataset.trayMoving;
+  state.screen = screen; save(); render();
+  if (screen !== 'arrival') document.querySelector<HTMLElement>('h1, h2')?.focus({ preventScroll: true });
+  if (from) trayAnimation = transitionTray(app, from, trayGeometry(app));
+}
 function field(label: string, value: string, placeholder: string, update: (value: string) => void, multiline = false) {
   const wrapper = node("label", label); const input = multiline ? node("textarea") : node("input");
   input.value = value; input.placeholder = placeholder; input.maxLength = multiline ? 2000 : 500;
@@ -47,12 +57,17 @@ function field(label: string, value: string, placeholder: string, update: (value
 }
 function render() {
   stopArrival?.(); stopArrival = undefined;
+  // Keep the current tray painted during the already-settled placeholder handoff.
+  if (state.screen === 'arrival') {
+    stopArrival = arriveReady(state.offering, () => go('website'), () => { go('landing'); message('I lost that first detail. Tell me what you offer again.'); });
+    return;
+  }
   unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; panel.replaceChildren(); panel.scrollTop = 0;
   app.className = state.screen === "landing" ? "landing" : "canvas";
   app.dataset.canvasStep = state.screen;
   setCanvasMode(app, canvasMode(state.screen));
   selectAnimation(canvasMode(state.screen));
-  if (state.screen === "landing") {
+  if (state.screen === "landing" || state.screen === "website") {
     const brand = node("div", "", "landing-logo");
     const logo = node("img"); logo.src = "/images/topic-gibbon-logo-transparent.png"; logo.alt = "Topic Gibbon";
     logo.width = 1040; logo.height = 440; brand.append(logo); panel.append(brand);
@@ -74,11 +89,6 @@ function render() {
       try { const saved = JSON.parse(localStorage.getItem(`${storageKey}:plan`)!); if (saved?.id && saved?.token) { state = saved; go("plan"); } }
       catch { message("The saved plan could not be opened in this browser."); }
     }));
-  } else if (state.screen === "arrival") {
-    stopArrival = arriveReady(state.offering, () => go("website"), () => {
-      panel.append(node("p", "I lost that first detail. Tell me what you offer again.", "error"), button("Enter again", () => go("landing"), true));
-      setCanvasMode(app, "context");
-    });
   } else if (state.screen === "website" || state.screen === "references") {
     const own = state.screen === "website";
     const title = node("h2", own ? "Do you have a website I should use as context?" : "Any competitor or inspiration sites I should look at?"); title.tabIndex = -1;

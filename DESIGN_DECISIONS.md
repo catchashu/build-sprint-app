@@ -21,3 +21,16 @@ User approved the finished Landing Page UX on mobile and desktop, including all 
 - Preserve the earlier approved baseline tags. This checkpoint supersedes prior Landing glass, brand and explainer-control instructions only; later states need their own reviews.
 
 Implementation and specifications are saved together at this checkpoint. Phase 1 Step 1 is review-only next; state-specific character animation implementation remains deferred to Phase 2.
+
+## 2026-10-15 - Phase 1 Step 1 approved and complete
+
+User approved Landing to Website Context after physical Android testing; desktop layout and transition checks also passed.
+
+- Prioritize the offering field and CTA while the keyboard is open; temporarily hide non-form landing content. Reason: prevent the keyboard from obscuring the primary action without changing the approved closed-keyboard appearance.
+- Restore the original layout and entered text on dismissal; keep controls stable until the keyboard actually closes, even after input blur. Allow temporary scrolling only when the visible height is unusually short.
+- Resize the same bottom-anchored tray directly over 350ms, including Back. Reason: make changing task layouts feel continuous without forcing identical tray heights or scaling text.
+- Keep the forest and original resting video continuous, without restarting playback or inserting a collapsed Arrival pause. Reduced motion skips the transition; keyboard resizing takes priority.
+- Extend the approved transparent logo, 65% tint / 12px blur, Inter and spacing to Website Context. Use full-width mobile and centered maximum-780px desktop trays, sized for the content.
+- Preserve the Website Context copy, optional field, Back/Continue behaviour, offering and saved URL. Phase 2 character-animation plans remain unchanged.
+
+Step 2 is review-only next; its existing design is not approved by this checkpoint.

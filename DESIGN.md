@@ -147,7 +147,7 @@ If a source reference, generated storyboard or proposed implementation conflicts
 
 **Sizes:** Display 28–48px responsive for the main headline or one primary result · heading 20px · body 16px · small 14px. Use relative units & only these four named sizes; do not shrink body, input or primary-button text on phones.
 
-**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Approved Landing panel tint: \#F7F8F5 at 65% opacity with 12px backdrop blur. Other Product Canvas states retain their existing 90% tint / 16px blur until their separate Phase 1 review. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
+**Text:** Fully opaque dark ink \#1D2723; secondary text \#55605A. Place text on a centred, pale frosted panel over the full-screen green forest/canopy. Approved Landing and Website Context panel tint: \#F7F8F5 at 65% opacity with 12px backdrop blur. Other, not-yet-reviewed Product Canvas states retain their existing 90% tint / 16px blur until their separate Phase 1 review. Frost the surface, not the letters. Keep inputs opaque white; use solid \#F7F8F5 as the panel fallback, not the page background.
 
 **Accent:** Solid deep green \#21634A with white text, only on the current screen/state’s main action, as defined in Section 4\. Secondary actions stay neutral. Hover/pressed: \#194D39. Keep the main-action button opaque on the pale panel. The green scenery is separate from the interface-accent rule.
 
@@ -194,9 +194,9 @@ This is one actual screen, not a sequence of conventional pages. The Product Can
 
 Canvas layout rule: use a mobile-first two-zone system. The upper Gibbon Stage is the expressive character space and normally gets the majority of the viewport after Start. The lower Interaction Tray is a frosted/high-contrast work surface anchored to the bottom. At rest, the tray is roughly the lower third of the screen; it may expand toward about half the viewport for card-heavy, correction, payment, or review states. Prefer internal tray scrolling before allowing it to swallow the full Gibbon Stage. Questions, inputs, cards, corrections, payment, and decision controls live in the Interaction Tray; Gibbon motion lives primarily in the Stage.
 
-Keyboard rule: when a text field receives focus on mobile, the Interaction Tray rises above the system keyboard and the Gibbon Stage compresses to a small presence strip. If the device leaves too little usable space, the Gibbon may temporarily disappear while the keyboard is open rather than compromising input legibility. The full Stage returns immediately when the keyboard closes. Desktop preserves the same separation of character space and work surface, but does not need to follow the mobile percentages literally.
+Keyboard rule (Landing and Website Context approved 2026-10-15): use the actual visible viewport to detect the mobile keyboard, rather than focus alone. While typing, keep the offering field and primary CTA above the keyboard where space permits. Temporarily hide the Landing logo, headline, explainers and saved-plan action; compress the Gibbon stage to a small strip. Website Context similarly hides its logo while retaining its question, field and navigation. Only unusually short visible areas require temporary tray scrolling. Keep this layout stable during input blur until the keyboard has actually closed. On dismissal, restore the approved layout, reset temporary tray scrolling and preserve all entered text. Do not treat browser chrome changes or pinch zoom as keyboard activation. Desktop retains its normal layout. Physical Android testing passed for the Landing keyboard behaviour.
 
-State rule: during Arrival, keep the Interaction Tray minimal until the Gibbon settles; during active processing, the tray may collapse to a compact status strip so the Gibbon has room to perform; during user-decision states, the tray expands only as much as the task requires.
+State rule: Phase 1 Landing to Website Context resizes the existing bottom-anchored tray directly, without painting an empty/collapsed Arrival tray. The Phase 2 Arrival performance may use a minimal tray until the Gibbon settles; during active processing, the tray may collapse to a compact status strip so the Gibbon has room to perform; during user-decision states, the tray expands only as much as the task requires.
 
 ### \#\#\#Character & Motion Implementation Rule
 
@@ -206,13 +206,15 @@ All character poses, expressions & animations must derive from one consistent, a
 
 Follow the existing Motion Bible for choreography, transitions & interruptibility. The approved motion storyboards establish visual direction, not finished production animation assets.
 
-Phase boundary: all state-specific character performances described below remain planned Phase 2 work. During Phase 1, use the unchanged approved resting-v1.mp4 loop in every state, at playback rate 1, with system reduced-motion support. Do not create new animations or add artificial waits. Approving the Landing does not approve later-state layouts or transitions.
+Phase boundary: all state-specific character performances described below remain planned Phase 2 work. During Phase 1, use the unchanged approved resting-v1.mp4 loop in every state, at playback rate 1, with system reduced-motion support. Do not create new animations or add artificial waits. Phase 1 Steps 0 and 1 (Landing and Landing to Website Context) are approved; later-state layouts and transitions still require separate review.
 
 ### \#\#\# Product Canvas — Arrival / Ready For Context
 
 For: Transition from the user's first commitment into the active Topic Gibbon experience.
 
-Top to bottom: Same forest/canopy world. After Start, the composition expands from the compact Landing into the two-zone Product Canvas. Keep the Interaction Tray minimal/mostly collapsed so the Gibbon Stage has room for the canonical Arrival → Ground Walk → Stop / Sit / Settle sequence from the Motion Bible. Once the Gibbon settles, the lower Interaction Tray rises into the Website Context state.
+Phase 1 approved behaviour: retain the current forest, video element and Interaction Tray. The already-settled resting placeholder proceeds immediately into Website Context without a timer, spinner, playback restart or empty intermediate tray. Animate measured tray/stage heights over 350ms with a gentle ease-out, keeping the tray bottom-anchored and text unscaled. The same transition applies on Back; interrupted transitions are cancellable. Respect reduced motion by skipping layout animation. Keyboard resizing takes priority over the decorative layout transition.
+
+Phase 2 planned behaviour: after Start, give the Gibbon room for the canonical Arrival / Ground Walk / Stop / Sit / Settle sequence from the Motion Bible, then reveal Website Context. This remains planned character-animation work, not part of the Phase 1 resting placeholder.
 
 Main action: None during Arrival. Arrival completes automatically → Website Context.  
 Loading: Arrival itself is the transition indicator; no spinner.  
@@ -225,6 +227,8 @@ If the AI answer is wrong: Not applicable yet.
 For: Add the user's existing website as business context when one exists, without forcing everyone to provide one.
 
 Top to bottom: Gibbon remains settled/attentive in the upper Stage. The lower Interaction Tray shows: “Do you have a website I should use as context?” Website URL (optional). “Leave this blank if you don’t have one.” \[Paste your website URL\]. Bottom navigation: \[Back\] as secondary navigation and \[Continue\] as the one main action. If the URL field opens the mobile keyboard, follow the locked keyboard rule: the tray rises and the Gibbon Stage compresses rather than covering the input.
+
+Approved visual treatment (2026-10-15): use the supplied transparent logo inside the same tray, Inter typography, 65% warm light tint and 12px blur with solid accessibility fallbacks. The tray spans the mobile viewport without outer side/bottom margins, has rounded upper corners and internal safe-area padding, and is centered at maximum 780px on desktop. Its content-sized height remains more compact than Landing; retain at least the upper third for the Gibbon when the keyboard is closed. Keep the existing question, helper copy, optional URL field, Back and Continue behaviour unchanged. Preserve offering and entered website URL when navigating back and forward.
 
 Main action: “Continue” → Reference Context.  
 Empty, first visit: “Paste your website URL”  
@@ -1049,8 +1053,6 @@ These rules apply across Topic Gibbon unless an explicitly documented state-spec
 
 User approved a compact landing composition with headline, offering input, main action and four information triggers visible. Preserve the introductory paragraph verbatim inside What? and payment/subscription reassurance verbatim inside How?. This supersedes their original always-visible placement for this landing pass. Preserve Inter, forest, character and the upper-third stage. Use the approved resting loop unchanged as the temporary character performance. Later canvas transitions require separate initial-layout review first. Very short viewport/text-enlargement overflow remains an explicit unresolved constraint, not permission to shrink or remove copy.
 
-## Phase 1 Arrival placeholder implementation (Step 1 review pending)
+## Phase 1 Arrival placeholder implementation - Step 1 approved 2026-10-15
 
-Landing desktop/mobile baseline is checkpoint f770fb2. User approved implementing Arrival / Ready For Context using the existing resting performance as already settled. Enter the explicit Arrival state, then proceed immediately to Website Context without a timer, spinner or media-length wait. The canvas contracts the tray and expands the stage through the existing layout transition; do not force a separate collapsed-tray pause when no arrival performance exists. Reduced motion removes layout motion and must not block readiness.
-
-Website Context uses roughly the bottom third, expanding only enough to accommodate its question, URL field and navigation (currently 20.5rem minimum, capped at half the available viewport). Smaller viewports retain internal tray scrolling. Keyboard geometry takes precedence. Animation assignments live in src/characterAnimations.ts; all V1 states use the unchanged resting-v1.mp4, measured at 14.333333 seconds and playback rate 1. A future arrival performance needs its own approved completion behavior; changing the asset assignment alone does not introduce a wait.
+The approved behaviour is specified in Section 4 (keyboard, Arrival and Website Context). Implementation keeps the same video and panel nodes, animates measured grid heights and never waits for the resting loop to finish. All animation assignments remain the unchanged resting-v1.mp4, measured at 14.333333 seconds with playback rate 1. State-specific performances remain Phase 2. Earlier fixed 20.5rem / half-viewport Website Context sizing is superseded by the content-sized approved tray. This approval does not extend to Reference Context or later states.

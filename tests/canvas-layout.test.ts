@@ -44,6 +44,8 @@ test('visible viewport shrink and recovery update the tray without clearing its 
     const stop=watchCanvasViewport(app as unknown as HTMLElement);input.focus();
     Object.assign(viewport,{height:430});viewport.dispatchEvent(new w.Event('resize'));
     assert.equal(app.dataset.keyboard,'true');assert.equal(app.style.getPropertyValue('--keyboard-height'),'430px');
+    input.blur();
+    assert.equal(app.dataset.keyboard,'true','keep controls stable while Android closes the keyboard after blur');
     Object.assign(viewport,{height:844});viewport.dispatchEvent(new w.Event('resize'));
     assert.equal(app.dataset.keyboard,'false');assert.equal(app.style.getPropertyValue('--keyboard-height'),'');assert.equal(input.value,'Preserved');
     stop();Object.assign(viewport,{height:430});viewport.dispatchEvent(new w.Event('resize'));assert.equal(app.dataset.keyboard,'false');
