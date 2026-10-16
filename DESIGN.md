@@ -260,11 +260,11 @@ If the AI answer is wrong: Competitor/reference information never overrides the 
 
 ### \#\#\# Product Canvas — Context Accepted / Lightweight Grounded Search Pass
 
-Phase 1 Step 3 status: Finding Your Customers / Initial Research is pending review. Research questions and cluster-card UX have significant reported issues. The existing implementation is not approved. The approved cluster-review direction is one topic cluster at a time with Tinder-style tick/cross controls, not individual-topic cards or vertically stacked cards with internal scrolling. Detailed review and implementation remain future work.
+Phase 1 Steps 3-4 approved 2026-10-16 after physical Android review. The approved implementation below supersedes the earlier stacked-card, half-height tray and processing-choreography instructions for these two states only.
 
 For: Communicate that Topic Gibbon has received the context and has begun real India-focused search research.
 
-Top to bottom: The Interaction Tray contracts to a compact processing/status strip while the upper Gibbon Stage regains visual priority. Topic Gibbon uses the canonical Receive Context behaviour from the Motion Bible, then moves into the approved processing choreography. Submitted offering description, website context where available, and reference sites become the working business context. V1 research geography is India and is not asked as an input.
+Top to bottom: Finding your customers uses the transparent Topic Gibbon logo, 65% light tint / 12px blur, Inter and the bottom-anchored responsive tray. Show actual research status, search-attempt count and expandable technical activity. Transition as soon as results are ready; never add an artificial wait. Continue the unchanged resting animation throughout Phase 1. Submitted offering and available website/reference context remain the working context; geography remains India.
 
 Main action: None while this pass is running.  
 Loading: “Looking for real search demand around your offering…”  
@@ -278,9 +278,13 @@ Navigation rule during progressive context collection: Back is always secondary 
 
 For: Prove that Topic Gibbon is using real India search evidence, show a small useful interpretation of that evidence, and let the user correct any early misunderstanding before payment.
 
-Top to bottom: Topic Gibbon finishes the lightweight processing beat and settles into a quiet attentive sit/chill state in the upper Stage. The Interaction Tray expands enough to present the First-Value result, roughly up to half the viewport on mobile if needed. Show: “Here’s what people in India are searching for around your offering.” Then show 2–4 demand/need cards. If they do not fit comfortably, the tray scrolls internally while the Gibbon remains visible above. Each card contains a meaningful demand-area label generated from the evidence; 2–3 representative sourced queries; a small provenance cue, “Sourced from live Google search evidence · India”; and the local actions \[Correct\] and \[Fix this\]. Do not show High / Medium / Low demand, full retained query sets, funnel analysis, website treatment, or final prioritisation yet. Once every card is resolved, show the primary \[Continue\] action.
+Top to bottom: Show one entire topic cluster at a time in a Tinder-style deck, not individual keywords or vertically stacked cards. Each cluster has its label, customer need and approximately 2-3 representative searches when space allows. Show Cluster N of M, Previous / Next, Accept, Reject, Fix this and Review decisions. Accept means relevant to the offering; Reject means outside the offering. Advance only after a confirmed save; failures stay on the affected cluster with retry available. Keep the tray, stage, navigation and decision controls stable across different content lengths, saved statuses and corrections. Use a brief card fade without moving the canvas or restarting the resting video. No swipe gestures in Phase 1.
 
-Main action: “Continue” → Unlock: Razorpay UPI Payment / Invite Code. Enabled only after every card is marked Correct or successfully fixed.
+Main action: Review decisions shows a concise accepted/rejected/pending summary, with a Review action for every cluster. Continue opens Unlock only after every cluster is accepted or rejected and at least one remains accepted. All-rejected results offer review or Edit context. Decisions remain revisitable; corrected or newly split clusters require review again.
+
+Approved responsive review: preserve normal text sizes and a fixed review frame for each viewport. Long labels and needs use readable excerpts with an explicit Full cluster & all searches action; complete text, every original search and its provenance remain in the existing evidence popup. Normal cards have no internal scrolling. On very small screens, supporting searches and nonessential heading/logo space yield to decisions and navigation. The evidence popup is a deliberate scrolling reading view with a clear persistent Close control. Corrections use the same stable frame; long selection forms may scroll in their dedicated form area, with actions accessible. Keyboard mode prioritizes input and Apply fix.
+
+Approved partial-search disclosure: when usable clusters exist, do not add a prominent red coverage warning to the review or summary. If requests failed, show this small neutral note only in the evidence popup: “Some search suggestions were unavailable. These clusters use the results we could retrieve, so the evidence may not cover every relevant search.” Keep underlying error records and technical logs. Unusable research, missing evidence, connection failures and failed saves still receive clear actionable errors. This is presentation only: no invented searches, research-logic changes or relabelling of incomplete evidence as complete.
 
 Empty, first visit: “I couldn’t find enough clear search evidence from this context yet.” \[Add one more detail\]  
 Empty, coming back: Preserve the generated cards and any Correct/Fix decisions in the current run.  
@@ -293,10 +297,10 @@ If the AI answer is wrong: Tap \[Fix this\] on the affected card → Fix This su
 
 For: Correct one wrong early interpretation without making the user manually edit clusters or raw search data.
 
-Top to bottom: Keep the affected card visible and expand the same Interaction Tray into the correction state rather than opening a separate product screen. Topic Gibbon remains quietly attentive in the upper Stage. Show: “What should I fix about this?” If a follow-up requires free-text entry, follow the locked keyboard rule: the tray rises above the keyboard and the Gibbon Stage compresses temporarily.
+Top to bottom: Keep the affected cluster and stable review frame while showing What should I fix about this? in the correction view. Preserve label/meaning, split, merge and other corrections and all existing clarification handling. Reject is a separate primary card decision, no longer buried in the Fix this menu. Keyboard entry may temporarily compress the stage; restore the review frame on dismissal.
 
 Choices and follow-ups:  
-• “This isn’t part of what I offer” → show: “I’ll exclude this from my understanding of your offering.” No extra field is required.  
+• Excluding a cluster uses the separate Reject control; restore relevance with Accept before correcting it.
 • “You’ve grouped different things together” → show the 2–3 sourced queries currently visible on this card and ask: “Which of these doesn’t belong here?” Let the user select one or more queries. Topic Gibbon decides the revised split; the user does not manually rebuild clusters.  
 • “This should be grouped with another card” → ask: “Which area should this be grouped with?” Show the other current First-Value cards as selectable options. Because there are only 2–4 cards total, show each option as the card title plus one representative sourced query when useful for disambiguation. Exactly one target card is selected.  
 • “The label / meaning is wrong” → show one short field: “Tell me what I should understand instead.”  
@@ -1069,3 +1073,8 @@ The approved behaviour is specified in Section 4 (keyboard, Arrival and Website 
 ## Session status - 2026-10-15 wrap-up
 
 Phase 1 Steps 0, 1 and 2 are approved. Next is Step 3: Finding Your Customers / Initial Research, starting with review of the research questions and cluster-review UX. Preserve one topic cluster at a time with Tinder-style tick/cross controls and no unwanted internal scrolling. Use the unchanged approved resting Gibbon animation throughout Phase 1; state-specific performances remain Phase 2 work. Production deployment is deferred until Phase 1 is complete and the full user journey has been tested. This records workflow/status only; no additional design changes are authorized tonight.
+
+
+## Current session status - 2026-10-16
+
+Phase 1 Steps 0-4 are approved. Batch 1 passed physical Android review; its final authorized refinement moves only the recoverable partial-search disclosure into the evidence view. The older 2026-10-15 wrap-up above is historical. Next: Batch 2, Invite Unlock, Full Research, Clarifications and Demand Map. Later-state designs still require review. Keep the approved resting loop, research logic, payment setup and integrations unchanged. No production deployment until the complete Phase 1 journey has passed.

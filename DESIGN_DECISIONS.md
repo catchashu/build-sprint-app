@@ -50,3 +50,16 @@ Stop development after this checkpoint. Step 3 (Finding Your Customers / Initial
 ## 2026-10-15 - End-of-day release decision
 
 All approved work through Phase 1 Step 2 is saved in GitHub. Continue local review for remaining Phase 1 steps; defer production deployment until Phase 1 is complete and the full user journey has been tested. Reason: save approved checkpoints without publishing design experiments or partially reviewed flows. Step 3 review is next; keep the resting animation through Phase 1 and defer state-specific animations to Phase 2.
+
+
+## 2026-10-16 - Batch 1 / Phase 1 Steps 3-4 approved
+
+User confirmed physical Android approval of the cluster deck, stable canvas, readable text, evidence popup and Close control, Accept/Reject, correction and decision summary.
+
+- One cluster at a time; Accept means relevant, Reject means outside the offering, Fix this handles meaning/grouping. Previous/Next and summary review allow changed decisions. Save before advancing.
+- Keep the review frame stable across content lengths and corrections; reserve save-status space. Reason: prevent canvas and Gibbon framing jumps. Preserve the original resting animation.
+- Preserve readable type. Show 2-3 search examples when space allows; very small viewports prioritize decisions and navigation. Explicit full-detail access retains complete labels, needs, searches and sources. The evidence popup scrolls deliberately; the main card does not.
+- Final authorized refinement: replace the prominent red partial-search warning with a small neutral note in evidence only. Reason: avoid alarming users when the saved results remain usable, while accurately disclosing unavailable suggestions. Blocking errors and technical records remain intact.
+- Apply the approved transparent logo, 65% tint / 12px blur, bottom tray and typography to Steps 3-4. Steps 0-2 and later batches remain unchanged.
+
+Validation: 116 tests and build passed. Browser regression covers 320x480, 320x568, 375x667, 390x844 and 1280x900; short/long clusters, stable frame, Accept/Reject/revisit, corrections, full evidence preservation, keyboard simulation, summary and unlock handoff. Warning refinement checks partial failures, clean results and actionable unusable-research errors. Browser fixtures simulate provider responses; physical Android approval covers the preceding complete Batch 1 UX, not a new full research rerun. No production deployment.

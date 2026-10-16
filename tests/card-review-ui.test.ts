@@ -5,7 +5,7 @@ import type { ConvexClient } from "convex/browser";
 import type { Id } from "../convex/_generated/dataModel";
 import { mountReview } from "../src/cardReview.ts";
 
-function setup(onContinue = () => {}) {
+function setup(onContinue = () => {}, deck = false) {
   const window = new Window();
   Object.assign(globalThis, { window, document: window.document, Option: function(text = "", value = "") { const option = window.document.createElement("option"); option.text = text; option.value = value; return option; } });
   const root = window.document.createElement("div"); window.document.body.append(root);
@@ -18,7 +18,7 @@ function setup(onContinue = () => {}) {
     onUpdate: (_api: unknown, _identity: unknown, callback: typeof emit) => { emit = callback; callback(structuredClone(view)); return () => {}; },
     mutation: (_api: unknown, args: { cardId: string; revision: number }) => { calls.push(args); return new Promise<void>((yes, no) => { resolve = yes; reject = no; }); },
   };
-  const stop = mountReview(client as unknown as ConvexClient, { id: "test-run" as Id<"firstValueRuns">, token: "test-only" }, root as unknown as HTMLElement, onContinue);
+  const stop = mountReview(client as unknown as ConvexClient, { id: "test-run" as Id<"firstValueRuns">, token: "test-only" }, root as unknown as HTMLElement, onContinue, { deck });
   return { window, root: root as unknown as HTMLElement, calls, view, emit: () => emit(structuredClone(view)), resolve: () => resolve(), reject: () => reject(new Error("Offline")), close: () => { stop(); window.happyDOM.abort(); } };
 }
 const settled = () => new Promise<void>(resolve => setImmediate(resolve));
@@ -92,5 +92,63 @@ test("one correct card can Continue and still offers Continue after reopening a 
     s.view.accepted = true; s.view.revision = 2; s.emit();
     const reopened = [...s.root.querySelectorAll("button")].find(b => b.textContent === "Continue")!;
     assert.ok(reopened); reopened.click(); assert.equal(continued, 2);
+  } finally { s.close(); }
+});
+
+test("deck saves before advancing, retries failures, revisits decisions and summarizes before Continue", async () => {
+  let continued = 0;
+  const s = setup(() => continued++, true);
+  const visible = () => s.root.querySelector<HTMLElement>('article:not([hidden])')!;
+  const click = (text: string, within: ParentNode = s.root) => [...within.querySelectorAll('button')].find(b => b.textContent?.endsWith(text))!.click();
+  try {
+    assert.equal(s.root.querySelectorAll('article:not([hidden])').length, 1);
+    assert.match(s.root.querySelector('.deck-navigation')!.textContent!, /Cluster 1 of 3/);
+    click('Accept', visible());
+    assert.equal(visible().dataset.cardId, 'a'); assert.match(visible().textContent!, /Saving/);
+    s.reject(); await settled();
+    assert.equal(visible().dataset.cardId, 'a'); assert.match(visible().textContent!, /save that change/);
+    click('Accept', visible()); s.resolve(); await settled();
+    assert.equal(visible().dataset.cardId, 'b');
+    click('Reject', visible()); s.resolve(); await settled();
+    assert.equal(visible().dataset.cardId, 'c');
+    click('Previous'); assert.equal(visible().dataset.cardId, 'b'); assert.match(visible().textContent!, /Rejected/);
+    click('Accept', visible()); s.resolve(); await settled();
+    assert.equal(visible().dataset.cardId, 'c');
+    click('Reject', visible()); s.resolve(); await settled();
+    assert.equal(s.root.dataset.reviewView, 'summary');
+    assert.match(s.root.querySelector('.deck-summary')!.textContent!, /2 accepted .* 1 rejected .* 0 to review/);
+    assert.equal(continued, 0);
+    click('Continue'); s.resolve(); await settled(); assert.equal(continued, 1);
+  } finally { s.close(); }
+});
+
+test("deck correction keeps selections, split requires a remaining query, merge has one target, Cancel preserves decisions", () => {
+  const s = setup(() => {}, true);
+  const click = (text: string) => [...s.root.querySelectorAll<HTMLButtonElement>('article:not([hidden]) button')].find(b => b.textContent?.endsWith(text))!.click();
+  try {
+    s.view.cards[0].queries.push({ ...s.view.cards[0].queries[0], id: 'second', query: 'Another search' }); s.emit();
+    click('Fix this');
+    const choose = (kind: string) => { const select = s.root.querySelector('select')!; select.value = kind; select.dispatchEvent(new s.window.Event('change') as unknown as Event); };
+    choose('split');
+    const inputs = [...s.root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+    inputs[0].click();
+    let apply = [...s.root.querySelectorAll('button')].find(b => b.textContent === 'Apply fix')!;
+    assert.equal(apply.disabled, false); inputs[1].click(); assert.equal(apply.disabled, true);
+    choose('merge');
+    assert.equal(s.root.querySelectorAll('input[type=radio]').length, 2);
+    (s.root.querySelector('input[type=radio]') as HTMLInputElement).click();
+    apply = [...s.root.querySelectorAll('button')].find(b => b.textContent === 'Apply fix')!; assert.equal(apply.disabled, false);
+    click('Cancel'); assert.equal(s.root.querySelector('select'), null); assert.equal(s.calls.length, 0);
+  } finally { s.close(); }
+});
+
+test("deck returns corrected and newly split clusters to review and cannot continue after rejecting all", async () => {
+  const s = setup(() => {}, true);
+  try {
+    s.view.decisions = { a: 'excluded', b: 'excluded', c: 'excluded' }; s.view.revision++; s.emit();
+    [...s.root.querySelectorAll('button')].find(b => b.textContent === 'Review decisions')!.click();
+    assert.equal([...s.root.querySelectorAll('button')].some(b => b.textContent === 'Continue'), false);
+    s.view.decisions.a = 'pending'; s.view.revision++; s.emit();
+    assert.equal(s.root.dataset.reviewView, 'card'); assert.equal(s.root.querySelector<HTMLElement>('article:not([hidden])')!.dataset.cardId, 'a');
   } finally { s.close(); }
 });

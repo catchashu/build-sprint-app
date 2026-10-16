@@ -3,7 +3,6 @@ import { randomId } from "./randomId";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import type { materializeCards } from "../shared/firstValue";
 import "./style.css";
 import { mountReview } from "./cardReview";
 import { mountResearch } from "./research";
@@ -43,7 +42,7 @@ let trayAnimation: Animation | undefined;
 function go(screen: State["screen"]) {
   const previous = app.dataset.canvasStep;
   const animate = (previous === 'landing' && screen === 'website') || (previous === 'website' && screen === 'landing')
-    || (previous === 'website' && screen === 'references') || (previous === 'references' && screen === 'website');
+    || (previous === 'website' && screen === 'references') || (previous === 'references' && screen === 'website') || (previous === 'references' && screen === 'result');
   const from = animate ? trayGeometry(app) : undefined;
   trayAnimation?.cancel(); trayAnimation = undefined; delete app.dataset.trayMoving;
   state.screen = screen; save(); render();
@@ -66,9 +65,11 @@ function render() {
   unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; panel.replaceChildren(); panel.scrollTop = 0;
   app.className = state.screen === "landing" ? "landing" : "canvas";
   app.dataset.canvasStep = state.screen;
+  delete app.dataset.reviewView;
+  delete app.dataset.researchState;
   setCanvasMode(app, canvasMode(state.screen));
   selectAnimation(canvasMode(state.screen));
-  if (state.screen === "landing" || state.screen === "website" || state.screen === "references") {
+  if (state.screen === "landing" || state.screen === "website" || state.screen === "references" || state.screen === "result") {
     const brand = node("div", "", "landing-logo");
     const logo = node("img"); logo.src = "/images/topic-gibbon-logo-transparent.png"; logo.alt = "Topic Gibbon";
     logo.width = 1040; logo.height = 440; brand.append(logo); panel.append(brand);
@@ -122,11 +123,12 @@ function render() {
     const unlock = node("div", "", "unlock"); panel.append(unlock);
     stopReview = mountUnlock(client, { id: state.id, token: state.token }, unlock, () => go("result"), () => go("research"));
   } else {
-    const title = node("h2", "Preparing your first search…"); title.tabIndex = -1;
+    let suggestionsUnavailable = false;
+    const title = node("h2", "Finding your customers"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");
     const status = node("p", "", "muted"); status.setAttribute("role", "status");
     const cards = node("div", "", "review");
-    const searches = node("details"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
+    const searches = node("details", "", "initial-activity"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
     const controls = node("div", "", "controls");
     const retry = button("Try again", () => void work(async () => { await client.mutation(api.firstValue.start, { id: state.id!, token: state.token }); }), true); retry.hidden = true;
     const edit = button("Edit context", () => { state.id = undefined; state.token = randomId(); go("landing"); }); edit.hidden = true;
@@ -134,22 +136,27 @@ function render() {
     if (!state.id) { message("This run couldn’t be opened. Your context is saved."); edit.hidden = false; return; }
     unsubscribe = client.onUpdate(api.firstValue.get, { id: state.id, token: state.token }, run => {
       if (!run) { setCanvasMode(app, "review"); message("This saved run couldn’t be opened."); edit.hidden = false; return; }
+      const before = trayGeometry(app);
       setCanvasMode(app, canvasMode("result", run.state));
+      app.dataset.researchState = run.state;
       count.textContent = `Searches used: ${run.searchCount} / ${run.searchLimit}`;
       log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => node("li", `${s.query} — ${s.status}${s.error ? `: ${s.error}` : ""}`, s.status === "failed" ? "error" : "")));
-      if (run.searches.some((s: { status: string }) => s.status === "failed")) searches.open = true;
       message(run.error || ""); if (!stopReview) cards.replaceChildren();
-      title.textContent = run.state === "complete" ? "Here’s what people in India are searching for around your offering." : run.state === "failed" ? "Your first view needs another step" : "Finding your customers’ questions";
+      title.textContent = run.state === "complete" ? "Which clusters fit your offering?" : run.state === "failed" ? "Your first view needs another step" : "Finding your customers";
       status.textContent = run.state === "searching" ? "Looking for real search demand around your offering…" : run.state === "grouping" ? "Organising the search evidence into a first view…" : run.state === "working" ? "Choosing searches around your offering…" : "";
       retry.hidden = !["ready", "failed"].includes(run.state) || !run.canRetry;
       retry.textContent = run.retryUsesSaved ? "Use saved searches" : "Try again";
       edit.hidden = !["ready", "failed", "complete"].includes(run.state);
       if (run.state === "complete" && run.cards) {
-        const values: ReturnType<typeof materializeCards> = JSON.parse(run.cards);
-        status.textContent = `Search evidence collected ${values[0].queries[0].sources[0].retrievedAt}. This is the saved first view for this run.`;
-        if (run.searches.some((s: { status: string }) => s.status === "failed")) status.textContent += " Some searches failed. These cards use only the successful saved results; coverage may be incomplete.";
-        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards, () => go("unlock"));
+        status.textContent = "";
+        suggestionsUnavailable = run.searches.some((s: { status: string }) => s.status === "failed");
+        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards, () => go("unlock"), { deck: true, suggestionsUnavailable: () => suggestionsUnavailable, editContext: () => { state.id = undefined; state.token = randomId(); go("landing"); } });
       }
+      count.hidden = run.state === "complete"; searches.hidden = run.state === "complete";
+      controls.hidden = retry.hidden && edit.hidden;
+      if (run.state === "complete") { edit.hidden = true; controls.hidden = true; }
+      const after = trayGeometry(app);
+      if (Math.abs(before.panel - after.panel) > 1) { trayAnimation?.cancel(); trayAnimation = transitionTray(app, before, after); }
     }, () => { message("The connection was interrupted. Your context is saved. Reload to reconnect."); });
   }
 }
