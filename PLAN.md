@@ -112,3 +112,6 @@ Initial mobile landing accepted and saved at 54a6805. Supporting copy remains ve
 4. Phase 3: deeper discovery/research, clustering, demand/priorities, output accuracy and optional integrations/enrichment. Do not invent volume values.
 
 Deferred non-blocking work: Excel bundle size; smallest-screen saved-plan Landing scroll compromise; legacy Landing payment-copy alignment; payment checkout testing before any future activation; funded volume-provider verification before enabling enrichment.
+
+
+2026-10-16 release complete: approved V1 published to https://ardent-fly-778.convex.site/ from be97b35; real production start/research/invite and saved-plan workbook smoke checks passed. Production release record and rollback details are in PROGRESS.md. Active next milestone: ten real-user tests; no further Phase 1 implementation pending.
