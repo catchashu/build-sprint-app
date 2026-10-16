@@ -272,3 +272,27 @@ body:has(#app[data-canvas-step=unlock]),body:has(#app[data-canvas-step=research]
 #app[data-canvas-step=research][data-canvas-mode=processing] .research-status{min-height:42px;font-size:14px;line-height:21px}
 #app.canvas[data-canvas-step=research][data-canvas-mode=processing] .panel>.research-status:empty{display:block}
 #app[data-canvas-step=research][data-canvas-mode=processing] .research-limits{min-height:63px}
+/* Batch 3: a single plan reading region and a separate, persistent action area. */
+#app.canvas[data-canvas-step=plan]{padding:env(safe-area-inset-top,0px) 0 0;height:100dvh;min-height:0;grid-template-rows:minmax(48px,1fr) auto;transition:none}
+#app.canvas[data-canvas-step=plan] .stage{min-height:0;contain:size}
+#app.canvas[data-canvas-step=plan] .panel{height:auto;max-width:780px;margin:0 auto;align-self:end;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:10px 10px 0 0;overflow:hidden;scrollbar-gutter:auto;display:flex;flex-direction:column}
+#app.canvas[data-canvas-step=plan] .landing-logo{width:9rem;flex-shrink:0;margin-bottom:8px}
+#app.canvas[data-canvas-step=plan] .panel>h2{margin-bottom:8px;flex-shrink:0}
+.plan-reading{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-padding:12px;padding:0 8px 8px 0;overflow-wrap:anywhere}
+#app.canvas[data-canvas-step=plan][data-plan-has-results=true]{grid-template-rows:minmax(0,1fr) calc(100dvh - min(100px,12dvh))}
+#app.canvas[data-canvas-step=plan][data-plan-has-results=true] .panel{height:100%;min-height:0}
+.plan-persistent-actions{flex-shrink:0;padding-top:8px;border-top:1px solid #78867d}
+.plan-persistent-actions>p:empty{display:none}.plan-persistent-actions>p{margin:0 0 8px;font-size:14px;line-height:21px}
+.plan-persistent-actions .plan-actions{margin:0;gap:8px;display:flex;align-items:center;flex-wrap:wrap}.plan-persistent-actions .primary{flex:1}.plan-persistent-actions button{min-height:44px;padding:8px 12px}.plan-persistent-actions .primary{min-height:48px}
+.plan-reading>.plan-actions{margin:0 0 8px}.plan-reading .plan-node{padding:16px 0}.plan-reading .plan-node p{margin-bottom:8px}.plan-reading .plan-branch{margin-bottom:8px}
+.plan-end-dialog{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}.plan-end-dialog .plan-actions{margin-bottom:0}
+#app.canvas[data-canvas-step=plan][data-keyboard=true]{height:var(--keyboard-height);grid-template-rows:0 minmax(0,1fr)}
+#app.canvas[data-canvas-step=plan][data-keyboard=true] .panel{height:100%;padding:8px 16px}
+#app.canvas[data-canvas-step=plan][data-keyboard=true] .landing-logo,#app.canvas[data-canvas-step=plan][data-keyboard=true] .panel>h2,#app.canvas[data-canvas-step=plan][data-keyboard=true] .plan-persistent-actions:has([data-export]){display:none}
+@media(max-width:600px){#app.canvas[data-canvas-step=plan] .panel{padding:8px 16px max(8px,env(safe-area-inset-bottom,0px))}.plan-persistent-actions .primary{flex-basis:100%}.plan-persistent-actions .secondary{flex:1}.plan-persistent-actions .plan-actions{gap:4px}.plan-reading .plan-node{grid-template-columns:minmax(0,1fr);gap:0}}
+@media(prefers-reduced-transparency:reduce){#app.canvas[data-canvas-step=plan] .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){#app.canvas[data-canvas-step=plan] .panel{background:Canvas;color:CanvasText;backdrop-filter:none}}
+.plan-processing{display:flex;gap:6px;align-items:center;height:28px;margin:4px 0 12px}.plan-processing span{width:5px;height:5px;border-radius:50%;background:var(--secondary);animation:plan-dot 1.4s ease-in-out infinite}.plan-processing span:nth-child(2){animation-delay:.16s}.plan-processing span:nth-child(3){animation-delay:.32s}
+@keyframes plan-dot{0%,80%,100%{opacity:.3}40%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.plan-processing span{animation:none;opacity:.65}}
+.plan-source-details{margin-bottom:12px}.plan-source-details a{overflow-wrap:anywhere}

@@ -20,7 +20,7 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   for (const {node} of orderedNodes(plan.nodes)) {
     const owner = containingPage(node, plan.nodes);
     const demand=demandSummary(planEvidence(node,cards).queries,volumes);
-    const details = [node.label, node.treatment, node.priority, demand.peak===null?'Insufficient evidence':demand.text, node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote];
+    const details = [node.label, node.treatment, node.priority, demand.peak===null?'Search volumes unavailable':demand.text, node.coverage.join('\n'), node.rationale, node.clusterIds.join('\n'), node.riskNote];
     if (isStandalone(node)) {
       let level = 1, ancestor = owner;
       while (ancestor) { level++; ancestor = containingPage(ancestor, plan.nodes); }
@@ -31,7 +31,7 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   const evidence = sheet('Search evidence', ['Demand area ID', 'Query ID', 'Observed search', 'Provider', 'Source field', 'Source reference', 'Retrieved at'], [32, 20, 60, 18, 32, 65, 28]);
   for (const card of cards) {
     const demand=demandSummary(card.queries,volumes);
-    areas.addRow([card.groupId, card.label, card.need, demand.peak===null?'Insufficient evidence':demand.text]);
+    areas.addRow([card.groupId, card.label, card.need, demand.peak===null?'Search volumes unavailable':demand.text]);
     for (const query of card.queries) for (const source of query.sources) evidence.addRow([card.groupId, query.id, query.query, source.provider, source.field, source.reference, source.retrievedAt]);
   }
   const notes = sheet('Context and limits', ['Item', 'Details'], [28, 100]);
@@ -39,7 +39,7 @@ export async function planWorkbook(plan: WebsitePlan, cards: Card[], offering: s
   notes.addRow(['How to read this plan', 'Website pages lists separate pages and supporting resources. On-page content lists sections and FAQs that belong within those pages, with no separate URL. Page level counts only separate pages/resources.']);
   notes.addRow(['Evidence scope', 'Search evidence contains the full retained searches for each mapped demand area. These are area-level context; not every search supports every section or FAQ mapped to that area.']);
   notes.addRow(['Priority', 'First / Next / Later describes business fit, intent and importance, not search volume.']);
-  notes.addRow(['Demand', VOLUME_NOTE]);
+  notes.addRow(['Demand', volumes?.rows.some(row=>row.volume!==null) ? VOLUME_NOTE : 'Research based on Google search suggestions in India (English). Search volumes are not available in this version.']);
   notes.addRow(['Volume availability',volumes?`Saved lookup from ${volumes.retrievedAt}. Blank/unavailable values are unknown, not zero. Saved reasoning may predate this lookup.`:'No saved volume lookup is available.']);
   for (const limitation of plan.limitations) notes.addRow(['Limitation', limitation]);
   if(volumes){

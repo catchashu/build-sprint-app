@@ -43,7 +43,8 @@ function go(screen: State["screen"]) {
   const previous = app.dataset.canvasStep;
   const animate = (previous === 'landing' && screen === 'website') || (previous === 'website' && screen === 'landing')
     || (previous === 'website' && screen === 'references') || (previous === 'references' && screen === 'website') || (previous === 'references' && screen === 'result')
-    || (previous === 'result' && screen === 'unlock') || (previous === 'unlock' && (screen === 'result' || screen === 'research'));
+    || (previous === 'result' && screen === 'unlock') || (previous === 'unlock' && (screen === 'result' || screen === 'research'))
+    || (previous === 'research' && screen === 'plan') || (previous === 'plan' && (screen === 'research' || screen === 'landing'));
   const from = animate ? trayGeometry(app) : undefined;
   trayAnimation?.cancel(); trayAnimation = undefined; delete app.dataset.trayMoving;
   state.screen = screen; save(); render();
@@ -70,11 +71,11 @@ function render() {
   delete app.dataset.researchState;
   setCanvasMode(app, canvasMode(state.screen));
   selectAnimation(canvasMode(state.screen));
-  if (state.screen !== "plan") {
+  {
     const brand = node("div", "", "landing-logo");
     const logo = node("img"); logo.src = "/images/topic-gibbon-logo-transparent.png"; logo.alt = "Topic Gibbon";
     logo.width = 1040; logo.height = 440; brand.append(logo); panel.append(brand);
-  } else panel.append(node("p", "Topic Gibbon", "brand"));
+  }
   const error = node("p", "", "error"); error.id = "message"; error.setAttribute("role", "alert");
   if (state.screen === "landing") {
     const h = node("h1"); h.tabIndex = -1;

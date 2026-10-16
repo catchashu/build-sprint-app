@@ -592,6 +592,20 @@ Done: “Got it. I’ll use that when I build your website plan.”
 
 If the AI answer is wrong: Choose \[Something else\] and provide the correct interpretation. Do not open a manual clustering or keyword-editing workflow.
 
+## Phase 1 Batch 3 - approved 2026-10-16
+
+User approved Website Plan Generation, Final Website Plan, Excel Download and Exit/Start New Run in full, including final processing/navigation/evidence refinements. These rules supersede conflicting older instructions in the corresponding sections below. State-specific Call/Departure performances remain Phase 2; no new animation or delay is required for Phase 1.
+
+- Preserve the transparent logo, Inter, 65% frosted tint, 12px blur, bottom-anchored mobile/maximum-780px desktop tray, safe areas and continuous resting animation. Use actual generation/checking states and smooth tray resizing.
+- Generation retains its heading and saved-map reassurance. Subtle three-dot opacity animation appears only during actual generating/checking states. Reduced motion shows stationary dots. No fake percentages, countdowns or artificial delays; errors stop the indicator and retain retry/recovery.
+- Remove ordinary Back to demand map navigation from generation and completed results. Keep Review demand map only when confirmation or recovery requires it. Preserve underlying data and targeted corrections.
+- Final plan has one intentional scrolling reading area, readable collapsible hierarchy, page/content purpose and priority, Why this?, coverage and supporting evidence. Download Excel stays outside the scrolling region in a persistent action area; it must not overlay content. Start a new run and Exit remain secondary actions.
+- Preserve expansion state, correction drafts/focus and reading position across updates. Keyboard mode prioritizes the active form and its action without covering the input; restore normal canvas on dismissal.
+- Evidence shows actual search terms/questions and one accurate concise Google/India source description per group. Provider names, source fields, working links and timestamps are behind View source details. Group identical provenance records while retaining their query associations. Keep all original research records in Excel.
+- V1 explanations state Google suggestions in India/English and unavailable search volumes. No unsupported measured-demand claims. Preserve source-backed data when present and all enrichment implementation for Phase 3.
+- Preserve workbook structure, sheets, columns and research data. With no measured data, demand cells say Search volumes unavailable and notes use the honest V1 explanation. Real saved enrichment data remains exportable. Download loading/error feedback is visible, including within Exit/new-run confirmations.
+- Preserve Exit/Start New Run confirmation, Cancel, download-before-leaving, saved-plan reopening and recovery. Exit returns to Landing without starting research; new-run confirmation resets the active offering without deleting the saved plan. No new departure performance.
+
 ### \#\#\# Product Canvas — Website Architecture Processing
 
 For: Turn the reviewed Demand Map and confirmed business context into the final prioritised website structure.
@@ -1091,4 +1105,4 @@ Phase 1 Steps 0, 1 and 2 are approved. Next is Step 3: Finding Your Customers / 
 
 ## Current session status - 2026-10-16
 
-Phase 1 Steps 0-6 are approved and complete, including Batch 2 and final copy refinements. Next: Batch 3 plan generation, final plan, Excel, Exit/new run, then Step 10 full responsive journey acceptance. Batch 3 requires plan approval before implementation. Preserve resting animation and research/integration behaviour. No deployment until Phase 1 is complete and tested.
+Phase 1 Steps 0-9 / Batches 1-3 are approved and complete. Batch 4 is Step 10: one complete real-world Android journey on the local preview, followed by blocking-fix review and release readiness. Preserve all approved UX, saved runs, files, research logic and integrations. No deployment until explicitly authorized after final verification.

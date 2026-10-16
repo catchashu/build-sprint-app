@@ -31,7 +31,7 @@ test('Excel round trip includes every node and exact evidence source, with untru
  assert.equal(loaded.getWorksheet('On-page content')!.getCell('B2').value,'p');
  assert.equal(loaded.getWorksheet('On-page content')!.getCell('C2').value,plan.nodes[0].label);
  assert.equal(loaded.getWorksheet('Search evidence')!.rowCount,4);assert.equal(loaded.getWorksheet('Search evidence')!.getCell('F2').value,input.review.cards[0].queries[0].sources[0].reference);
- assert.equal(loaded.getWorksheet('Website pages')!.getCell('G2').value,'Insufficient evidence');
+ assert.equal(loaded.getWorksheet('Website pages')!.getCell('G2').value,'Search volumes unavailable');
 });
 
 test('a subpage cannot be nested inside an on-page section',()=>{

@@ -208,3 +208,10 @@ Physical Android approval confirmed stable Tinder-style cluster cards, readable 
 Invite Unlock, Full Research, Clarifications and Demand Map approved after physical Android testing; final progress footer and V1 data explanation approved. Invite-only presentation preserves payment code/configuration. Stable activity/history popup, clarification controls and map confirmation accepted. Automatic-summary sizing regression fixed and physically confirmed. DESIGN.md and DESIGN_DECISIONS.md record current specifications and rationale. 116 tests/build passed; mobile/desktop browser fixtures passed. Existing Excel bundle warning remains. Save approved code/docs to GitHub; no deployment.
 
 Next: inspect/propose Batch 3 (Website Plan Generation, Final Plan, Excel Download, Exit/Start New Run), await approval, implement/test, then full Phase 1 responsive journey acceptance. Deadline October 17, 11 AM. Preserve research logic, integrations and resting animation.
+
+
+## 2026-10-16 - USER PASS: Phase 1 Batch 3 complete
+
+All Batch 3 UX and final refinements approved: plan generation with real-state processing dots, consistent canvas, one plan reading area, persistent download, preserved evidence/corrections, grouped source details, honest V1 data notes, Excel, Exit/Cancel/new run/reopening. 116 tests/build and mobile/desktop browser regression passed; actual downloaded workbooks parsed and checked. User explicitly requires no further visual review. DESIGN.md and DESIGN_DECISIONS.md updated; save code/tests/docs together to GitHub. No production deployment.
+
+Next: Batch 4, final real-world Android run using local preview and existing real APIs. No mocked responses for that run. Preserve saved research, local data and prior XLSX/artifacts. Verify environment readiness, then user tests full journey; fix only blockers and park non-blocking improvements. Release decision follows final results. Deadline October 17, 11 AM.

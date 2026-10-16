@@ -78,3 +78,18 @@ User approved Invite Unlock, Full Research, Clarifications and Demand Map after 
 - Preserve transparent logo, 65% tint/12px blur, Inter and the existing resting animation throughout.
 
 Validation: 116 tests/build passed; browser fixtures cover 320/375/390px and desktop, keyboard changes, invite validation, recent/history activity, clarifications, map confirmation and summary/Unlock/back transitions. Simulated provider responses are not a new live-provider verification. Batch 3 remains pending plan approval. No deployment.
+
+
+## 2026-10-16 - USER PASS: Batch 3 in full
+
+Physical Android review approved generation, final plan, collapsible hierarchy, Excel and Exit. User subsequently accepted all final verification results and explicitly waived further visual review.
+
+- Single plan reading area plus persistent Download Excel preserves readable results and reachable completion controls without nested scrolling or overlays.
+- Preserve hierarchy/evidence/corrections; retain expanded details, drafts and reading position through updates. Keyboard layouts reveal the complete correction form rather than overlapping its input.
+- Show subtle three-dot animation only during actual generation/checking; stationary with reduced motion. This reassures users without invented progress or delays.
+- Remove routine Back navigation from generation/results to reduce clutter, but retain Review demand map when confirmation or recovery is necessary.
+- Group identical provenance under optional View source details; show real queries and concise source descriptions first. Preserve source links/timestamps and complete Excel evidence.
+- Keep V1 volume explanations honest; preserve workbook schema and enrichment code/data for future use.
+- Preserve Exit/Cancel/new-run confirmations and saved-plan reopening. Use only the existing resting Gibbon performance.
+
+Validation: 116 automated tests and build passed. Browser checks at 320x568, 375x667, 390x844 and 1280x900 covered long/short plans, errors/retry, clarification, keyboard corrections, expansion/draft retention, reduced motion, evidence grouping/links, actual Excel downloads, refresh, Exit/Cancel, reopening and Start New Run. Downloaded XLSX files were reopened programmatically: five original worksheets, columns and expected research rows preserved. Browser fixtures used sample saved plans, not fresh live research. Batch 4 now verifies one real Android run. No deployment.
