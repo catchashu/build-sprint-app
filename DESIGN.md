@@ -1115,3 +1115,8 @@ Phase 1 Steps 0-10 / Batches 1-4 are approved and complete (2026-10-16). The use
 Initial research and full research reuse the website-plan generation three-dot processing indicator. Animate only during actual pending work; running searches pulse gently, completed searches show a static tick, and actual failure/timeout/retry messages remain visible. Reduced-motion preferences disable movement. Reserved indicator space and stable activity rows avoid status-driven layout shifts. Initial reassurance: "This may take a few minutes. Your completed searches are saved." Full-research reassurance: "This may take a few minutes. You can refresh and resume your research." Preserve searches-used counts, live statuses, expanded-by-default latest-three activity, manual collapse and complete history view. No artificial progress or delays.
 
 The approved transparent logo, 65% frosted tint, 12px blur, bottom tray, responsive canvas and continuous resting animation remain unchanged. Earlier pending-review / no-release notes are historical and superseded by this acceptance. State-specific Gibbon performances remain Phase 2; deeper research and enrichment remain Phase 3.
+
+
+## Session close - 2026-10-16
+
+Phase 1 V1 is complete and live at https://ardent-fly-778.convex.site/ (application commit be97b35; deployment c7d8bf73-c5bd-4b9b-968a-a95c2954e6c8). Next priority: ten real-user tests. Phase 2 covers state-specific Gibbon character animations and UX enhancements. Phase 3 covers technical improvements, research logic, clustering quality and remaining integrations. Neither phase begins during this session close. The custom domain topicgibbon.com is deferred to a later stage; no domain or DNS work is required now.

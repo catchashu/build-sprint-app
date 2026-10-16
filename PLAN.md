@@ -115,3 +115,8 @@ Deferred non-blocking work: Excel bundle size; smallest-screen saved-plan Landin
 
 
 2026-10-16 release complete: approved V1 published to https://ardent-fly-778.convex.site/ from be97b35; real production start/research/invite and saved-plan workbook smoke checks passed. Production release record and rollback details are in PROGRESS.md. Active next milestone: ten real-user tests; no further Phase 1 implementation pending.
+
+
+## Session close - 2026-10-16
+
+Phase 1 V1 is complete and live at https://ardent-fly-778.convex.site/ (application commit be97b35; deployment c7d8bf73-c5bd-4b9b-968a-a95c2954e6c8). Next priority: ten real-user tests. Phase 2 covers state-specific Gibbon character animations and UX enhancements. Phase 3 covers technical improvements, research logic, clustering quality and remaining integrations. Neither phase begins during this session close. The custom domain topicgibbon.com is deferred to a later stage; no domain or DNS work is required now.
