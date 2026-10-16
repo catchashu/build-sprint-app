@@ -151,15 +151,15 @@ body:has(#app[data-keyboard=true]){overflow:hidden}
 #app.canvas[data-canvas-step=references][data-keyboard=true] .panel label{margin-bottom:12px}
 #app.canvas[data-canvas-step=references][data-keyboard=true] .panel .controls{margin-top:12px}
 /* Batch 1: the initial research and cluster deck share the approved glass tray. */
-#app.canvas[data-canvas-step=result]{padding:env(safe-area-inset-top,0px) 0 0;grid-template-rows:minmax(0,1fr) auto;transition:none;height:auto;min-height:100svh}
-#app.canvas[data-canvas-step=result] .stage{min-height:48px}
-#app.canvas[data-canvas-step=result] .panel{height:auto;align-self:end;max-width:780px;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));overflow:visible;scrollbar-gutter:auto;border-radius:10px 10px 0 0;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]){padding:env(safe-area-inset-top,0px) 0 0;grid-template-rows:minmax(0,1fr) auto;transition:none;height:auto;min-height:100svh}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .stage{min-height:48px}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel{height:auto;align-self:end;max-width:780px;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));overflow:visible;scrollbar-gutter:auto;border-radius:10px 10px 0 0;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 body:has(#app[data-canvas-step=result]){overflow-y:auto}
-#app.canvas[data-canvas-step=result]{height:100svh}
-#app.canvas[data-canvas-step=result] .landing-logo{width:9rem;margin-bottom:8px}
-#app.canvas[data-canvas-step=result] .panel>h2{margin-bottom:8px}
-#app.canvas[data-canvas-step=result] .panel>.muted{margin-bottom:8px}
-#app.canvas[data-canvas-step=result] .panel>.count{margin-bottom:8px}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]){height:100svh}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .landing-logo{width:9rem;margin-bottom:8px}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel>h2{margin-bottom:8px}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel>.muted{margin-bottom:8px}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel>.count{margin-bottom:8px}
 .initial-activity{margin-top:8px!important}.initial-activity ul{max-height:30svh;overflow:auto;padding-left:24px}
 .cluster-deck{max-width:560px;margin:auto;text-align:left}
 .deck-navigation{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
@@ -183,29 +183,29 @@ body:has(#app[data-canvas-step=result]){overflow-y:auto}
 .cluster-deck .review-footer{margin:12px 0}.cluster-deck>.deck-navigation+div+div>button{min-height:44px;padding:8px 12px}
 .deck-summary h3{margin-bottom:8px}.decision-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #78867d}.decision-row button{padding:8px;min-height:44px;font-size:14px}.decision-row span{overflow-wrap:anywhere}
 .cluster-evidence{width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;padding:24px}.cluster-evidence .explainer-header{top:-24px}.cluster-evidence li{margin-bottom:16px}.cluster-evidence a{display:block;margin:8px 0}
-#app.canvas[data-canvas-step=result][data-review-view=correction] .panel>h2,#app.canvas[data-canvas-step=result][data-review-view=correction] .panel>.muted{display:none}
-#app.canvas[data-canvas-step=result][data-keyboard=true]{height:var(--keyboard-height);min-height:0;grid-template-rows:0 minmax(0,1fr)}
-#app.canvas[data-canvas-step=result][data-keyboard=true] .panel{height:100%;overflow:auto}
-#app.canvas[data-canvas-step=result][data-keyboard=true] .landing-logo,#app.canvas[data-canvas-step=result][data-keyboard=true] .deck-navigation{display:none}
-@media(max-width:600px){#app.canvas[data-canvas-step=result] .panel{padding:8px 16px max(8px,env(safe-area-inset-bottom,0px))}.cluster-deck .cards article{padding:12px}.deck-navigation{margin-bottom:8px}}
-@media(prefers-reduced-transparency:reduce){#app.canvas[data-canvas-step=result] .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
-@media(forced-colors:active){#app.canvas[data-canvas-step=result] .panel,.cluster-deck .cards article{background:Canvas;color:CanvasText;backdrop-filter:none}.cluster-deck .cards::before{display:none}}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction] .panel>h2,#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction] .panel>.muted{display:none}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true]{height:var(--keyboard-height);min-height:0;grid-template-rows:0 minmax(0,1fr)}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .panel{height:100%;overflow:auto}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .landing-logo,#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .deck-navigation{display:none}
+@media(max-width:600px){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel{padding:8px 16px max(8px,env(safe-area-inset-bottom,0px))}.cluster-deck .cards article{padding:12px}.deck-navigation{margin-bottom:8px}}
+@media(prefers-reduced-transparency:reduce){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel,.cluster-deck .cards article{background:Canvas;color:CanvasText;backdrop-filter:none}.cluster-deck .cards::before{display:none}}
 /* Compact secondary tools leave room for the character and the two decisions. */
 .cluster-tools{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cluster-tools button{min-height:44px;padding:8px 0;font-size:14px}
 .cluster-tools button:first-child{text-decoration:underline;text-underline-offset:4px}
-#app.canvas[data-canvas-step=result] .panel>.muted:empty{display:none}
-#app.canvas[data-canvas-step=result][data-keyboard=true] article.is-editing>h3,#app.canvas[data-canvas-step=result][data-keyboard=true] .correction-title,#app.canvas[data-canvas-step=result][data-keyboard=true] .correction-form>label:first-of-type{display:none}
-#app.canvas[data-canvas-step=result][data-keyboard=true] .correction-form{margin-top:0}
-#app.canvas[data-canvas-step=result][data-keyboard=true] .correction-form .review-actions{position:sticky;bottom:0;background:#F7F8F5;padding:4px 0}
-#app.canvas[data-canvas-step=result][data-review-view=correction] .cluster-deck>div:last-of-type>button:last-child{display:none}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]) .panel>.muted:empty{display:none}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] article.is-editing>h3,#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .correction-title,#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .correction-form>label:first-of-type{display:none}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .correction-form{margin-top:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-keyboard=true] .correction-form .review-actions{position:sticky;bottom:0;background:#F7F8F5;padding:4px 0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction] .cluster-deck>div:last-of-type>button:last-child{display:none}
 /* Stable review composition: content changes within the frame, never the stage. */
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]){--review-tray:min(680px,calc(100svh - min(100px,12svh)));grid-template-rows:minmax(0,1fr) var(--review-tray);min-height:0}
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .stage{min-height:0}
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .panel{height:100%;display:flex;flex-direction:column;min-height:0}
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .landing-logo{flex-shrink:0}
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .panel>h2{flex-shrink:0}
-#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .cluster-deck{width:100%;min-height:0;flex:1;display:flex;flex-direction:column;margin:0 auto}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]){--review-tray:min(680px,calc(100svh - min(100px,12svh)));grid-template-rows:minmax(0,1fr) var(--review-tray);min-height:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .stage{min-height:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .panel{height:100%;display:flex;flex-direction:column;min-height:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .landing-logo{flex-shrink:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .panel>h2{flex-shrink:0}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .cluster-deck{width:100%;min-height:0;flex:1;display:flex;flex-direction:column;margin:0 auto}
 .cluster-deck[data-review-view=card] .deck-navigation{flex-shrink:0}
 #app.canvas .cluster-deck[data-review-view=card] .cards{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr)}
 .cluster-deck[data-review-view=card] .cards article{height:100%;min-height:0;display:flex;flex-direction:column;gap:0}
@@ -216,14 +216,14 @@ body:has(#app[data-canvas-step=result]){overflow-y:auto}
 .cluster-deck[data-review-view=card] .review-save-state{display:block!important;height:24px;flex-shrink:0;margin:0;font-size:14px;line-height:24px}
 .cluster-deck[data-review-view=card] .review-save-state.error{height:auto}
 .cluster-deck[data-review-view=card]>div:last-of-type{flex-shrink:0}
-@media(max-height:700px){#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .landing-logo{width:7rem;margin-bottom:4px}#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .panel>h2{display:none}.cluster-deck[data-review-view=card] .cluster-label{margin-top:4px}.cluster-deck[data-review-view=card] .deck-navigation{margin-bottom:8px}}
-@media(max-height:450px){#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]){--review-tray:100svh}#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .landing-logo{display:none}.cluster-deck[data-review-view=card] .cluster-searches,.cluster-deck[data-review-view=card] .cluster-label{display:none}}
+@media(max-height:700px){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .landing-logo{width:7rem;margin-bottom:4px}#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .panel>h2{display:none}.cluster-deck[data-review-view=card] .cluster-label{margin-top:4px}.cluster-deck[data-review-view=card] .deck-navigation{margin-bottom:8px}}
+@media(max-height:450px){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]){--review-tray:100svh}#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .landing-logo{display:none}.cluster-deck[data-review-view=card] .cluster-searches,.cluster-deck[data-review-view=card] .cluster-label{display:none}}
 #app.canvas .cluster-deck[data-review-view=card] .cards{grid-template-columns:minmax(0,1fr)}
 .cluster-deck[data-review-view=card] .cards article,.cluster-deck .cluster-searches,.cluster-deck .cluster-tools{min-width:0}
 .cluster-evidence{max-width:calc(100vw - 24px)}
-@media(min-height:451px) and (max-height:550px){#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]){--review-tray:calc(100svh - 24px)}#app.canvas[data-canvas-step=result]:is([data-review-view=card],[data-review-view=correction]) .landing-logo{display:none}}
+@media(min-height:451px) and (max-height:550px){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]){--review-tray:calc(100svh - 24px)}#app.canvas:is([data-canvas-step=result],[data-canvas-step=research]):is([data-review-view=card],[data-review-view=correction]) .landing-logo{display:none}}
 
-#app.canvas[data-canvas-step=result][data-review-view=correction] .panel>h2{display:block}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction] .panel>h2{display:block}
 .cluster-deck[data-review-view=correction] .deck-navigation{flex-shrink:0}
 #app.canvas .cluster-deck[data-review-view=correction] .cards{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
 .cluster-deck[data-review-view=correction] .cards article{height:100%;min-height:0;min-width:0;display:flex;flex-direction:column}
@@ -231,8 +231,44 @@ body:has(#app[data-canvas-step=result]){overflow-y:auto}
 .cluster-deck[data-review-view=correction] .correction-form{min-height:0;overflow-y:auto;overscroll-behavior:contain;margin-top:8px;padding:4px;scroll-padding:8px 0 64px}
 .cluster-deck[data-review-view=correction] .correction-form .review-actions{position:sticky;bottom:-4px;background:#F7F8F5;padding:4px 0}
 .cluster-deck[data-review-view=correction]>div:last-of-type{min-height:44px;flex-shrink:0}
-@media(max-height:700px){#app.canvas[data-canvas-step=result][data-review-view=correction] .panel>h2{display:none}}
-#app.canvas[data-canvas-step=result][data-review-view=correction][data-keyboard=true]{grid-template-rows:0 minmax(0,1fr)}
-#app.canvas[data-canvas-step=result][data-review-view=correction][data-keyboard=true] .panel>h2{display:none}
+@media(max-height:700px){#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction] .panel>h2{display:none}}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction][data-keyboard=true]{grid-template-rows:0 minmax(0,1fr)}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=correction][data-keyboard=true] .panel>h2{display:none}
 /* An unusually long decision summary is a reading state, not a fixed card. */
-#app.canvas[data-canvas-step=result][data-review-view=summary]{height:auto;min-height:100svh;grid-template-rows:minmax(48px,1fr) auto}
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=summary]{height:auto;min-height:100svh;grid-template-rows:minmax(48px,1fr) auto}
+/* The video fills its allocated track; its intrinsic height must not size an auto-height summary. */
+#app.canvas:is([data-canvas-step=result],[data-canvas-step=research])[data-review-view=summary] .stage{contain:size}
+
+/* Batch 2: the invite and consequential questions use the approved tray. */
+#app.canvas[data-canvas-step=unlock]{padding:env(safe-area-inset-top,0px) 0 0;grid-template-rows:minmax(48px,1fr) auto;height:auto;min-height:100dvh;transition:none}
+#app.canvas[data-canvas-step=unlock] .panel{height:auto;max-width:780px;align-self:end;padding:16px 24px max(16px,env(safe-area-inset-bottom,0px));overflow:visible;background:rgb(247 248 245 / .65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:10px 10px 0 0;scrollbar-gutter:auto}
+#app.canvas[data-canvas-step=unlock] .stage{min-height:48px;contain:size}
+#app.canvas[data-canvas-step=unlock] .landing-logo{width:9rem;margin-bottom:8px}
+.unlock{max-width:560px;margin:auto}.unlock-info>h2{margin-bottom:8px}.unlock-info>button{width:100%;margin-top:8px}
+.payment-options{margin:16px 0}.payment-options>summary{font-weight:600}.payment-options>.primary{width:100%}
+.unlock[data-invite-open=true] .unlock-info>p,.unlock[data-invite-open=true] .payment-options{display:none}
+.unlock[data-invite-open=true] .unlock-info>button{font-size:14px;min-height:44px;padding:8px;text-align:left;margin:0 0 8px}
+.unlock .invite-form{margin:0 0 8px!important}.unlock .invite-form>label{margin-bottom:8px}.unlock .invite-form>.primary{width:100%}.unlock-footer{margin-top:8px}.unlock-footer>button{min-height:44px}
+.unlock[data-invite-open=true] .unlock-info>h2{margin-bottom:4px}
+.research-question{max-width:560px;margin:auto;border:0!important;padding:0!important}
+#app.canvas[data-canvas-step=research][data-review-view=question]{height:auto;min-height:100svh;grid-template-rows:minmax(48px,1fr) auto}
+#app.canvas[data-canvas-step=research][data-review-view=question] .stage{contain:size}
+#app.canvas[data-canvas-step=research] .panel>.small:empty{display:none}
+#app.canvas[data-canvas-step=research] .panel:has(.cluster-deck:not([hidden]))>.muted{display:none}
+#app.canvas[data-canvas-step=research][data-keyboard=true],#app.canvas[data-canvas-step=unlock][data-keyboard=true]{height:var(--keyboard-height);min-height:0;grid-template-rows:0 minmax(0,1fr)}
+#app.canvas[data-canvas-step=unlock][data-keyboard=true] .panel,#app.canvas[data-canvas-step=research][data-keyboard=true] .panel{height:100%;overflow-y:auto;padding:8px 16px}
+#app.canvas[data-canvas-step=unlock][data-keyboard=true] .landing-logo,#app.canvas[data-canvas-step=unlock][data-keyboard=true] .unlock-info{display:none}
+#app.canvas[data-canvas-step=research][data-review-view=question][data-keyboard=true] .landing-logo,#app.canvas[data-canvas-step=research][data-review-view=question][data-keyboard=true] .research-question>h3,#app.canvas[data-canvas-step=research][data-review-view=question][data-keyboard=true] .research-question>p,#app.canvas[data-canvas-step=research][data-review-view=question][data-keyboard=true] .research-question>button,#app.canvas[data-canvas-step=research][data-review-view=question][data-keyboard=true] .research-question>details:first-of-type{display:none}
+.research-question textarea{min-height:96px}.research-question form>button{width:100%}
+@media(max-width:600px){#app.canvas[data-canvas-step=unlock] .panel{padding:8px 16px max(8px,env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-transparency:reduce){#app.canvas[data-canvas-step=unlock] .panel{background:#F7F8F5;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){#app.canvas[data-canvas-step=unlock] .panel{background:Canvas;color:CanvasText;backdrop-filter:none;-webkit-backdrop-filter:none}}
+body:has(#app[data-canvas-step=unlock]),body:has(#app[data-canvas-step=research][data-review-view=summary]),body:has(#app[data-canvas-step=research][data-review-view=question]){overflow-y:auto}
+/* Full research activity has three reserved rows; incoming entries cannot grow the tray. */
+.search-activity{margin-top:8px!important}.recent-searches{height:144px;list-style:none;padding:0;margin:0;display:grid;grid-template-rows:repeat(3,48px)}
+.recent-searches li{min-width:0;display:flex;flex-direction:column;margin:0;line-height:24px}.activity-query{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-activity>button{min-height:44px;padding:8px 0;font-size:14px}.search-history li{overflow-wrap:anywhere}
+#app[data-canvas-step=research][data-canvas-mode=processing] .research-heading{min-height:52px}
+#app[data-canvas-step=research][data-canvas-mode=processing] .research-status{min-height:42px;font-size:14px;line-height:21px}
+#app.canvas[data-canvas-step=research][data-canvas-mode=processing] .panel>.research-status:empty{display:block}
+#app[data-canvas-step=research][data-canvas-mode=processing] .research-limits{min-height:63px}

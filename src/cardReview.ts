@@ -4,7 +4,8 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { Review, Card } from "../shared/cardReview";
-import {demandSummary,queryVolumeText,VOLUME_NOTE,type VolumeSnapshot} from '../shared/searchVolume';
+import type {VolumeSnapshot} from '../shared/searchVolume';
+const DEMAND_MAP_NOTE = 'Research based on Google search suggestions in India (English). Search volumes are not available in this version.';
 type View = Review & { volumes?:VolumeSnapshot|null; volumeState?:string|null; clarificationPending?: boolean; unlocked?: boolean; pending: { cardId: string; id: string } | null; last: { id: string; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const e = document.createElement(tag); e.textContent = text; e.className = cls; return e; };
 const labels = { split: "These searches should not be grouped together", merge: "This should be grouped with another card", excluded: "This isn’t part of what I offer", label: "The label / meaning is wrong", other: "Something else" };
@@ -50,7 +51,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     const header = element("div", "", "explainer-header");
     const close = element("button", "Close", "explainer-close"); close.type = "button"; close.onclick = () => dialog.close();
     header.append(element("h2", "Cluster details"), close);
-    dialog.append(header, element("h3", card.label), element("p", card.need), element("p", "Observed Google searches · India. These are search examples, not measured search volumes.", "small muted"), sourceList(card));
+    dialog.append(header, element("h3", card.label), element("p", card.need), element("p", options.demandMap ? DEMAND_MAP_NOTE : "Observed Google searches · India. These are search examples, not measured search volumes.", "small muted"), sourceList(card));
     if (options.suggestionsUnavailable?.()) {
       const note = element("p", "Some search suggestions were unavailable. These clusters use the results we could retrieve, so the evidence may not cover every relevant search.", "small muted coverage-note");
       dialog.insertBefore(note, dialog.lastElementChild);
@@ -61,7 +62,6 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     const list = element("ul");
     for (const query of card.queries) {
       const item = element("li", query.query), detail = element("details"); detail.dataset.queryId = query.id; detail.append(element("summary", "Source"));
-      if(options.demandMap)detail.append(element('p',queryVolumeText(query.query,current?.volumes),'small muted'));
       for (const source of query.sources) {
         const a = element("a", `${source.field === "related_questions.question" ? "Google question" : "Google related search"} · ${source.retrievedAt}`);
         a.href = source.reference; a.target = "_blank"; a.rel = "noopener noreferrer"; detail.append(a);
@@ -96,7 +96,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
         if (options.demandMap) article.append(button("Restore this area", () => void perform(async () => { await client.mutation(reviews.decision, { ...identity, revision: current!.revision, cardId: card.groupId, decision: "correct" }); }, card.groupId)));
         continue;
       }
-      if (options.demandMap) article.append(element("p", ['queued','running'].includes(current.volumeState??'')?'Checking India search volumes…':`Demand: ${demandSummary(card.queries,current.volumes).text}`, "small muted"));
+      if (options.demandMap) article.append(element("p", "Search volumes are not available in this version.", "small muted"));
       if (deck) {
         const related = element("ul", "", "cluster-searches");
         for (const query of card.queries.slice(0, 3)) related.append(element("li", query.query));
@@ -204,13 +204,13 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
       next.disabled = next.disabled || !allCorrect || !!editing || !!current.clarificationPending;
       const footer = element("div", "", "review-footer"); footer.append(element("p", current.clarificationPending ? "Answer the question above before confirming the map." : allCorrect ? (deck ? "Your decisions are ready to confirm." : "Your cards are ready to confirm.") : deck ? "Accept or reject every cluster before continuing." : "Mark each remaining card Correct before continuing.", "small muted"), next); nextOutside.append(footer);
     }
-    nextOutside.append(element("p", options.demandMap ? VOLUME_NOTE : "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
+    nextOutside.append(element("p", options.demandMap ? DEMAND_MAP_NOTE : "This first view uses Google suggestions and questions localized to India. It does not measure search volume.", "small muted review-wide"));
     outsideCards.replaceChildren(nextOutside);
     if (deck) {
       if (!current.cards.some(c => c.groupId === selectedId)) selectedId = current.cards.find(c => current!.decisions[c.groupId] === "pending")?.groupId ?? current.cards[0]?.groupId ?? "";
       const index = current.cards.findIndex(c => c.groupId === selectedId);
       root.dataset.reviewView = summary ? "summary" : editing ? "correction" : "card";
-      if (app) app.dataset.reviewView = root.dataset.reviewView;
+      if (app && !root.hidden) app.dataset.reviewView = root.dataset.reviewView;
       navigation.replaceChildren();
       const previous = button("Previous", () => visit(current!.cards[Math.max(0, index - 1)].groupId)); previous.disabled ||= index <= 0 || !!editing;
       const next = button("Next", () => visit(current!.cards[Math.min(current!.cards.length - 1, index + 1)].groupId)); next.disabled ||= index >= current.cards.length - 1 || !!editing;

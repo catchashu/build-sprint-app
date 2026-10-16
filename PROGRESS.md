@@ -201,3 +201,10 @@ First action tomorrow: open the local flow at Phase 1 Step 3, Finding Your Custo
 ## 2026-10-16 - USER PASS: Batch 1, Phase 1 Steps 3-4
 
 Physical Android approval confirmed stable Tinder-style cluster cards, readable titles/customer needs, detailed evidence with usable scrolling/Close, Accept/Reject, corrections and decision summary. Final authorized disclosure refinement is implemented: recoverable missing suggestions appear as neutral information in evidence, not red canvas/summary warnings; blocking errors and backend logs remain unchanged. 116 tests and build pass; browser checks cover 320x480, 320x568, 375x667, 390x844 and 1280x900 using simulated responses, including exact full evidence and stable geometry. Regression runner: scripts/verify-cluster-layout.mjs (uses an existing Playwright installation via PLAYWRIGHT_MODULE, with local Vite running). Existing Excel bundle warning remains. Save approved code, tests and specifications to GitHub; do not deploy. Next: Batch 2 review and implementation plan for Invite Unlock, Full Research, Clarifications and Demand Map.
+
+
+## 2026-10-16 - USER PASS: Phase 1 Batch 2 complete
+
+Invite Unlock, Full Research, Clarifications and Demand Map approved after physical Android testing; final progress footer and V1 data explanation approved. Invite-only presentation preserves payment code/configuration. Stable activity/history popup, clarification controls and map confirmation accepted. Automatic-summary sizing regression fixed and physically confirmed. DESIGN.md and DESIGN_DECISIONS.md record current specifications and rationale. 116 tests/build passed; mobile/desktop browser fixtures passed. Existing Excel bundle warning remains. Save approved code/docs to GitHub; no deployment.
+
+Next: inspect/propose Batch 3 (Website Plan Generation, Final Plan, Excel Download, Exit/Start New Run), await approval, implement/test, then full Phase 1 responsive journey acceptance. Deadline October 17, 11 AM. Preserve research logic, integrations and resting animation.

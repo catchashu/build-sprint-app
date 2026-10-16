@@ -63,3 +63,18 @@ User confirmed physical Android approval of the cluster deck, stable canvas, rea
 - Apply the approved transparent logo, 65% tint / 12px blur, bottom tray and typography to Steps 3-4. Steps 0-2 and later batches remain unchanged.
 
 Validation: 116 tests and build passed. Browser regression covers 320x480, 320x568, 375x667, 390x844 and 1280x900; short/long clusters, stable frame, Accept/Reject/revisit, corrections, full evidence preservation, keyboard simulation, summary and unlock handoff. Warning refinement checks partial failures, clean results and actionable unusable-research errors. Browser fixtures simulate provider responses; physical Android approval covers the preceding complete Batch 1 UX, not a new full research rerun. No production deployment.
+
+
+## 2026-10-16 - USER PASS: Batch 2
+
+User approved Invite Unlock, Full Research, Clarifications and Demand Map after physical Android review, including final footer and V1 no-volumes wording.
+
+- Invite-only presentation reduces distraction while preserving future payment activation. Dynamic viewport height removes the gap below Unlock.
+- Expanded latest-three activity makes real work visible; reserved space prevents jumping. Manual collapse and a separate complete history preserve user control and readable detail.
+- Refresh wording reflects saved server workflows; failed runs still require Try again. Backend retries are unchanged.
+- Focused clarifications and the reused cluster deck keep decisions consistent, with existing corrections and evidence retained.
+- Remove unsupported volume/provider/band claims from V1 Demand Map presentation. Enrichment implementation remains available for Phase 3.
+- Exclude video intrinsic size from automatic summary grid sizing: reproduced the oversized Gibbon regression, fixed it and obtained physical Android confirmation.
+- Preserve transparent logo, 65% tint/12px blur, Inter and the existing resting animation throughout.
+
+Validation: 116 tests/build passed; browser fixtures cover 320/375/390px and desktop, keyboard changes, invite validation, recent/history activity, clarifications, map confirmation and summary/Unlock/back transitions. Simulated provider responses are not a new live-provider verification. Batch 3 remains pending plan approval. No deployment.

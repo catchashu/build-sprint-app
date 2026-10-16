@@ -1,6 +1,7 @@
 import type { ConvexClient } from "convex/browser";
 import type { Id } from "../convex/_generated/dataModel";
 import { api } from "../convex/_generated/api";
+import { trayGeometry, transitionTray } from "./trayTransition";
 
 type Checkout = { open(): void; close(): void; on(event: string, handler: () => void): void };
 type RazorpayConstructor = new (options: Record<string, unknown>) => Checkout;
@@ -20,7 +21,7 @@ function loadCheckout() {
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const el = document.createElement(tag); el.textContent = text; el.className = cls; return el; };
 export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, back: () => void, onUnlocked: () => void) {
   let transitioned = false;
-  const content = element("div"), inviteSlot = element("div"), feedback = element("div"), footer = element("div");
+  const content = element("div", "", "unlock-info"), inviteSlot = element("div"), feedback = element("div"), footer = element("div", "", "unlock-footer");
   root.replaceChildren(content, inviteSlot, feedback, footer);
   let inviteInput: HTMLInputElement | undefined, inviteApply: HTMLButtonElement | undefined, inviteClear: HTMLButtonElement | undefined, inviteShow: HTMLButtonElement | undefined, inviteHelp: HTMLParagraphElement | undefined;
   let codeVisible = false;
@@ -92,6 +93,8 @@ export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValue
   }
   function draw() {
     if (!alive) return;
+    const app=root.closest<HTMLElement>('#app'), before=app?trayGeometry(app):null;
+    root.dataset.inviteOpen = String(inviteOpen);
     content.replaceChildren(); feedback.replaceChildren(); footer.replaceChildren(); inviteSlot.hidden = true;
     if (!state) { content.append(element("p", "Opening your saved run…")); return; }
     if (state.unlocked) {
@@ -122,11 +125,18 @@ export function mountUnlock(client: ConvexClient, identity: { id: Id<"firstValue
     pay.disabled = busy || !state.paymentReady; content.append(pay);
     if (!state.paymentReady) content.append(element("p", "Test payments aren’t set up yet. Your review is saved.", "small muted"));
     content.append(element("p", "On a phone, use an available UPI app. On a computer, scan the QR shown by Razorpay. Test mode may use a simulated payment screen.", "small muted"), element("p", "Secure payments powered by Razorpay", "small muted"));
-    content.append(button("Have an invite code?", () => { inviteOpen = !inviteOpen; draw(); if (inviteOpen) root.querySelector<HTMLInputElement>("#invite-code")?.focus(); }));
+    const paymentOptions = element("details", "", "payment-options");
+    // V1 access is invite-only. Keep the checkout integration for future activation.
+    paymentOptions.hidden = true;
+    paymentOptions.append(element("summary", "Payment options · ₹399 once"));
+    while (content.children.length > 2) paymentOptions.append(content.children[2]);
+    content.append(paymentOptions);
+    content.append(button(inviteOpen ? "Back to unlock options" : "Enter invite code", () => { inviteOpen = !inviteOpen; draw(); if (inviteOpen) root.querySelector<HTMLInputElement>("#invite-code")?.focus(); }, !inviteOpen));
     if (inviteOpen) { inviteSlot.hidden = false; drawInvite(); }
     drawFeedback();
     if (state.orderPending) footer.append(button(checking ? "Checking your payment…" : "Check payment status", () => { checks = 0; void checkPayment(); }));
     footer.append(button("Close", back));
+    if(app&&before){const after=trayGeometry(app);if(Math.abs(after.panel-before.panel)>1)transitionTray(app,before,after);}
   }
   const stop = client.onUpdate(api.payments.get, identity, next => {
     const first = !state; state = next;

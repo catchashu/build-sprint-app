@@ -317,6 +317,20 @@ Error: “I couldn’t apply that change. Your original card is still here.” \
 Done: “Updated. Check this again.” → revised card(s) with \[Correct\] / \[Fix this\]  
 If the AI answer is wrong: Tap \[Fix this\] again.
 
+## Phase 1 Batch 2 - approved 2026-10-16
+
+These approved specifications supersede conflicting older instructions in the Unlock, Full Research, Clarification and Demand Map sections below. Other stages remain subject to separate review. User approved the complete batch following physical Android testing and the final content refinements.
+
+- Shared design: transparent logo, Inter, approved controls/spacing, 65% frosted tint, 12px blur, full-width bottom mobile tray and centered maximum-780px desktop tray. Preserve the continuous resting animation; no new performances or artificial delays.
+- Unlock: invite-only V1, primary action "Enter invite code". Hide the expandable ₹399 payment interface; retain payment integration and configuration. Preserve Show code, Clear code, Apply, validation, keyboard behaviour and saved unlock. Close returns to confirmed initial review. Dynamic viewport height and safe-area padding keep the tray bottom-anchored as browser bars change.
+- Full Research: show actual phases and statuses. Search Activity opens expanded with the latest three attempts, newest first. Reserve row/phase space so updates do not grow the tray or move Gibbon. Respect manual collapse during the screen visit. "View all search activity" opens complete live history, full query text and technical errors in a separate reading popup with Close. No large scrolling log inside the main canvas.
+- Progress footer: "Your completed search results are saved. If you refresh, your research will resume." Active workflows continue on the server and refresh reconnects to saved work. Failed runs instead say "Your completed search results are saved. Select Try again to resume." Retry logic is unchanged.
+- Clarifications: one consequential question at a time, Why this matters, relevant/excluded/uncertain controls and Something else with a custom answer. Keep the map hidden while clarification is pending. Preserve answer semantics and keyboard-accessible submission.
+- Demand Map: reuse the approved stable one-cluster deck, progress, Accept/Reject, revisit, corrections, split/merge, evidence popup and summary. Confirm demand map advances only after existing review checks. Preserve readable controls and complete supporting data.
+- Map summary/evidence explanation: "Research based on Google search suggestions in India (English). Search volumes are not available in this version." Card labels also state volume unavailability. No monthly-estimate, demand-band or volume-checking claims in this V1 screen. Preserve all enrichment implementation for Phase 3; research logic/integrations unchanged.
+- Recoverable missing suggestions remain a neutral evidence note; blocking errors and technical records remain intact.
+- Summary layout: video intrinsic dimensions must not size the automatic-height grid. Preserve fixed card geometry, async-update stability and summary/Unlock/Back navigation. Long summaries retain deliberate page reading, not internal card scrolling.
+
 ### \#\#\# Product Canvas — Unlock: Razorpay UPI Payment / Invite Code
 
 For: Unlock the full Topic Gibbon research and website plan after the user has already seen and confirmed credible first value. If the user neither pays nor uses the valid invite code, the run ends at First Value.
@@ -1077,4 +1091,4 @@ Phase 1 Steps 0, 1 and 2 are approved. Next is Step 3: Finding Your Customers / 
 
 ## Current session status - 2026-10-16
 
-Phase 1 Steps 0-4 are approved. Batch 1 passed physical Android review; its final authorized refinement moves only the recoverable partial-search disclosure into the evidence view. The older 2026-10-15 wrap-up above is historical. Next: Batch 2, Invite Unlock, Full Research, Clarifications and Demand Map. Later-state designs still require review. Keep the approved resting loop, research logic, payment setup and integrations unchanged. No production deployment until the complete Phase 1 journey has passed.
+Phase 1 Steps 0-6 are approved and complete, including Batch 2 and final copy refinements. Next: Batch 3 plan generation, final plan, Excel, Exit/new run, then Step 10 full responsive journey acceptance. Batch 3 requires plan approval before implementation. Preserve resting animation and research/integration behaviour. No deployment until Phase 1 is complete and tested.

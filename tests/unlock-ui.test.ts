@@ -14,7 +14,9 @@ function setup(){
  const client={onUpdate:(_api:unknown,_identity:unknown,callback:typeof emit)=>{emit=callback;callback({...state});return()=>{};},mutation:(_api:unknown,args:{code:string})=>{submitted.push(args.code);return new Promise<{ok:boolean;message:string}>(r=>{resolve=r;});}};
  const stop=mountUnlock(client as unknown as ConvexClient,{id:'test-run' as Id<'firstValueRuns'>,token:'test-only'},root as unknown as HTMLElement,()=>{},()=>{continued++;});
  const button=(text:string)=>{const b=[...root.querySelectorAll('button')].find(b=>b.textContent===text);assert.ok(b,`Missing ${text}`);return b;};
- button('Have an invite code?').click();
+ assert.equal(root.querySelector('.payment-options')?.hasAttribute('hidden'),true,'V1 must hide payment entry');
+ assert.equal(button('Enter invite code').className,'primary');
+ button('Enter invite code').click();
  const input=()=>root.querySelector('input')!;
  const type=(value:string)=>{input().value=value;input().dispatchEvent(new window.Event('input'));};
  return{window,root,state,button,input,type,submitted,emit:()=>emit({...state}),resolve:(ok:boolean)=>resolve({ok,message:ok?'Unlocked':'That invite code is not valid.'}),continued:()=>continued,close:()=>{stop();window.happyDOM.abort();}};

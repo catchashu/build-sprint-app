@@ -6,7 +6,7 @@ Phase 1 is UX and visual polish only, using the unchanged approved resting anima
 
 Review one step at a time: 0 Landing (reopened for refinement); 1 Landing to Website Context; 2 reference context; 3 initial research; 4 initial cluster review; 5 unlock; 6 full research and Demand Map review; 7 plan generation; 8 final plan; 9 Excel / Exit / new run; 10 complete responsive journey. Cluster review means one cluster card at a time with tick/cross controls, not individual-topic cards or the older stacked-card layout. Preserve approved copy and design except explicitly authorized changes.
 
-Phase 1 Steps 0-4 are approved and complete (2026-10-16), including physical Android approval of Batch 1 and its authorized neutral evidence-disclosure refinement. Next is Batch 2: Invite Unlock, Full Research, Clarifications and Demand Map. Review its concrete implementation plan before coding; preserve approved Steps 0-4, research logic, payment setup, integrations and the resting animation. Earlier dated milestone notes are historical.
+Phase 1 Steps 0-6 are approved and complete, including Batch 2 and final copy refinements. Next: Batch 3 plan generation, final plan, Excel, Exit/new run, then Step 10 full responsive journey acceptance. Batch 3 requires plan approval before implementation. Preserve resting animation and research/integration behaviour. No deployment until Phase 1 is complete and tested. Deadline: October 17, 11 AM. Earlier dated milestone notes are historical.
 
 Production deployment is deferred until Phase 1 is complete and the full user journey has been tested. Continue local review and GitHub checkpoints in the meantime.
 

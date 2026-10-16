@@ -42,7 +42,8 @@ let trayAnimation: Animation | undefined;
 function go(screen: State["screen"]) {
   const previous = app.dataset.canvasStep;
   const animate = (previous === 'landing' && screen === 'website') || (previous === 'website' && screen === 'landing')
-    || (previous === 'website' && screen === 'references') || (previous === 'references' && screen === 'website') || (previous === 'references' && screen === 'result');
+    || (previous === 'website' && screen === 'references') || (previous === 'references' && screen === 'website') || (previous === 'references' && screen === 'result')
+    || (previous === 'result' && screen === 'unlock') || (previous === 'unlock' && (screen === 'result' || screen === 'research'));
   const from = animate ? trayGeometry(app) : undefined;
   trayAnimation?.cancel(); trayAnimation = undefined; delete app.dataset.trayMoving;
   state.screen = screen; save(); render();
@@ -69,7 +70,7 @@ function render() {
   delete app.dataset.researchState;
   setCanvasMode(app, canvasMode(state.screen));
   selectAnimation(canvasMode(state.screen));
-  if (state.screen === "landing" || state.screen === "website" || state.screen === "references" || state.screen === "result") {
+  if (state.screen !== "plan") {
     const brand = node("div", "", "landing-logo");
     const logo = node("img"); logo.src = "/images/topic-gibbon-logo-transparent.png"; logo.alt = "Topic Gibbon";
     logo.width = 1040; logo.height = 440; brand.append(logo); panel.append(brand);
