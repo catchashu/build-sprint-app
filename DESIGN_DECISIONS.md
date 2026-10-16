@@ -93,3 +93,10 @@ Physical Android review approved generation, final plan, collapsible hierarchy, 
 - Preserve Exit/Cancel/new-run confirmations and saved-plan reopening. Use only the existing resting Gibbon performance.
 
 Validation: 116 automated tests and build passed. Browser checks at 320x568, 375x667, 390x844 and 1280x900 covered long/short plans, errors/retry, clarification, keyboard corrections, expansion/draft retention, reduced motion, evidence grouping/links, actual Excel downloads, refresh, Exit/Cancel, reopening and Start New Run. Downloaded XLSX files were reopened programmatically: five original worksheets, columns and expected research rows preserved. Browser fixtures used sample saved plans, not fresh live research. Batch 4 now verifies one real Android run. No deployment.
+
+
+## 2026-10-16 - Phase 1 accepted for V1 release
+
+The user completed a real Android end-to-end run and approved every Phase 1 stage, including actual research and workbook download. A final physical check also approved the processing refinements. Reuse one subtle three-dot treatment across initial research, full research and plan generation so genuine processing remains apparent without invented progress. Running search markers pulse; completion is static; reduced motion is respected. Reassurance accurately describes persisted searches and existing refresh recovery. No research logic, APIs, integrations, data schemas, canvas sizing or card interactions changed.
+
+Release is authorized only after production configuration and data-safety checks. Invite-only V1 retains hidden payment implementation. Search-volume enrichment remains disabled and no measured-volume claims are made without actual source data. Next validation is ten real users. Defer state-specific animations to Phase 2 and research quality, discovery, clustering, prioritization, output accuracy and enrichment/integrations to Phase 3.

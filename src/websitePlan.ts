@@ -1,3 +1,4 @@
+import { processingDots } from './processingIndicator';
 import { canvasMode, setCanvasMode } from "./canvasLayout";
 import { trayGeometry, transitionTray } from './trayTransition';
 import type { ConvexClient } from 'convex/browser';
@@ -14,8 +15,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   let volumesRequested=false;
   let alive = true, started = false, busy = false, exporting = false, current: View | null = null, lastDraw = '';
   const heading = el('h2', 'Loading your website plan…'); heading.tabIndex = -1;
-  const processing=el('div','','plan-processing');processing.hidden=true;processing.setAttribute('role','status');processing.setAttribute('aria-label','Preparing your website plan');
-  for(let i=0;i<3;i++){const dot=el('span');dot.setAttribute('aria-hidden','true');processing.append(dot);}
+  const processing=processingDots('plan-processing','Preparing your website plan');processing.hidden=true;
   const status = el('p'); status.setAttribute('role', 'status');
   const error = el('p', '', 'error'); error.setAttribute('role', 'alert');
   const controls = el('div', '', 'plan-actions'), question = el('section'), output = el('div', '', 'website-plan');

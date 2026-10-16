@@ -1,3 +1,4 @@
+import { processingDots, searchStatus } from './processingIndicator';
 import { canvasMode, setCanvasMode } from "./canvasLayout";
 import { trayGeometry, transitionTray } from "./trayTransition";
 import type { ConvexClient } from 'convex/browser';
@@ -38,13 +39,15 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
   const phases:Record<string,string>={ready:'Preparing your full research',planning:'Choosing searches from your confirmed offering',searching:'Researching real search demand in India',cleaning:'Cleaning and organising the evidence',grouping:'Grouping searches by underlying need',complete:'Here is your India demand map',failed:'Research paused. Your work is safe.'};
   heading.textContent=phases[run.state]??'Opening your research';
   status.textContent=run.state==='complete'?'Searches are grouped by what people are trying to do. Inspect the evidence or correct an area below.':run.state!=='failed'?`${run.searchCount} search attempts started. Refreshing will resume this run.`:'';
+  const pendingOperation=['planning','searching','cleaning','grouping'].includes(run.state)&&!run.error;
+  if(pendingOperation){status.textContent=`${run.searchCount} search attempts started.`;status.append(processingDots('processing-inline','Research in progress'));}
   error.textContent=run.error??'';retry.hidden=run.state!=='failed';
   searches=run.searches;
-  log.replaceChildren(...searches.slice(-3).reverse().map(s=>{const row=el('li'),query=el('span',s.query,'activity-query');query.title=s.query;row.append(query,el('span',s.status,'small muted'));return row;}));
+  log.replaceChildren(...searches.slice(-3).reverse().map(s=>{const row=el('li'),query=el('span',s.query,'activity-query');query.title=s.query;const label=searchStatus(s.status,pendingOperation);label.classList.add('small','muted');row.append(query,label);return row;}));
   if(!searches.length)log.append(el('li','No searches started yet.','small muted'));
   allActivity.disabled=!searches.length;historyList?.replaceChildren(...historyRows());
   suggestionsUnavailable=run.searches.some((s:{status:string})=>s.status==='failed');
-  limits.textContent=run.state==='failed'?'Your completed search results are saved. Select Try again to resume.':'Your completed search results are saved. If you refresh, your research will resume.';
+  limits.textContent=run.state==='failed'?'Your completed search results are saved. Select Try again to resume.':pendingOperation?'This may take a few minutes. You can refresh and resume your research.':'Your completed search results are saved. If you refresh, your research will resume.';
   if(run.state==='complete'&&!run.hasCards)status.textContent='There is not enough observable evidence for a demand map. Your research remains saved.';
   const pending:Clarification|undefined=run.questions.find((q:Clarification)=>!run.answers.some((a:{questionId:string})=>a.questionId===q.id));
   map.hidden=!!pending||run.state!=='complete';
@@ -72,6 +75,6 @@ export function mountResearch(client:ConvexClient,identity:{id:Id<'firstValueRun
   }
   if(app&&!pending&&run.state==='complete')app.ownerDocument.defaultView?.dispatchEvent(new Event('resize'));
   if(app&&before){const after=trayGeometry(app);if(Math.abs(after.panel-before.panel)>1)transitionTray(app,before,after);}
- },()=>{error.textContent='The connection was interrupted. Your research is saved. Refresh to reconnect.';});
+ },()=>{status.querySelector('.processing-dots')?.remove();log.querySelectorAll('.is-running').forEach(n=>n.classList.remove('is-running'));error.textContent='The connection was interrupted. Your research is saved. Refresh to reconnect.';});
  return()=>{alive=false;stop();stopReview?.();history?.remove();};
 }

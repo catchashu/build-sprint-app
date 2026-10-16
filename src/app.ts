@@ -13,6 +13,7 @@ import { canvasMode, setCanvasMode, watchCanvasViewport } from "./canvasLayout";
 import { createRestingStage } from "./restingStage";
 import { arriveReady } from "./arrival";
 import { trayGeometry, transitionTray } from "./trayTransition";
+import { processingDots, searchStatus } from './processingIndicator';
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
@@ -129,12 +130,14 @@ function render() {
     const title = node("h2", "Finding your customers"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");
     const status = node("p", "", "muted"); status.setAttribute("role", "status");
+    status.classList.add('initial-research-status');
+    const reassurance=node('p','This may take a few minutes. Your completed searches are saved.','small muted');reassurance.hidden=true;
     const cards = node("div", "", "review");
     const searches = node("details", "", "initial-activity"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
     const controls = node("div", "", "controls");
     const retry = button("Try again", () => void work(async () => { await client.mutation(api.firstValue.start, { id: state.id!, token: state.token }); }), true); retry.hidden = true;
     const edit = button("Edit context", () => { state.id = undefined; state.token = randomId(); go("landing"); }); edit.hidden = true;
-    controls.append(retry, edit); panel.append(title, count, status, error, cards, searches, controls);
+    controls.append(retry, edit); panel.append(title, count, status, reassurance, error, cards, searches, controls);
     if (!state.id) { message("This run couldn’t be opened. Your context is saved."); edit.hidden = false; return; }
     unsubscribe = client.onUpdate(api.firstValue.get, { id: state.id, token: state.token }, run => {
       if (!run) { setCanvasMode(app, "review"); message("This saved run couldn’t be opened."); edit.hidden = false; return; }
@@ -142,10 +145,13 @@ function render() {
       setCanvasMode(app, canvasMode("result", run.state));
       app.dataset.researchState = run.state;
       count.textContent = `Searches used: ${run.searchCount} / ${run.searchLimit}`;
-      log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => node("li", `${s.query} — ${s.status}${s.error ? `: ${s.error}` : ""}`, s.status === "failed" ? "error" : "")));
+      const pending=['working','searching','grouping'].includes(run.state)&&!run.error;
+      log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => {const row=node('li',`${s.query} — `,s.status==='failed'?'error':'');row.append(searchStatus(s.status,pending));if(s.error)row.append(document.createTextNode(`: ${s.error}`));return row;}));
       message(run.error || ""); if (!stopReview) cards.replaceChildren();
       title.textContent = run.state === "complete" ? "Which clusters fit your offering?" : run.state === "failed" ? "Your first view needs another step" : "Finding your customers";
       status.textContent = run.state === "searching" ? "Looking for real search demand around your offering…" : run.state === "grouping" ? "Organising the search evidence into a first view…" : run.state === "working" ? "Choosing searches around your offering…" : "";
+      if(pending){status.textContent=status.textContent.replace(/…$/,'');status.append(processingDots('processing-inline','Research in progress'));}
+      reassurance.hidden=!pending;
       retry.hidden = !["ready", "failed"].includes(run.state) || !run.canRetry;
       retry.textContent = run.retryUsesSaved ? "Use saved searches" : "Try again";
       edit.hidden = !["ready", "failed", "complete"].includes(run.state);
@@ -159,7 +165,7 @@ function render() {
       if (run.state === "complete") { edit.hidden = true; controls.hidden = true; }
       const after = trayGeometry(app);
       if (Math.abs(before.panel - after.panel) > 1) { trayAnimation?.cancel(); trayAnimation = transitionTray(app, before, after); }
-    }, () => { message("The connection was interrupted. Your context is saved. Reload to reconnect."); });
+    }, () => {status.querySelector('.processing-dots')?.remove();log.querySelectorAll('.is-running').forEach(n=>n.classList.remove('is-running'));reassurance.hidden=true; message("The connection was interrupted. Your context is saved. Reload to reconnect."); });
   }
 }
 async function launch() {

@@ -10,7 +10,7 @@ const payment={accepted:true,unlocked:null,paymentReady:false,inviteReady:true,o
 const research={state:'ready',searches:[],searchCount:0,hasCards:false,questions:[],answers:[]};
 const listeners=new Map();window.calls=[];
 const emit=(name,value)=>listeners.get(name)?.(structuredClone(value));
-window.updateActivity=(count)=>{research.searches=Array.from({length:count},(_,i)=>({query:'Hospital furniture search '+i,status:i===count-1?'running':'complete'}));research.searchCount=count;research.state=count>3?'grouping':'searching';emit('fullResearch:get',research);};
+window.updateActivity=(count,lastStatus='running')=>{research.searches=Array.from({length:count},(_,i)=>({query:'Hospital furniture search '+i,status:i===count-1?lastStatus:'complete'}));research.searchCount=count;research.state=count>3?'grouping':'searching';emit('fullResearch:get',research);};
 window.finishFullResearch=()=>{research.state='complete';research.hasCards=true;research.searchCount=4;research.searches=[{query:'sample search',status:'failed',error:'Sample provider failure'}];research.questions=[{id:'q1',question:'Do you supply furniture for home care as well as hospitals?',reason:'This changes which customer needs should be included.'},{id:'q2',question:'Is installation included in your offering?',reason:'This changes how we interpret installation searches.'}];emit('fullResearch:get',research);};
 function answer(id){research.answers.push({questionId:id});map.clarificationPending=research.questions.some(q=>!research.answers.some(a=>a.questionId===q.id));emit('fullResearch:get',research);emit('mapReview:get',map);}
 export class ConvexClient{
@@ -31,7 +31,7 @@ try{for(const [width,height]of [[320,568],[375,667],[390,844],[1280,900]]){
  await context.addInitScript(()=>{const viewport=new EventTarget();Object.assign(viewport,{height:innerHeight,offsetTop:0,scale:1});Object.defineProperty(window,'visualViewport',{value:viewport});window.keyboard=h=>{viewport.height=h;viewport.dispatchEvent(new Event('resize'));};});
  const page=await context.newPage();await page.route('**/convex_browser.js*',r=>r.fulfill({contentType:'application/javascript',body:mock}));
  await page.goto('http://127.0.0.1:5174/');
- const settle=()=>page.evaluate(async()=>{await Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>{})));});
+ const settle=()=>page.evaluate(async()=>{await Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{})));});
  const capture=async name=>{await settle();await page.screenshot({path:'artifacts/batch2-'+name+'-'+width+'x'+height+'.png',fullPage:true});};
  const fit=async name=>{await settle();const data=await page.evaluate(()=>{const p=document.querySelector('.panel');return {width:innerWidth,overflow:document.documentElement.scrollHeight-innerHeight,trayScroll:p.scrollHeight-p.clientHeight};});assert.equal(data.width,width);assert.ok(data.overflow<=1,JSON.stringify({name,width,...data}));assert.ok(data.trayScroll<=1,JSON.stringify({name,width,...data}));results.push({name,width,height,...data});};
  await page.getByLabel('What do you offer?').fill('We supply hospital furniture.');await page.getByRole('button',{name:'Plan my website',exact:true}).click();
@@ -56,7 +56,8 @@ try{for(const [width,height]of [[320,568],[375,667],[390,844],[1280,900]]){
  const geometry=()=>page.locator('.panel').boundingBox();const beforeActivity=await geometry();
  await page.evaluate(()=>window.updateActivity(3));await settle();assert.deepEqual(await geometry(),beforeActivity);
  await page.evaluate(()=>window.updateActivity(7));await settle();assert.deepEqual(await geometry(),beforeActivity);
- assert.equal(await page.locator('.recent-searches li').count(),3);assert.match(await page.locator('.recent-searches li').first().innerText(),/search 6.*running/s);await fit('recent-activity');await capture('recent-activity');
+ assert.equal(await page.locator('.recent-searches li').count(),3);assert.match(await page.locator('.recent-searches li').first().innerText(),/search 6.*running/s);await fit('recent-activity');await capture('recent-activity');assert.equal(await page.locator('.search-status-mark.is-running').count(),1);
+ await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.processing-dots>span').first().evaluate(e=>getComputedStyle(e).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});await page.evaluate(()=>window.updateActivity(7,'complete'));await settle();assert.deepEqual(await geometry(),beforeActivity);assert.equal(await page.locator('.is-running').count(),0);
  await page.getByRole('button',{name:'View all search activity',exact:true}).click();assert.equal(await page.locator('.search-history li').count(),7);await capture('activity-history');await page.getByRole('button',{name:'Close',exact:true}).click();
  await page.locator('.search-activity>summary').click();await page.evaluate(()=>window.updateActivity(8));assert.equal(await page.locator('.search-activity').getAttribute('open'),null);
  await page.locator('.search-activity>summary').click();await fit('activity-reopened');

@@ -16,6 +16,7 @@ const review={revision:0,cards,decisions:Object.fromEntries(cards.map(c=>[c.grou
 let first,reviewListener;
 const run={state:'searching',searchCount:2,searchLimit:4,searches:[{query:'hospital furniture supplier india',status:'complete'}],canRetry:true,cards:null};
 const emit=()=>reviewListener?.(structuredClone(review));
+window.setSearchStatus=status=>{run.searches[0].status=status;first(structuredClone(run));};
 window.completeResearch=()=>{run.state='complete';run.error=null;run.cards=JSON.stringify(cards);first(structuredClone(run));};
 window.failResearch=()=>{run.state='failed';run.error='There is not enough evidence. Try again or edit your context.';first(structuredClone(run));};
 window.setSuggestionsUnavailable=(missing)=>{run.searches=missing?[{query:'sample failed search',status:'failed',error:'Test provider failure'}]:[{query:'sample successful search',status:'complete'}];first(structuredClone(run));};
@@ -48,11 +49,14 @@ for(const [width,height] of [[390,844],[375,667],[320,568],[320,480],[1280,900]]
  await page.getByRole('button',{name:'Continue',exact:true}).click();
  await page.getByRole('heading',{name:'Finding your customers',exact:true}).waitFor();
  await page.waitForFunction(()=>!document.querySelector('#app').dataset.trayMoving);
- const capture=async name=>{await page.evaluate(async()=>{await Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>{})));});await page.screenshot({path:'artifacts/stable-deck-'+name+'-'+width+'x'+height+'.png',fullPage:true});};
+ const capture=async name=>{await page.evaluate(async()=>{await Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{})));});await page.screenshot({path:'artifacts/stable-deck-'+name+'-'+width+'x'+height+'.png',fullPage:true});};
  const fit=async name=>{const metric=await page.evaluate(()=>{const p=document.querySelector('.panel');return {page:document.documentElement.scrollHeight-innerHeight,internal:p.scrollHeight-p.clientHeight,horizontal:document.documentElement.scrollWidth-innerWidth};});results.push({width,height,name,...metric});assert.ok(metric.internal<=1,JSON.stringify({name,width,...metric}));assert.ok(metric.horizontal<=1);if(width>=375)assert.ok(metric.page<=1,JSON.stringify({name,width,...metric}));};
  await fit('research');await capture('research');
+ assert.equal(await page.locator('.processing-dots').isVisible(),true);await page.locator('.initial-activity>summary').click();await page.evaluate(()=>window.setSearchStatus('running'));await page.waitForFunction(()=>!document.querySelector('#app').dataset.trayMoving);const processingFrame=await page.locator('.panel').boundingBox();assert.equal(await page.locator('.search-status-mark.is-running').count(),1);
+ await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.processing-dots>span').first().evaluate(e=>getComputedStyle(e).animationName),'none');assert.equal(await page.locator('.is-running').evaluate(e=>getComputedStyle(e).animationName),'none');await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.evaluate(()=>window.setSearchStatus('complete'));assert.equal(await page.locator('.is-running').count(),0);assert.deepEqual(await page.locator('.panel').boundingBox(),processingFrame);await page.locator('.initial-activity>summary').click();
  await page.evaluate(()=>window.failResearch());
- assert.match(await page.locator('#message').textContent(),/not enough evidence/);
+ assert.match(await page.locator('#message').textContent(),/not enough evidence/);assert.equal(await page.locator('.processing-dots').count(),0);assert.equal(await page.locator('.is-running').count(),0);
  assert.equal(await page.getByRole('button',{name:'Try again',exact:true}).isVisible(),true);
  assert.equal(await page.getByRole('button',{name:'Edit context',exact:true}).isVisible(),true);
  await page.evaluate(()=>window.completeResearch());
@@ -70,7 +74,7 @@ for(const [width,height] of [[390,844],[375,667],[320,568],[320,480],[1280,900]]
  assert.equal(await page.locator('#message').textContent(),'');assert.equal(await page.locator('.coverage-note').count(),0);
  await page.getByRole('button',{name:'Review',exact:true}).first().click();
  await page.evaluate(()=>window.setSuggestionsUnavailable(false));
- await page.evaluate(async()=>{await Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>{})));});
+ await page.evaluate(async()=>{await Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{})));});
  const geometry=()=>page.evaluate(()=>{const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return [r.y,r.height];};return {panel:rect('.panel'),stage:rect('.stage'),nav:rect('.deck-navigation'),card:rect('article:not([hidden])'),title:rect('article:not([hidden]) h3'),actions:rect('article:not([hidden])>.review-actions')};});
  const baseline=await geometry();
  const stable=async label=>{const actual=await geometry();for(const key of ['panel','stage','nav','card','actions'])for(let i=0;i<2;i++)assert.ok(Math.abs(actual[key][i]-baseline[key][i])<1,JSON.stringify({label,width,key,actual,baseline}));results.push({width,label,stable:true});};

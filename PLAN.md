@@ -6,9 +6,9 @@ Phase 1 is UX and visual polish only, using the unchanged approved resting anima
 
 Review one step at a time: 0 Landing (reopened for refinement); 1 Landing to Website Context; 2 reference context; 3 initial research; 4 initial cluster review; 5 unlock; 6 full research and Demand Map review; 7 plan generation; 8 final plan; 9 Excel / Exit / new run; 10 complete responsive journey. Cluster review means one cluster card at a time with tick/cross controls, not individual-topic cards or the older stacked-card layout. Preserve approved copy and design except explicitly authorized changes.
 
-Phase 1 Steps 0-9 / Batches 1-3 are approved and complete. Batch 4 is Step 10: one complete real-world Android journey on the local preview, followed by blocking-fix review and release readiness. Preserve all approved UX, saved runs, files, research logic and integrations. No deployment until explicitly authorized after final verification. Deadline: October 17, 11 AM. Earlier dated milestone notes are historical.
+Phase 1 Steps 0-10 / Batches 1-4 are approved and complete (2026-10-16). The user passed the complete real-world Android journey with real research, cluster review, invite unlock, full research, clarifications, Demand Map, website-plan generation, actual Excel download and Exit, then separately approved the final processing indicators. V1 release is authorized after production readiness checks; stop on configuration or data-loss concerns. Preserve all approved UX, existing data and research logic. Next after release: ten real-user tests; record blocking findings separately from deferred improvements.
 
-Production deployment is deferred until Phase 1 is complete and the full user journey has been tested. Continue local review and GitHub checkpoints in the meantime.
+Production release is now authorized, subject to production configuration and safety checks. No additional UX or research changes belong in this release. Deadline: October 17, 11 AM.
 
 ## Milestones
 
@@ -102,3 +102,13 @@ Use the earlier MRI experiment in `clustering logic/` as the starting point. The
 
 ## Mobile composition follow-up — initial landing first
 Initial mobile landing accepted and saved at 54a6805. Supporting copy remains verbatim in the approved explainers. State-driven canvas implementation is now deployed for phone review: context bottom third, review half, processing compact strip, final plan bottom two-thirds. Approved resting loop remains unchanged. Automated and browser checks pass; physical phone keyboard/safe-area review and user acceptance remain pending. Exceptionally short 320x568 landing fit remains unresolved without changing approved content hierarchy.
+
+
+## After Phase 1 release - approved 2026-10-16
+
+1. Verify production configuration, checkpoint approved code/docs, publish to the existing Convex site and smoke-test real research, invite access and workbook download without deleting data. Stop if configuration or data safety is uncertain.
+2. Complete ten real-user tests. Log blockers and non-blocking feedback separately; preserve the approved V1 during release.
+3. Phase 2: state-specific character performances; use existing resting animation until approved.
+4. Phase 3: deeper discovery/research, clustering, demand/priorities, output accuracy and optional integrations/enrichment. Do not invent volume values.
+
+Deferred non-blocking work: Excel bundle size; smallest-screen saved-plan Landing scroll compromise; legacy Landing payment-copy alignment; payment checkout testing before any future activation; funded volume-provider verification before enabling enrichment.

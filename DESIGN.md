@@ -1105,4 +1105,13 @@ Phase 1 Steps 0, 1 and 2 are approved. Next is Step 3: Finding Your Customers / 
 
 ## Current session status - 2026-10-16
 
-Phase 1 Steps 0-9 / Batches 1-3 are approved and complete. Batch 4 is Step 10: one complete real-world Android journey on the local preview, followed by blocking-fix review and release readiness. Preserve all approved UX, saved runs, files, research logic and integrations. No deployment until explicitly authorized after final verification.
+Phase 1 Steps 0-10 / Batches 1-4 are approved and complete (2026-10-16). The user passed the complete real-world Android journey with real research, cluster review, invite unlock, full research, clarifications, Demand Map, website-plan generation, actual Excel download and Exit, then separately approved the final processing indicators. V1 release is authorized after production readiness checks; stop on configuration or data-loss concerns. Preserve all approved UX, existing data and research logic. Next after release: ten real-user tests; record blocking findings separately from deferred improvements.
+
+
+## Final Phase 1 acceptance - 2026-10-16
+
+Phase 1 Steps 0-10 / Batches 1-4 are approved and complete (2026-10-16). The user passed the complete real-world Android journey with real research, cluster review, invite unlock, full research, clarifications, Demand Map, website-plan generation, actual Excel download and Exit, then separately approved the final processing indicators. V1 release is authorized after production readiness checks; stop on configuration or data-loss concerns. Preserve all approved UX, existing data and research logic. Next after release: ten real-user tests; record blocking findings separately from deferred improvements.
+
+Initial research and full research reuse the website-plan generation three-dot processing indicator. Animate only during actual pending work; running searches pulse gently, completed searches show a static tick, and actual failure/timeout/retry messages remain visible. Reduced-motion preferences disable movement. Reserved indicator space and stable activity rows avoid status-driven layout shifts. Initial reassurance: "This may take a few minutes. Your completed searches are saved." Full-research reassurance: "This may take a few minutes. You can refresh and resume your research." Preserve searches-used counts, live statuses, expanded-by-default latest-three activity, manual collapse and complete history view. No artificial progress or delays.
+
+The approved transparent logo, 65% frosted tint, 12px blur, bottom tray, responsive canvas and continuous resting animation remain unchanged. Earlier pending-review / no-release notes are historical and superseded by this acceptance. State-specific Gibbon performances remain Phase 2; deeper research and enrichment remain Phase 3.
