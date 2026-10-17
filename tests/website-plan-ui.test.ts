@@ -39,3 +39,46 @@ test('closing a tab restores its saved plan while another open tab retains its o
  w.sessionStorage.setItem(key,JSON.stringify({screen:'result',id:'other-tab-run'}));assert.equal(readSavedState<any>(w.sessionStorage as unknown as Storage,w.localStorage as unknown as Storage,key,()=>({})).id,'other-tab-run');
  w.happyDOM.abort();
 });
+
+test('plan analytics runs only after complete output is mounted and distinguishes restored results',async()=>{
+ for(const resumed of [false,true]){
+  const window=new Window();Object.assign(globalThis,{window,document:window.document});
+  const root=window.document.createElement('div');window.document.body.append(root);
+  let emit:(view:any)=>void=()=>{};const seen:string[]=[];
+  const client={onUpdate:(_api:unknown,_id:unknown,cb:typeof emit)=>{emit=cb;return()=>{};},mutation:async()=>{}};
+  const stop=mountWebsitePlan(client as unknown as ConvexClient,{id:'test' as Id<'firstValueRuns'>,token:'private'},root as unknown as HTMLElement,()=>{},()=>{}, {
+   viewed(kind){assert.ok(root.querySelector('.plan-node'));seen.push(kind);throw Error('analytics unavailable');},
+  });
+  try{
+   const {input,plan}=planFixture();const view={state:'complete',plan,cards:input.review.cards,offering:input.offering};
+   if(!resumed){emit({state:'generating'});emit({...view,state:'failed'});assert.deepEqual(seen,[]);}
+   emit(view);assert.deepEqual(seen,[resumed?'reopened':'new']);emit(view);assert.equal(seen.length,1);
+   stop();emit({...view,error:'late update'});assert.equal(seen.length,1);
+  }finally{stop();await window.happyDOM.close();}
+ }
+});
+
+test('Excel event follows generated download, skips failures, and tolerates analytics errors',async(t)=>{
+ const window=new Window();Object.assign(globalThis,{window,document:window.document});
+ const root=window.document.createElement('div');window.document.body.append(root);
+ let emit:(view:any)=>void=()=>{},downloads=0,exports=0,fail=true;
+ t.mock.method(URL,'createObjectURL',()=>{if(fail)throw Error('generation unavailable');return 'blob:synthetic';});
+ t.mock.method(URL,'revokeObjectURL',()=>{});
+ t.mock.method(window.HTMLAnchorElement.prototype,'click',()=>{downloads++;});
+ const originalTimeout=globalThis.setTimeout;
+ t.mock.method(globalThis,'setTimeout',((fn:any,delay:number,...args:any[])=>originalTimeout(fn,delay===60000?0:delay,...args)) as typeof setTimeout);
+ const client={onUpdate:(_api:unknown,_id:unknown,cb:typeof emit)=>{emit=cb;return()=>{};},mutation:async()=>{}};
+ const stop=mountWebsitePlan(client as unknown as ConvexClient,{id:'test' as Id<'firstValueRuns'>,token:'private'},root as unknown as HTMLElement,()=>{},()=>{}, {
+  exported(){assert.equal(downloads,1);exports++;throw Error('analytics unavailable');},
+ });
+ const wait=async(predicate:()=>boolean)=>{for(let i=0;i<200&&!predicate();i++)await new Promise(r=>originalTimeout(r,10));assert.ok(predicate());};
+ try{
+  const {input,plan}=planFixture();emit({state:'complete',plan,cards:input.review.cards,offering:input.offering});
+  (root.querySelector('button[data-export]') as unknown as HTMLButtonElement).click();
+  assert.equal(exports,0);await wait(()=>!!root.querySelector('.error')?.textContent);
+  assert.equal(exports,0);assert.equal(downloads,0);
+  fail=false;(root.querySelector('button[data-export]') as unknown as HTMLButtonElement).click();
+  await wait(()=>root.textContent.includes('Your Excel file is ready.'));
+  assert.equal(downloads,1);assert.equal(exports,1);
+ }finally{stop();await window.happyDOM.close();}
+});

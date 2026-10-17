@@ -9,7 +9,7 @@ const DEMAND_MAP_NOTE = 'Research based on Google search suggestions in India (E
 type View = Review & { volumes?:VolumeSnapshot|null; volumeState?:string|null; clarificationPending?: boolean; unlocked?: boolean; pending: { cardId: string; id: string } | null; last: { id: string; cardId: string; kind: "label" | "other" | "split" | "merge"; queryIds?: string[]; targetCardId?: string; note: string; state: string; error: string | null } | null };
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = "", cls = "") => { const e = document.createElement(tag); e.textContent = text; e.className = cls; return e; };
 const labels = { split: "These searches should not be grouped together", merge: "This should be grouped with another card", excluded: "This isn’t part of what I offer", label: "The label / meaning is wrong", other: "Something else" };
-export function mountReview(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, continueToUnlock: () => void, options: { demandMap?: boolean; deck?: boolean; suggestionsUnavailable?: () => boolean; editContext?: () => void } = {}) {
+export function mountReview(client: ConvexClient, identity: { id: Id<"firstValueRuns">; token: string }, root: HTMLElement, continueToUnlock: () => void, options: { displayed?: () => void; demandMap?: boolean; deck?: boolean; suggestionsUnavailable?: () => boolean; editContext?: () => void } = {}) {
   const reviews = options.demandMap ? api.mapReview : api.cardReview;
   const deck = !!options.deck;
   let selectedId = "", summary = false, lastVisible = "";
@@ -255,6 +255,7 @@ export function mountReview(client: ConvexClient, identity: { id: Id<"firstValue
     if (view.last?.state === "complete" && previous?.pending?.id === view.last.id) editing = null;
     if (!previous && view.pending && view.last) editing = { cardId: view.last.cardId, kind: view.last.kind, queryIds: view.last.queryIds, targetCardId: view.last.targetCardId, note: view.last.note, requestId: randomId() };
     draw();
+    if (alive && view.cards.length && root.isConnected) { try { options.displayed?.(); } catch { /* Analytics is optional. */ } }
   }, () => { error = "The review connection was interrupted. Your saved cards are still here. Reload to reconnect."; draw(); });
   // Refit presentation only. The saved labels, needs, queries and sources stay intact.
   function fitCard() {

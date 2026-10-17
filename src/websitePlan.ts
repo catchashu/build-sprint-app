@@ -11,7 +11,8 @@ const V1_EVIDENCE_NOTE='Research based on Google search suggestions in India (En
 
 type View = { id?: Id<'websitePlans'>; state: string; plan?: WebsitePlan | null; cards?: Card[]; offering?: string; question?: string | null; error?: string | null; volumes?:VolumeSnapshot|null; volumeState?:string|null };
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = '') => { const node = document.createElement(tag); node.textContent = text; node.className = cls; return node; };
-export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstValueRuns'>; token: string}, root: HTMLElement, back: () => void, reset: () => void) {
+export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstValueRuns'>; token: string}, root: HTMLElement, back: () => void, reset: () => void, analytics: { viewed?: (kind: 'new' | 'reopened') => void; exported?: () => void } = {}) {
+  let observedPending = false;
   let volumesRequested=false;
   let alive = true, started = false, busy = false, exporting = false, current: View | null = null, lastDraw = '';
   const heading = el('h2', 'Loading your website plan…'); heading.tabIndex = -1;
@@ -42,7 +43,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   }
   async function download() {
     if (!current?.plan || exporting) return; exporting = true; status.textContent = 'Preparing your Excel file…';if(dialogStatus)dialogStatus.textContent=status.textContent; error.textContent = ''; updateDisabled();
-    try { const {downloadPlan} = await import('./planExport'); await downloadPlan(current.plan, current.cards ?? [], current.offering ?? '',current.volumes); if (alive) status.textContent = 'Your Excel file is ready.'; }
+    try { const {downloadPlan} = await import('./planExport'); await downloadPlan(current.plan, current.cards ?? [], current.offering ?? '',current.volumes); try { analytics.exported?.(); } catch { /* Analytics is optional. */ } if (alive) status.textContent = 'Your Excel file is ready.'; }
     catch { if (alive) error.textContent = 'I couldn’t prepare the Excel file. Your website plan is safe. Try download again.'; }
     finally { exporting = false; if (alive) {if(dialogStatus)dialogStatus.textContent=error.textContent||status.textContent;updateDisabled();} }
   }
@@ -121,6 +122,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
   }
   const stop = client.onUpdate(api.websitePlan.get, identity, (view: View) => {
     if (!alive) return; current = view;
+    if (['ready', 'generating', 'checking', 'clarification'].includes(view.state)) observedPending = true;
     const before=app?trayGeometry(app):null;
     setCanvasMode(root,canvasMode('plan',view.state));
     if(app){app.dataset.planState=view.state;app.dataset.planHasResults=String(!!view.plan);}
@@ -142,6 +144,7 @@ export function mountWebsitePlan(client: ConvexClient, identity: {id: Id<'firstV
     if (view.plan) { if (view.state !== 'complete') output.append(el('p', 'Your previous saved plan remains below while this change is resolved.', 'muted')); renderPlan(view); }
     for(const detail of output.querySelectorAll<HTMLDetailsElement>('details[data-plan-detail]'))if(detailState.has(detail.dataset.planDetail!))detail.open=detailState.get(detail.dataset.planDetail!)!;
     for(const input of output.querySelectorAll<HTMLTextAreaElement>('textarea')){const key=input.closest<HTMLElement>('[data-plan-detail]')?.dataset.planDetail;if(key&&drafts.has(key)){input.value=drafts.get(key)!;const apply=input.form?.querySelector<HTMLButtonElement>('button');if(apply)apply.dataset.requiresText=String(!input.value.trim());}if(key===focusKey&&selection){input.focus({preventScroll:true});input.setSelectionRange(selection[0],selection[1]);}}
+    if (view.state === 'complete' && view.plan && root.isConnected) { try { analytics.viewed?.(observedPending ? 'new' : 'reopened'); } catch { /* Analytics is optional. */ } }
     reading.scrollTop=savedScroll;
     updateDisabled();
     if(app&&before){const after=trayGeometry(app);if(Math.abs(before.panel-after.panel)>1)transitionTray(app,before,after);}

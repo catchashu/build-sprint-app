@@ -152,3 +152,16 @@ test("deck returns corrected and newly split clusters to review and cannot conti
     assert.equal(s.root.dataset.reviewView, 'card'); assert.equal(s.root.querySelector<HTMLElement>('article:not([hidden])')!.dataset.cardId, 'a');
   } finally { s.close(); }
 });
+
+test('initial results callback waits for nonempty mounted cards and cannot break review',()=>{
+ const window=new Window();Object.assign(globalThis,{window,document:window.document});
+ const root=window.document.createElement('div');window.document.body.append(root);
+ let emit:(view:any)=>void=()=>{};let displayed=0;
+ const client={onUpdate:(_api:unknown,_id:unknown,cb:typeof emit)=>{emit=cb;return()=>{};}};
+ const stop=mountReview(client as unknown as ConvexClient,{id:'test' as Id<'firstValueRuns'>,token:'private'},root as unknown as HTMLElement,()=>{}, {displayed(){assert.ok(root.querySelector('article'));displayed++;throw Error('analytics failure');}});
+ try{
+  emit(null);assert.equal(displayed,0);
+  const view={revision:0,accepted:false,notes:[],pending:null,last:null,decisions:{a:'pending'},cards:[{groupId:'a',label:'Safe test',need:'Test',queries:[]}]};
+  emit(view);assert.equal(displayed,1);assert.match(root.textContent,/Safe test/);
+ }finally{stop();window.happyDOM.abort();}
+});

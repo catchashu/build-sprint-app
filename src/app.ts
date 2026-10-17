@@ -1,4 +1,6 @@
 import { explainerClose, audienceTabs } from "./explainerControls";
+import { initializeAnalytics, analyticsJourney, trackMilestone } from './analytics';
+import { mountPrivacyNotice, openPrivacyDialog } from './privacyControls';
 import { randomId } from "./randomId";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
@@ -14,21 +16,30 @@ import { createRestingStage } from "./restingStage";
 import { arriveReady } from "./arrival";
 import { trayGeometry, transitionTray } from "./trayTransition";
 import { processingDots, searchStatus } from './processingIndicator';
+void initializeAnalytics();
 const client = new ConvexClient(import.meta.env.VITE_CONVEX_URL);
 const app = document.querySelector<HTMLElement>("#app")!;
 const storageKey = `topic-gibbon-m2:${import.meta.env.VITE_CONVEX_URL}`;
-type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "arrival" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string };
+type State = { offering: string; website: string; references: string[]; websiteText: string; referenceText: string; screen: "landing" | "arrival" | "website" | "references" | "result" | "unlock" | "research" | "plan"; id?: Id<"firstValueRuns">; token: string; analyticsJourney?: string };
 const blank = (): State => ({ offering: "", website: "", references: ["", ""], websiteText: "", referenceText: "", screen: "landing", token: randomId() });
 let state: State;
 state = readSavedState(sessionStorage, localStorage, storageKey, blank);
 let unsubscribe: (() => void) | undefined;
 let stopReview: (() => void) | undefined;
+let stopPrivacyNotice: (() => void) | undefined;
 const { stage, select: selectAnimation, stop: stopStage } = createRestingStage();
 let stopArrival: (() => void) | undefined;
 const panel = node("section", "", "panel"); app.append(stage, panel);
 const stopViewport = watchCanvasViewport(app);
-import.meta.hot?.dispose(() => { stopArrival?.(); stopStage(); stopViewport(); unsubscribe?.(); stopReview?.(); });
+import.meta.hot?.dispose(() => { stopArrival?.(); stopStage(); stopViewport(); unsubscribe?.(); stopReview?.(); stopPrivacyNotice?.(); });
 let busy = false;
+function journeyForAnalytics(): string | undefined {
+  try {
+    const id = analyticsJourney(state.analyticsJourney);
+    if (id && id !== state.analyticsJourney) { state.analyticsJourney = id; save(); }
+    return id;
+  } catch { return undefined; }
+}
 function save() { saveState(sessionStorage, localStorage, storageKey, state); }
 function node<K extends keyof HTMLElementTagNameMap>(tag: K, text = "", className = "") { const e = document.createElement(tag); e.textContent = text; e.className = className; return e; }
 function button(text: string, action: () => void, primary = false) { const b = node("button", text, primary ? "primary" : "secondary"); b.type = "button"; b.onclick = action; return b; }
@@ -62,10 +73,10 @@ function render() {
   stopArrival?.(); stopArrival = undefined;
   // Keep the current tray painted during the already-settled placeholder handoff.
   if (state.screen === 'arrival') {
-    stopArrival = arriveReady(state.offering, () => go('website'), () => { go('landing'); message('I lost that first detail. Tell me what you offer again.'); });
+    stopArrival = arriveReady(state.offering, () => { go('website'); trackMilestone('onboarding_started', journeyForAnalytics()); }, () => { go('landing'); message('I lost that first detail. Tell me what you offer again.'); });
     return;
   }
-  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; panel.replaceChildren(); panel.scrollTop = 0;
+  unsubscribe?.(); unsubscribe = undefined; stopReview?.(); stopReview = undefined; stopPrivacyNotice?.(); stopPrivacyNotice = undefined; panel.replaceChildren(); panel.scrollTop = 0;
   app.className = state.screen === "landing" ? "landing" : "canvas";
   app.dataset.canvasStep = state.screen;
   delete app.dataset.reviewView;
@@ -94,6 +105,7 @@ function render() {
       try { const saved = JSON.parse(localStorage.getItem(`${storageKey}:plan`)!); if (saved?.id && saved?.token) { state = saved; go("plan"); } }
       catch { message("The saved plan could not be opened in this browser."); }
     }));
+    stopPrivacyNotice = mountPrivacyNotice(panel);
   } else if (state.screen === "website" || state.screen === "references") {
     const own = state.screen === "website";
     const title = node("h2", own ? "Do you have a website I should use as context?" : "Any competitor or inspiration sites I should look at?"); title.tabIndex = -1;
@@ -117,7 +129,8 @@ function render() {
   } else if (state.screen === "plan") {
     if (!state.id) { go("landing"); return; }
     app.classList.add("plan-screen");
-    stopReview = mountWebsitePlan(client, { id: state.id, token: state.token }, panel, () => go("research"), () => { state = blank(); go("landing"); });
+    const analyticsId = journeyForAnalytics();
+    stopReview = mountWebsitePlan(client, { id: state.id, token: state.token }, panel, () => go("research"), () => { state = blank(); go("landing"); }, { viewed: kind => trackMilestone("final_plan_viewed", analyticsId, kind), exported: () => trackMilestone("excel_export_triggered", analyticsId) });
   } else if (state.screen === "research") {
     if (!state.id) { go("landing"); return; }
     stopReview = mountResearch(client, { id: state.id, token: state.token }, panel, () => go("plan"));
@@ -127,6 +140,8 @@ function render() {
     stopReview = mountUnlock(client, { id: state.id, token: state.token }, unlock, () => go("result"), () => go("research"));
   } else {
     let suggestionsUnavailable = false;
+    let observedPending = false;
+    const analyticsId = journeyForAnalytics();
     const title = node("h2", "Finding your customers"); title.tabIndex = -1;
     const count = node("p", "Searches used: 0 / 4", "count");
     const status = node("p", "", "muted"); status.setAttribute("role", "status");
@@ -136,7 +151,7 @@ function render() {
     const searches = node("details", "", "initial-activity"); searches.append(node("summary", "Search activity")); const log = node("ul"); searches.append(log);
     const controls = node("div", "", "controls");
     const retry = button("Try again", () => void work(async () => { await client.mutation(api.firstValue.start, { id: state.id!, token: state.token }); }), true); retry.hidden = true;
-    const edit = button("Edit context", () => { state.id = undefined; state.token = randomId(); go("landing"); }); edit.hidden = true;
+    const edit = button("Edit context", () => { state.id = undefined; state.analyticsJourney = undefined; state.token = randomId(); go("landing"); }); edit.hidden = true;
     controls.append(retry, edit); panel.append(title, count, status, reassurance, error, cards, searches, controls);
     if (!state.id) { message("This run couldn’t be opened. Your context is saved."); edit.hidden = false; return; }
     unsubscribe = client.onUpdate(api.firstValue.get, { id: state.id, token: state.token }, run => {
@@ -145,6 +160,7 @@ function render() {
       setCanvasMode(app, canvasMode("result", run.state));
       app.dataset.researchState = run.state;
       count.textContent = `Searches used: ${run.searchCount} / ${run.searchLimit}`;
+      if (['ready', 'working', 'searching', 'grouping'].includes(run.state)) observedPending = true;
       const pending=['working','searching','grouping'].includes(run.state)&&!run.error;
       log.replaceChildren(...run.searches.map((s: { query: string; status: string; error?: string }) => {const row=node('li',`${s.query} — `,s.status==='failed'?'error':'');row.append(searchStatus(s.status,pending));if(s.error)row.append(document.createTextNode(`: ${s.error}`));return row;}));
       message(run.error || ""); if (!stopReview) cards.replaceChildren();
@@ -158,7 +174,7 @@ function render() {
       if (run.state === "complete" && run.cards) {
         status.textContent = "";
         suggestionsUnavailable = run.searches.some((s: { status: string }) => s.status === "failed");
-        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards, () => go("unlock"), { deck: true, suggestionsUnavailable: () => suggestionsUnavailable, editContext: () => { state.id = undefined; state.token = randomId(); go("landing"); } });
+        if (!stopReview) stopReview = mountReview(client, { id: state.id!, token: state.token }, cards, () => go("unlock"), { deck: true, displayed: () => trackMilestone("initial_results_viewed", analyticsId, observedPending ? "new" : "reopened"), suggestionsUnavailable: () => suggestionsUnavailable, editContext: () => { state.id = undefined; state.analyticsJourney = undefined; state.token = randomId(); go("landing"); } });
       }
       count.hidden = run.state === "complete"; searches.hidden = run.state === "complete";
       controls.hidden = retry.hidden && edit.hidden;
@@ -188,6 +204,10 @@ function explain(label: string) {
     const audience = audienceTabs(["I\u2019m planning my own website", "I\u2019m doing this for a client/team"], content.paragraphs);
     dialog.append(audience.tabs, audience.content);
   } else for (const paragraph of content.paragraphs) dialog.append(node("p", paragraph));
+  if (label === 'What?') {
+    const privacy = button('Privacy', () => openPrivacyDialog(document, privacy));
+    privacy.className = 'privacy-link'; dialog.append(privacy);
+  }
   dialog.onclose = () => dialog.remove(); document.body.append(dialog); dialog.showModal();
 }
 render();

@@ -1,4 +1,22 @@
 @font-face{font-family:Inter;src:url('/fonts/InterVariable.woff2') format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
+/* First-visit dialog is outside page flow; the original Landing stays unchanged. */
+body:has(.landing) dialog.privacy-notice{position:fixed;inset:auto;left:50%;top:var(--privacy-center,50%);transform:translate(-50%,-50%);margin:0;width:min(360px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:44px 16px 16px;text-align:left;overflow-y:auto}
+.privacy-notice>p{margin:0 0 12px}
+.privacy-notice-close{position:absolute;top:0;right:0;min-width:44px;min-height:44px;padding:8px;background:transparent;font-size:20px;font-weight:400}
+.privacy-notice-close:focus-visible{outline-offset:-4px}
+.privacy-actions{display:flex;flex-wrap:wrap;gap:4px}
+.privacy-actions button{font-size:14px;min-height:44px;padding:8px 12px}
+.privacy-notice .privacy-actions{justify-content:space-between}
+.privacy-notice .privacy-actions button{padding:8px;min-width:44px}
+.privacy-link{text-decoration:underline;text-underline-offset:3px}
+.privacy-link{font-size:14px;min-height:44px;padding:8px 0;background:transparent;font-weight:400}
+.privacy-dialog{width:min(560px,calc(100% - 32px));text-align:left}
+.privacy-dialog form{margin:0;max-width:none}
+.privacy-preference{display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin:24px 0}
+.privacy-preference input{width:20px;height:20px;flex:0 0 20px;margin:4px 0;padding:0;accent-color:var(--green)}
+.privacy-preference strong{font-size:16px;font-weight:600}
+.privacy-preference .small{display:block;font-weight:400;margin-top:4px}
+.privacy-dialog .privacy-actions{margin-top:16px}
 :root{font-family:Inter,sans-serif;color:#1D2723;background:#21634A;font-size:16px;line-height:1.5;font-synthesis:none;--ink:#1D2723;--secondary:#55605A;--panel:#F7F8F5;--green:#21634A;--radius:10px}
 *{box-sizing:border-box}body{margin:0;min-width:320px}body::before{content:"";position:fixed;inset:0;z-index:-1;background:url('/images/gibbon-placeholder.jpg') center top / max(100vw, 150vh) auto no-repeat;filter:brightness(.65)}
 button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;padding:12px 24px;border:0;border-radius:var(--radius);font-weight:600;color:var(--ink);background:#fff}button:hover{background:#e8ede8}button:disabled{opacity:.6;cursor:wait}.primary{color:white;background:var(--green)}.primary:hover{background:#194D39}.secondary{background:transparent}.secondary:hover{background:#e8ede8}
